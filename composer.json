@@ -1,0 +1,24 @@
+{
+    "name": "ju1ius/xdg-mime",
+    "description": "Query the XDG Mime database.",
+    "authors": [
+        {
+            "name": "ju1ius",
+            "email": "jules.bernable@laposte.net"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "ju1ius\\XDGMime\\": "src/",
+            "ju1ius\\XDGMime\\Test\\": "tests/"
+        },
+        "files": []
+    },
+    "require": {
+        "ocramius/proxy-manager": "^1.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.1"
+    }
+}

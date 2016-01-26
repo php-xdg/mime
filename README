@@ -1,0 +1,10 @@
+ju1ius/XDGMime
+==============
+
+This package is an implementation of the [XDG Shared MIME Info Database](http://standards.freedesktop.org/shared-mime-info-spec/)
+
+## Installation
+
+```sh
+$ composer require ju1ius/xdg-mime
+```

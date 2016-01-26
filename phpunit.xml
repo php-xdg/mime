@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="vendor/autoload.php" colors="true">
+    <testsuites>
+        <testsuite name="ju1ius/xdg-mime">
+            <directory>tests</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist>
+            <directory>tests</directory>
+            <exclude>
+                <directory>tests/Resources</directory>
+            </exclude>
+        </whitelist>
+    </filter>
+</phpunit>
