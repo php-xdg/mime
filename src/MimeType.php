@@ -1,140 +1,116 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime;
 
-/**
- * @author ju1ius
- */
-final class MimeType
+use ju1ius\XDGMime\Exception\InvalidMimeType;
+
+final class MimeType implements \Stringable
 {
-    private static $instances = [];
-
-    private $media;
-    private $subtype;
-
     /**
-     * MimeType constructor.
-     *
-     * @param $media
-     * @param $subtype
+     * @var array<string, self>
      */
-    private function __construct($media, $subtype)
-    {
-        $this->media = $media;
-        $this->subtype = $subtype;
+    private static array $instances = [];
+
+    private function __construct(
+        public readonly string $media,
+        public readonly string $subtype,
+    ) {
     }
 
     // No cloning !
-    private function __clone() {}
-
-    /**
-     * @param string $name
-     *
-     * @return MimeType
-     */
-    public static function create($name)
+    private function __clone()
     {
-        if ($name instanceof self) return $name;
+    }
 
-        // Avoid calling strtolower repeatedly
-        if (isset(self::$instances[$name])) return self::$instances[$name];
+    public static function of(self|string $name): self
+    {
+        if ($name instanceof self) {
+            return $name;
+        }
+
+        if ($type = self::$instances[$name] ?? null) {
+            return $type;
+        }
 
         $name = strtolower($name);
-        if (isset(self::$instances[$name])) return self::$instances[$name];
+        if ($type = self::$instances[$name] ?? null) {
+            return $type;
+        }
 
         $parts = explode('/', $name);
-        if (count($parts) !== 2) {
+        if (\count($parts) !== 2) {
             throw new InvalidMimeType($name);
         }
 
-        $type = new self($parts[0], $parts[1]);
-        self::$instances[$name] = $type;
-
-        return $type;
+        return self::$instances[$name] = new self($parts[0], $parts[1]);
     }
 
-    /**
-     * @param string $subtype
-     *
-     * @return MimeType
-     */
-    public function withSubtype($subtype)
+    public function withSubtype(string $subtype): self
     {
-        return self::create($this->media . '/' . $subtype);
+        return self::of($this->media . '/' . $subtype);
     }
 
-    /**
-     * @return string
-     */
-    public function __toString()
+    public function __toString(): string
     {
         return $this->media . '/' . $this->subtype;
-    }
-
-    /**
-     * @return string
-     */
-    public function getMedia()
-    {
-        return $this->media;
-    }
-
-    /**
-     * @return string
-     */
-    public function getSubtype()
-    {
-        return $this->subtype;
     }
 
     //
     // Static constructors for default, well-known or special types
     // ---------------------------------------------------------------------------------------------------------------
 
-    public static function unknown()
+    public static function unknown(): self
     {
-        return self::create('application/octet-stream');
-    }
-    public static function defaultBinary()
-    {
-        return self::create('application/octet-stream');
-    }
-    public static function defaultText()
-    {
-        return self::create('text/plain');
-    }
-    public static function defaultExecutable()
-    {
-        return self::create('application/executable');
+        return self::of('application/octet-stream');
     }
 
-    public static function directory()
+    public static function defaultBinary(): self
     {
-        return self::create('inode/directory');
-    }
-    public static function symlink()
-    {
-        return self::create('inode/symlink');
+        return self::of('application/octet-stream');
     }
 
-    public static function characterDevice()
+    public static function defaultText(): self
     {
-        return self::create('inode/chardevice');
+        return self::of('text/plain');
     }
-    public static function blockDevice()
+
+    public static function defaultExecutable(): self
     {
-        return self::create('inode/blockdevice');
+        return self::of('application/executable');
     }
-    public static function fifo()
+
+    public static function directory(): self
     {
-        return self::create('inode/fifo');
+        return self::of('inode/directory');
     }
-    public static function socket()
+
+    public static function symlink(): self
     {
-        return self::create('inode/socket');
+        return self::of('inode/symlink');
     }
-    public static function door()
+
+    public static function characterDevice(): self
     {
-        return self::create('inode/door');
+        return self::of('inode/chardevice');
+    }
+
+    public static function blockDevice(): self
+    {
+        return self::of('inode/blockdevice');
+    }
+
+    public static function fifo(): self
+    {
+        return self::of('inode/fifo');
+    }
+
+    public static function socket(): self
+    {
+        return self::of('inode/socket');
+    }
+
+    public static function door(): self
+    {
+        return self::of('inode/door');
     }
 }

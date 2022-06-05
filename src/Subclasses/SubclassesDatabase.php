@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime\Subclasses;
 
@@ -6,43 +6,21 @@ use ju1ius\XDGMime\MimeType;
 
 /**
  * A mapping from MIME types to types they inherit from.
- *
- * @author ju1ius
  */
-class SubclassesDatabase
+final class SubclassesDatabase
 {
     /**
-     * [
-     *  'mime/type' => ['parent/type', 'parent/type', ...]
-     * ]
-     * @var array
+     * @param array<string, MimeType[]> $subclasses
      */
-    private $subclasses = [];
-
-    /**
-     * @param MimeType $subclass
-     * @param MimeType $parent
-     *
-     * @return $this
-     */
-    public function add(MimeType $subclass, MimeType $parent)
-    {
-        $sub = (string)$subclass;
-        if (!isset($this->subclasses[$sub])) {
-            $this->subclasses[$sub] = [];
-        }
-
-        $this->subclasses[$sub][(string)$parent] = $parent;
-
-        return $this;
+    public function __construct(
+        private readonly array $subclasses,
+    ) {
     }
 
     /**
-     * @param MimeType $type
-     *
      * @return MimeType[]
      */
-    public function getParents(MimeType $type)
+    public function getParents(MimeType $type): array
     {
         $type = (string)$type;
         if (!isset($this->subclasses[$type])) {

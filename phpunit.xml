@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="vendor/autoload.php" colors="true">
-    <testsuites>
-        <testsuite name="ju1ius/xdg-mime">
-            <directory>tests</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist>
-            <directory>tests</directory>
-            <exclude>
-                <directory>tests/Resources</directory>
-            </exclude>
-        </whitelist>
-    </filter>
+<phpunit
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+  bootstrap="vendor/autoload.php"
+  cacheResultFile="tools/.phpunit.result.cache"
+  colors="true"
+>
+  <coverage>
+    <include>
+      <directory>src</directory>
+    </include>
+  </coverage>
+  <testsuites>
+    <testsuite name="ju1ius/xdg-mime">
+      <directory>tests</directory>
+    </testsuite>
+  </testsuites>
 </phpunit>

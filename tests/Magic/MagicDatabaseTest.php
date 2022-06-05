@@ -1,29 +1,31 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime\Test\Magic;
 
-
+use ju1ius\XDGMime\Magic\MagicDatabase;
 use ju1ius\XDGMime\Magic\MagicDatabaseBuilder;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 
-class MagicDatabaseTest extends \PHPUnit_Framework_TestCase
+class MagicDatabaseTest extends TestCase
 {
-    private function buildDatabase($path)
-    {
-        $builder = new MagicDatabaseBuilder();
-        return $builder->build([
-            __DIR__.'/../Resources/databases/'.$path
-        ]);
-    }
-
-    private function getTestFile($path)
-    {
-        return __DIR__.'/../Resources/files/'.$path;
-    }
-
-    public function testPythonMagicRules()
+    public function testPythonMagicRules(): void
     {
         $db = $this->buildDatabase('python.magic');
         $result = $db->match($this->getTestFile('python-app'));
-        $this->assertEquals('text/x-python', (string)$result);
+        Assert::assertSame('text/x-python', (string)$result);
+    }
+
+    private function buildDatabase(string $path): MagicDatabase
+    {
+        $builder = new MagicDatabaseBuilder();
+        return $builder->build([
+            __DIR__ . '/../Resources/databases/' . $path,
+        ]);
+    }
+
+    private function getTestFile(string $path): string
+    {
+        return __DIR__ . '/../Resources/files/' . $path;
     }
 }

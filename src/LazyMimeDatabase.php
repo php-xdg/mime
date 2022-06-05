@@ -1,64 +1,50 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime;
 
 /**
  * MimeDatabase lazy-loading proxy.
- *
- * @author ju1ius
  */
 final class LazyMimeDatabase extends MimeDatabase
 {
-    /**
-     * @var MimeDatabase
-     */
-    private $database;
-    /**
-     * @var \Closure
-     */
-    private $initializer;
+    private ?MimeDatabase $database = null;
 
-    /**
-     * LazyMimeDatabase constructor.
-     *
-     * @param \Closure $initializer
-     */
-    public function __construct(\Closure $initializer)
-    {
-        $this->initializer = $initializer;
+    public function __construct(
+        private \Closure $initializer,
+    ) {
     }
 
-    public function getCanonicalType($type)
+    public function getCanonicalType(MimeType|string $type): MimeType
     {
         $this->initializer && $this->initializer->__invoke($this->database, $this->initializer);
         return $this->database->getCanonicalType($type);
     }
 
-    public function getParentTypes($type)
+    public function getParentTypes(MimeType|string $type): array
     {
         $this->initializer && $this->initializer->__invoke($this->database, $this->initializer);
         return $this->database->getParentTypes($type);
     }
 
-    public function guessTypeByFileName($path)
+    public function guessTypeByFileName(string $path): MimeType
     {
         $this->initializer && $this->initializer->__invoke($this->database, $this->initializer);
         return $this->database->guessTypeByFileName($path);
     }
 
-    public function guessTypeByData($data, $maxPriority = 100, $minPriority = 0)
+    public function guessTypeByData(string $data, int $maxPriority = 100, int $minPriority = 0): MimeType
     {
         $this->initializer && $this->initializer->__invoke($this->database, $this->initializer);
         return $this->database->guessTypeByData($data, $maxPriority, $minPriority);
     }
 
-    public function guessTypeByContents($path, $maxPriority = 100, $minPriority = 0)
+    public function guessTypeByContents(string $path, int $maxPriority = 100, int $minPriority = 0): MimeType
     {
         $this->initializer && $this->initializer->__invoke($this->database, $this->initializer);
         return $this->database->guessTypeByContents($path, $maxPriority, $minPriority);
     }
 
-    public function guessType($path, $followLinks = true)
+    public function guessType(string $path, bool $followLinks = true): MimeType
     {
         $this->initializer && $this->initializer->__invoke($this->database, $this->initializer);
         return $this->database->guessType($path, $followLinks);

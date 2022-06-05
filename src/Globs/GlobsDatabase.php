@@ -1,9 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime\Globs;
-
-use ju1ius\XDGMime\Globs\Glob;
-use ju1ius\XDGMime\MimeType;
 
 /**
  * The glob2 file is a simple list of lines containing weight, MIME type and pattern, separated by a colon.
@@ -12,52 +9,33 @@ use ju1ius\XDGMime\MimeType;
  * 55:text/x-diff:*.patch
  * 50:text/x-diff:*.diff
  * </code>
- *
- * @author ju1ius
  */
-class GlobsDatabase
+final class GlobsDatabase
 {
-    private $globs = [];
-    private $extensions = [];
-    private $casedExtensions = [];
-    private $literals = [];
-    private $casedLiterals = [];
-
     /**
-     * GlobsDatabase constructor.
-     *
-     * @param array $globs
-     * @param array $extensions
-     * @param array $casedExtensions
-     * @param array $literals
-     * @param array $casedLiterals
+     * @param Glob[] $globs
+     * @param array<string, Glob> $extensions
+     * @param array<string, Glob> $casedExtensions
+     * @param array<string, Glob> $literals
+     * @param array<string, Glob> $casedLiterals
      */
     public function __construct(
-        array $globs,
-        array $extensions,
-        array $casedExtensions,
-        array $literals,
-        array $casedLiterals
+        private readonly array $globs,
+        private readonly array $extensions,
+        private readonly array $casedExtensions,
+        private readonly array $literals,
+        private readonly array $casedLiterals,
     ) {
-        $this->globs = $globs;
-        $this->extensions = $extensions;
-        $this->casedExtensions = $casedExtensions;
-        $this->literals = $literals;
-        $this->casedLiterals = $casedLiterals;
     }
 
     /**
      * Returns the matching glob(s) for the given filename.
-     * If $best is true, return only the best match, or null if no matches were found.
-     * If $best is false(default), return an array of matched globs.
-     *
-     * @param string $name
-     *
-     * @param bool   $best
+     * If `$best` is `true`, return only the best match, or null if no matches were found.
+     * If `$best` is `false` (default), return an array of matched globs.
      *
      * @return Glob|Glob[]|null
      */
-    public function match($name, $best=false)
+    public function match(string $name, bool $best = false): Glob|array|null
     {
         $matches = [];
         // Literals
@@ -68,13 +46,13 @@ class GlobsDatabase
             }
             $matches[] = $this->casedLiterals[$leaf];
         }
-        // Case insensitive literals
-        $lleaf = strtolower($leaf);
-        if (isset($this->literals[$lleaf])) {
+        // Case-insensitive literals
+        $lowerLeaf = strtolower($leaf);
+        if (isset($this->literals[$lowerLeaf])) {
             if ($best) {
-                return $this->literals[$lleaf];
+                return $this->literals[$lowerLeaf];
             }
-            $matches[] = $this->literals[$lleaf];
+            $matches[] = $this->literals[$lowerLeaf];
         }
         // Extensions
         $ext = $leaf;
@@ -94,7 +72,7 @@ class GlobsDatabase
             }
         }
         // Case insensitive extensions
-        $ext = $lleaf;
+        $ext = $lowerLeaf;
         while (true) {
             $p = strpos($ext, '.');
             if ($p === false) {
@@ -111,7 +89,6 @@ class GlobsDatabase
             }
         }
         // Other globs
-        /** @var Glob $glob */
         foreach ($this->globs as $glob) {
             if ($glob->matches($leaf)) {
                 if ($best) {

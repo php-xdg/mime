@@ -1,59 +1,54 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime\Globs;
 
 use ju1ius\XDGMime\MimeType;
 
-/**
- * @author ju1ius
- */
-class GlobsDatabaseBuilder
+final class GlobsDatabaseBuilder
 {
     /**
-     * @param array $files
-     *
-     * @return GlobsDatabase
+     * @param string[] $files
      */
-    public function build(array $files)
+    public function build(array $files): GlobsDatabase
     {
-        $allglobs = [];
+        $globs = [];
         foreach ($files as $filepath) {
-            $this->parseFile($filepath, $allglobs);
+            $this->parseFile($filepath, $globs);
         }
-        return $this->finalize($allglobs);
+        return $this->finalize($globs);
     }
 
-    private function parseFile($filepath, &$allglobs)
+    private function parseFile(string $filepath, array &$allGlobs): void
     {
         $lines = file($filepath, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
         if (!$lines) {
-            return $allglobs;
+            return;
         }
 
         foreach ($lines as $line) {
-            if ($line[0] === '#') {
+            if (str_starts_with($line, '#')) {
                 // Comment
                 continue;
             }
             $fields = explode(':', $line);
-            $weight = (int) $fields[0];
+            $weight = (int)$fields[0];
             $type = $fields[1];
             $pattern = $fields[2];
 
             if ($pattern === '__NOGLOBS__') {
                 // This signals to discard any previous globs
-                unset($allglobs[$type]);
+                unset($allGlobs[$type]);
                 continue;
             }
             $flags = empty($fields[3]) ? [] : explode(',', $fields[3]);
-            $mime = MimeType::create($type);
-            $glob = new Glob($weight, $pattern, $mime, in_array('cs', $flags));
+            $mime = MimeType::of($type);
+            $glob = new Glob($weight, $pattern, $mime, \in_array('cs', $flags));
 
-            $allglobs[$type][] = $glob;
+            $allGlobs[$type][] = $glob;
         }
     }
 
-    private function finalize($allglobs)
+    private function finalize(array $allGlobs): GlobsDatabase
     {
         $globs = [];
         $extensions = [];
@@ -61,7 +56,7 @@ class GlobsDatabaseBuilder
         $literals = [];
         $casedLiterals = [];
 
-        foreach ($allglobs as $type => $typeGlobs) {
+        foreach ($allGlobs as $type => $typeGlobs) {
             /** @var Glob $glob */
             foreach ($typeGlobs as $glob) {
                 // Literal extensions
@@ -87,11 +82,11 @@ class GlobsDatabaseBuilder
             }
         }
         // Sort globs by weight DESC & length DESC
-        usort($globs, function ($a, $b) {
-            return $a->weight === $b->weight
-                ? strlen($b->pattern) - strlen($a->pattern)
-                : $b->weight - $a->weight;
-        });
+        usort($globs, fn($a, $b) => (
+            $a->weight === $b->weight
+                ? \strlen($b->pattern) - \strlen($a->pattern)
+                : $b->weight - $a->weight
+        ));
 
         return new GlobsDatabase($globs, $extensions, $casedExtensions, $literals, $casedLiterals);
     }

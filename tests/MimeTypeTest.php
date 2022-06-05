@@ -1,64 +1,63 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime\Test;
 
+use ju1ius\XDGMime\Exception\InvalidMimeType;
 use ju1ius\XDGMime\MimeType;
+use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 
-
-class MimeTypeTest extends \PHPUnit_Framework_TestCase
+class MimeTypeTest extends TestCase
 {
-    public function testThatItParsesCorrectly()
+    public function testThatItParsesCorrectly(): void
     {
-        $type = MimeType::create('text/plain');
-        $this->assertEquals('text', $type->getMedia());
-        $this->assertEquals('plain', $type->getSubtype());
+        $type = MimeType::of('text/plain');
+        Assert::assertSame('text', $type->media);
+        Assert::assertSame('plain', $type->subtype);
 
-        $type = MimeType::create('application/vnd.stuff.x-foo');
-        $this->assertEquals('application', $type->getMedia());
-        $this->assertEquals('vnd.stuff.x-foo', $type->getSubtype());
+        $type = MimeType::of('application/vnd.stuff.x-foo');
+        Assert::assertSame('application', $type->media);
+        Assert::assertSame('vnd.stuff.x-foo', $type->subtype);
     }
 
     /**
      * @dataProvider invalidMimeTypeProvider
-     *
-     * @expectedException \ju1ius\XDGMime\InvalidMimeType
      */
-    public function testThatItRaisesInvalidMimeType($mime)
+    public function testThatItRaisesInvalidMimeType($mime): void
     {
-        MimeType::create($mime);
-    }
-    public function invalidMimeTypeProvider()
-    {
-        return [
-            ['application'],
-            ['application/foo/bar/baz']
-        ];
+        $this->expectException(InvalidMimeType::class);
+        MimeType::of($mime);
     }
 
-    public function testMimeTypeStrictEquality()
+    public function invalidMimeTypeProvider(): \Traversable
     {
-        $this->assertEquals(MimeType::create('audio/mpeg'), MimeType::create('audio/mpeg'));
+        yield ['application'];
+        yield ['application/foo/bar/baz'];
+    }
+
+    public function testMimeTypeStrictEquality(): void
+    {
+        Assert::assertSame(MimeType::of('audio/mpeg'), MimeType::of('audio/mpeg'));
     }
 
     /**
      * @dataProvider toStringProvider
      */
-    public function testThatItConvertsToString($mime)
+    public function testThatItConvertsToString($mime): void
     {
-        $this->assertEquals($mime, (string)MimeType::create($mime));
-    }
-    public function toStringProvider()
-    {
-        return [
-            ['inode/door'],
-            ['application/vdn.foo-bar.x-baz']
-        ];
+        Assert::assertSame($mime, (string)MimeType::of($mime));
     }
 
-    public function testThatMimeTypesAreCaseInsensitive()
+    public function toStringProvider(): \Traversable
     {
-        $type = MimeType::create('image/JPEG');
-        $this->assertEquals('image', $type->getMedia());
-        $this->assertEquals('jpeg', $type->getSubtype());
+        yield ['inode/door'];
+        yield ['application/vdn.foo-bar.x-baz'];
+    }
+
+    public function testThatMimeTypesAreCaseInsensitive(): void
+    {
+        $type = MimeType::of('image/JPEG');
+        Assert::assertSame('image', $type->media);
+        Assert::assertSame('jpeg', $type->subtype);
     }
 }

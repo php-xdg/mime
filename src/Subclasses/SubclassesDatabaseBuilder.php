@@ -1,26 +1,28 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime\Subclasses;
 
 use ju1ius\XDGMime\MimeType;
 
-/**
- * @author ju1ius
- */
-class SubclassesDatabaseBuilder
+final class SubclassesDatabaseBuilder
 {
-    public function build(array $files)
+    /**
+     * @param string[] $files
+     */
+    public function build(array $files): SubclassesDatabase
     {
-        $db = new SubclassesDatabase();
+        $subclasses = [];
         foreach ($files as $path) {
             $lines = file($path, FILE_IGNORE_NEW_LINES|FILE_SKIP_EMPTY_LINES);
-            if (!$lines) continue;
+            if (!$lines) {
+                continue;
+            }
             foreach ($lines as $line) {
-                list($subclass, $parent) = explode(' ', $line, 2);
-                $db->add(MimeType::create($subclass), MimeType::create($parent));
+                [$subclass, $parent] = explode(' ', $line, 2);
+                $subclasses[$subclass][$parent] = MimeType::of($parent);
             }
         }
 
-        return $db;
+        return new SubclassesDatabase($subclasses);
     }
 }

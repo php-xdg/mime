@@ -1,80 +1,37 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime\Globs;
 
 use ju1ius\XDGMime\MimeType;
 
 /**
- * Internal data structre fo the Glob2 database.
- * All fields are public for speed but shouldn't be modified after instanciation.
- *
- * @author ju1ius
+ * Internal data structure fo the Glob2 database.
  *
  * @internal
  */
-class Glob
+final class Glob
 {
-    /**
-     * @var int
-     */
-    public $weight;
-    /**
-     * @var string
-     */
-    public $pattern;
-    /**
-     * @var MimeType
-     */
-    public $type;
-    /**
-     * @var bool
-     */
-    public $caseSensitive = false;
+    public readonly bool $isExtensionGlob;
+    public readonly ?string $extension;
+    public readonly bool $isLiteral;
 
-    /**
-     * @var bool
-     */
-    public $isExtensionGlob = false;
-    /**
-     * @var null|string
-     */
-    public $extension = null;
-    /**
-     * @var bool|int
-     */
-    public $isLiteral = false;
-
-    /**
-     * Glob constructor.
-     *
-     * @param integer  $weight
-     * @param string   $pattern
-     * @param MimeType $type
-     * @param bool     $caseSensitive
-     */
-    public function __construct($weight, $pattern, $type, $caseSensitive = false)
-    {
-        $this->weight = $weight;
-        $this->pattern = $pattern;
-        $this->type = $type;
-        $this->caseSensitive = $caseSensitive;
-
-        $this->isExtensionGlob = strpos($pattern, '*.') === 0;
+    public function __construct(
+        public readonly int $weight,
+        public readonly string $pattern,
+        public readonly MimeType $type,
+        public readonly bool $caseSensitive = false,
+    ) {
+        $this->isExtensionGlob = str_starts_with($pattern, '*.');
         if ($this->isExtensionGlob) {
             $pattern = substr($pattern, 2);
             $this->extension = $pattern;
         }
-        $this->isLiteral = preg_match('/[^\[*?]/', $pattern);
+        $this->isLiteral = (bool)preg_match('/[^\[*?]/', $pattern);
     }
 
-    /**
-     * @param $name
-     *
-     * @return bool
-     */
-    public function matches($name)
+    public function matches(string $name): bool
     {
-        $flags = $this->caseSensitive ? 0 : FNM_CASEFOLD;
+        $flags = $this->caseSensitive ? 0 : \FNM_CASEFOLD;
         return fnmatch($this->pattern, $name, $flags);
     }
 }

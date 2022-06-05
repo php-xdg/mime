@@ -1,4 +1,4 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace ju1ius\XDGMime;
 
@@ -6,84 +6,56 @@ use ju1ius\XDGMime\Aliases\AliasesDatabaseBuilder;
 use ju1ius\XDGMime\Globs\GlobsDatabaseBuilder;
 use ju1ius\XDGMime\Magic\MagicDatabaseBuilder;
 use ju1ius\XDGMime\Subclasses\SubclassesDatabaseBuilder;
+use ju1ius\XDGMime\Utils\XdgBaseDir;
+use Symfony\Component\Filesystem\Path;
 
-/**
- * @author ju1ius
- */
 class MimeDatabaseFactory
 {
-    private static $XDG_DATA_DIRS;
-
-    public static function fromCustomPaths($aliases, $globs, $magics, $subclasses)
-    {
-        if (!is_array($aliases)) $aliases = [$aliases];
-        if (!is_array($globs)) $globs = [$globs];
-        if (!is_array($magics)) $magics = [$magics];
-        if (!is_array($subclasses)) $magics = [$subclasses];
-
-        $aliasBuilder = new AliasesDatabaseBuilder();
-        $aliasDb = $aliasBuilder->build($aliases);
-
-        $globsBuilder = new GlobsDatabaseBuilder();
-        $globsDb = $globsBuilder->build($globs);
-
-        $magicBuilder = new MagicDatabaseBuilder();
-        $magicDb = $magicBuilder->build($magics);
-
-        $subclassesBuilder = new SubclassesDatabaseBuilder();
-        $subclassesDb = $subclassesBuilder->build($subclasses);
-
-        return new MimeDatabase($aliasDb, $globsDb, $magicDb, $subclassesDb);
-    }
-
-    public static function fromXDGDirectories()
-    {
-        return static::fromCustomPaths(
-            self::loadDataPaths("mime/aliases"),
-            self::loadDataPaths("mime/globs2"),
-            self::loadDataPaths("mime/magic"),
-            self::loadDataPaths("mime/subclasses")
+    /**
+     * @param string[] $aliases
+     * @param string[] $globs
+     * @param string[] $magics
+     * @param string[] $subclasses
+     *
+     * @return MimeDatabase
+     */
+    public static function fromCustomPaths(
+        array $aliases,
+        array $globs,
+        array $magics,
+        array $subclasses,
+    ): MimeDatabase {
+        return new MimeDatabase(
+            (new AliasesDatabaseBuilder())->build($aliases),
+            (new GlobsDatabaseBuilder())->build($globs),
+            (new MagicDatabaseBuilder())->build($magics),
+            (new SubclassesDatabaseBuilder())->build($subclasses),
         );
     }
 
-    public static function fromDefaults()
+    public static function fromXDGDirectories(): MimeDatabase
     {
-        $db_path = __DIR__.'/Resources';
         return static::fromCustomPaths(
-            $db_path.'/aliases',
-            $db_path.'/globs2',
-            $db_path.'/magic',
-            $db_path.'/subclasses'
+            self::loadDataPaths('mime/aliases'),
+            self::loadDataPaths('mime/globs2'),
+            self::loadDataPaths('mime/magic'),
+            self::loadDataPaths('mime/subclasses'),
         );
     }
 
-    private static function loadDataPaths($path)
+    public static function fromDefaults(): MimeDatabase
     {
-        $paths = [];
-        foreach (self::getDataDirs() as $dir) {
-            $p = "{$dir}/{$path}";
-            if (file_exists($p)) $paths[] = $p;
-        }
-
-        return $paths;
+        $dbPath = __DIR__ . '/Resources';
+        return static::fromCustomPaths(
+            [$dbPath . '/aliases'],
+            [$dbPath . '/globs2'],
+            [$dbPath . '/magic'],
+            [$dbPath . '/subclasses'],
+        );
     }
 
-    private static function getDataDirs()
+    private static function loadDataPaths(string $path): array
     {
-        if (!is_array(self::$XDG_DATA_DIRS)) {
-            $home = getenv('HOME');
-            $data_home = getenv('XDG_DATA_HOME');
-            if (!$data_home) {
-                $data_home = "{$home}/.local/share";
-            }
-            $data_dirs = getenv('XDG_DATA_DIRS');
-            if (!$data_dirs) {
-                $data_dirs = "/usr/local/share:/usr/share";
-            }
-
-            self::$XDG_DATA_DIRS = array_merge([$data_home], explode(':', $data_dirs));
-        }
-
-        return self::$XDG_DATA_DIRS;
+        return iterator_to_array(XdgBaseDir::dataPaths($path));
     }
 }
