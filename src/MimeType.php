@@ -113,4 +113,9 @@ final class MimeType implements \Stringable
     {
         return self::of('inode/door');
     }
+
+    public function __wakeup(): void
+    {
+        self::$instances[(string)$this] = $this;
+    }
 }
