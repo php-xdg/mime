@@ -158,7 +158,7 @@ final class MagicDatabaseBuilder
             while (\strlen($line) <= $valueLength) {
                 $line .= fgets($fp);
             }
-            $mask = substr($line, 1, $valueLength + 1);
+            $mask = substr($line, 1, $valueLength);
             $line = substr($line, $valueLength + 1);
         }
 
