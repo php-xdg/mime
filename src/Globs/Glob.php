@@ -26,7 +26,7 @@ final class Glob
             $pattern = substr($pattern, 2);
             $this->extension = $pattern;
         }
-        $this->isLiteral = (bool)preg_match('/[^\[*?]/', $pattern);
+        $this->isLiteral = (bool)preg_match('/^[^\[*?]+$/', $pattern);
     }
 
     public function matches(string $name): bool
