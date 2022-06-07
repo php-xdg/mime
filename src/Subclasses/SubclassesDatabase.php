@@ -22,11 +22,6 @@ final class SubclassesDatabase
      */
     public function getParents(MimeType $type): array
     {
-        $type = (string)$type;
-        if (!isset($this->subclasses[$type])) {
-            return [];
-        }
-
-        return array_values($this->subclasses[$type]);
+        return array_map(MimeType::of(...), $this->subclasses[(string)$type] ?? []);
     }
 }

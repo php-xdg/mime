@@ -50,7 +50,7 @@ class MimeDatabase
     {
         $glob = $this->globsDb->match($path, true);
 
-        return $glob ? $glob->type : MimeType::unknown();
+        return $glob ? MimeType::of($glob->type) : MimeType::unknown();
     }
 
     public function guessTypeByData(string $data, int $maxPriority = 100, int $minPriority = 0): MimeType
@@ -138,7 +138,7 @@ class MimeDatabase
             }
             $globs = \array_slice($globs, 0, $i);
             if (\count($globs) === 1) {
-                return $globs[0]->type;
+                return MimeType::of($globs[0]->type);
             }
             $possible = $globs;
         }
@@ -152,7 +152,7 @@ class MimeDatabase
         if ($type) {
             return MimeType::of($type);
         } elseif ($globs) {
-            return $globs[0]->type;
+            return MimeType::of($globs[0]->type);
         } elseif (($stat['mode'] & self::STAT_IMODE) & 0o111) {
             return MimeType::defaultExecutable();
         } elseif ($this->looksLikeTextFile($path)) {

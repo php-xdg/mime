@@ -41,8 +41,7 @@ final class GlobsDatabaseBuilder
                 continue;
             }
             $flags = empty($fields[3]) ? [] : explode(',', $fields[3]);
-            $mime = MimeType::of($type);
-            $glob = new Glob($weight, $pattern, $mime, \in_array('cs', $flags));
+            $glob = new Glob($weight, $pattern, $type, \in_array('cs', $flags));
 
             $allGlobs[$type][] = $glob;
         }

@@ -31,7 +31,7 @@ class AliasesDatabaseBuilder
         $aliases = [];
         foreach ($lines as $line) {
             [$alias, $canonical] = explode(' ', $line, 2);
-            $aliases[$alias] = MimeType::of($canonical);
+            $aliases[$alias] = $canonical;
         }
 
         return $aliases;

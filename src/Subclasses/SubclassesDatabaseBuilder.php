@@ -19,7 +19,7 @@ final class SubclassesDatabaseBuilder
             }
             foreach ($lines as $line) {
                 [$subclass, $parent] = explode(' ', $line, 2);
-                $subclasses[$subclass][$parent] = MimeType::of($parent);
+                $subclasses[$subclass][$parent] = $parent;
             }
         }
 

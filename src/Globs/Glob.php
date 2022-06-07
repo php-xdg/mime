@@ -18,7 +18,7 @@ final class Glob
     public function __construct(
         public readonly int $weight,
         public readonly string $pattern,
-        public readonly MimeType $type,
+        public readonly string $type,
         public readonly bool $caseSensitive = false,
     ) {
         $this->isExtensionGlob = str_starts_with($pattern, '*.');

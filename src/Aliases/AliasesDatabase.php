@@ -13,7 +13,7 @@ class AliasesDatabase
 
     public function canonical(MimeType $alias): MimeType
     {
-        return $this->aliases[(string)$alias] ?? $alias;
+        return $this->get($alias, $alias);
     }
 
     /**
@@ -21,6 +21,9 @@ class AliasesDatabase
      */
     public function get(MimeType $alias, ?MimeType $default = null): ?MimeType
     {
-        return $this->aliases[(string)$alias] ?? $default;
+        if ($type = $this->aliases[(string)$alias] ?? null) {
+            return MimeType::of($type);
+        }
+        return $default;
     }
 }
