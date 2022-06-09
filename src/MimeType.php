@@ -76,7 +76,7 @@ final class MimeType implements \Stringable
 
     public static function defaultExecutable(): self
     {
-        return self::of('application/executable');
+        return self::of('application/x-executable');
     }
 
     public static function directory(): self

@@ -24,4 +24,15 @@ final class SubclassesDatabase
     {
         return array_map(MimeType::of(...), $this->subclasses[(string)$type] ?? []);
     }
+
+    public function isSubclassOf(MimeType|string $type, MimeType|string $parent): bool
+    {
+        if ($type === $parent) {
+            return true;
+        }
+        if ($parents = $this->subclasses[(string)$type] ?? null) {
+            return \in_array((string)$parent, $parents, true);
+        }
+        return false;
+    }
 }

@@ -2,7 +2,7 @@
 
 namespace ju1ius\XDGMime\Magic;
 
-final class MagicDatabase
+final class MagicDatabase implements MagicDatabaseInterface
 {
     /**
      * @param array<string, array{int, AbstractRule}[]> $rules
@@ -55,8 +55,7 @@ final class MagicDatabase
             $types = $this->rules;
         }
 
-        $data = substr($data, 0, $this->maxRuleLength);
-        $buflen = \strlen($data);
+        $buflen = min(\strlen($data), $this->maxRuleLength);
 
         /**
          * @var int $priority
