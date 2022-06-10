@@ -1,6 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Magic;
+namespace ju1ius\XDGMime\Runtime;
+
+use ju1ius\XDGMime\Magic\AbstractRule;
 
 final class MagicDatabase implements MagicDatabaseInterface
 {
@@ -24,7 +26,7 @@ final class MagicDatabase implements MagicDatabaseInterface
      * Returns the MIME type found, or null if no entries match.
      * Raises IOError if the file can't be opened.
      */
-    public function match(string $path, int $maxPriority = 100, int $minPriority = 0, ?array $possible = null): ?string
+    public function match(string $path, ?array $allowedTypes = null): ?string
     {
         $fp = fopen($path, 'rb');
         $buffer = fread($fp, $this->maxRuleLength);
@@ -34,18 +36,14 @@ final class MagicDatabase implements MagicDatabaseInterface
             return null;
         }
 
-        return $this->matchData($buffer, $maxPriority, $minPriority, $possible);
+        return $this->matchData($buffer, $allowedTypes);
     }
 
-    public function matchData(
-        string $data,
-        int $maxPriority = 100,
-        int $minPriority = 0,
-        ?array $possible = null
-    ): ?string {
-        if ($possible) {
+    public function matchData(string $data, ?array $allowedTypes = null): ?string
+    {
+        if ($allowedTypes) {
             $types = [];
-            foreach ($possible as $type) {
+            foreach ($allowedTypes as $type) {
                 foreach ($this->rules[$type] as [$priority, $rule]) {
                     $types[] = [$priority, $type, $rule];
                 }
@@ -55,7 +53,7 @@ final class MagicDatabase implements MagicDatabaseInterface
             $types = $this->rules;
         }
 
-        $buflen = min(\strlen($data), $this->maxRuleLength);
+        $length = min(\strlen($data), $this->maxRuleLength);
 
         /**
          * @var int $priority
@@ -63,13 +61,7 @@ final class MagicDatabase implements MagicDatabaseInterface
          * @var AbstractRule $rule
          */
         foreach ($types as [$priority, $type, $rule]) {
-            if ($priority > $maxPriority) {
-                continue;
-            }
-            if ($priority < $minPriority) {
-                break;
-            }
-            if ($rule->matches($data, $buflen)) {
+            if ($rule->matches($data, $length)) {
                 return $type;
             }
         }

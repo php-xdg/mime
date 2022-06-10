@@ -2,6 +2,8 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo\Utils;
 
+use Symfony\Component\Filesystem\Path;
+
 /**
  * Regression tests file format for shared-mime-info and xdgmime.
  *
@@ -23,8 +25,11 @@ final class SharedMimeInfoTestFileParser
             if (str_starts_with($line, '#')) {
                 continue;
             }
-            $parts = explode(' ', $line, 3);
+            $parts = preg_split('/\s+/', $line, 3, PREG_SPLIT_NO_EMPTY);
             [$filename, $expected] = $parts;
+            if (Path::isRelative($filename)) {
+                $filename = Path::makeAbsolute($filename, dirname($path));
+            }
             $flags = $this->parseFlags($parts[2] ?? '');
             yield new SharedMimeInfoTestDTO($filename, $expected, ...$flags);
         }

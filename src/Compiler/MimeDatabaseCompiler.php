@@ -18,20 +18,26 @@ final class MimeDatabaseCompiler
         $tpl = <<<'PHP'
         <?php
 
+        use ju1ius\XDGMime\MimeDatabase;
+        use ju1ius\XDGMime\Runtime\AliasesDatabase;
+        use ju1ius\XDGMime\Runtime\FileInfoMagicDatabase;
         use ju1ius\XDGMime\Runtime\Glob;
         use ju1ius\XDGMime\Runtime\GlobLiteral;
+        use ju1ius\XDGMime\Runtime\GlobsDatabase;
+        use ju1ius\XDGMime\Runtime\SubclassesDatabase;
 
-        return [
-            'subclasses' => %s,
-            'aliases' => %s,
-            'globs' => %s,
-        ];
+        return new MimeDatabase(
+            new AliasesDatabase(%s),
+            new SubclassesDatabase(%s),
+            new GlobsDatabase(%s),
+            new FileInfoMagicDatabase(),
+        );
         PHP;
 
         return sprintf(
             $tpl,
-            $this->compileSubClasses($lookup['subclasses'], 1),
             $this->compileAliases($lookup['aliases'], 1),
+            $this->compileSubClasses($lookup['subclasses'], 1),
             $this->compileGlobs($lookup['globs'], 1),
         );
     }
@@ -45,6 +51,7 @@ final class MimeDatabaseCompiler
         $aliases = [];
         $subclasses = [];
         $globs = [];
+        $magicRules = [];
         foreach ($types as $canonical => $type) {
             if ($type->subclassOf) {
                 $subclasses[$canonical] = $type->subclassOf;
@@ -55,7 +62,9 @@ final class MimeDatabaseCompiler
             foreach ($type->globs as $glob) {
                 $globs[] = $glob;
             }
-            // TODO: Magic
+            foreach ($type->magic as $rule) {
+                $magicRules[$canonical][] = $rule;
+            }
             // TODO: TreeMagic
         }
 
@@ -63,7 +72,7 @@ final class MimeDatabaseCompiler
             'subclasses' => $subclasses,
             'aliases' => $aliases,
             'globs' => $this->createGlobLookup($globs),
-            'magic' => [],
+            'magic' => $this->createMagicLookup($magicRules),
             'treemagic' => [],
         ];
     }
@@ -108,25 +117,21 @@ final class MimeDatabaseCompiler
 
     private function compileGlobs(array $lookup, int $indentLevel = 0): string
     {
-        $indent = str_repeat('    ', $indentLevel);
         $literalKeys = [
-            'case_sensitive_extensions',
-            'extensions',
-            'case_sensitive_literals',
-            'literals',
+            'extensions' => 'extensions',
+            'case_sensitive_extensions' => 'caseSensitiveExtensions',
+            'literals' => 'literals',
+            'case_sensitive_literals' => 'caseSensitiveLiterals',
         ];
-        $output = "[\n";
-        foreach ($literalKeys as $lookupKey) {
+        $output = "\n";
+        foreach ($literalKeys as $lookupKey => $argName) {
+            $indent = str_repeat('    ', ++$indentLevel);
             $hashMap = $lookup[$lookupKey];
             if (!$hashMap) {
+                $output .= sprintf("%s%s: [],\n", $indent, $argName);
                 continue;
             }
-            $indent = str_repeat('    ', ++$indentLevel);
-            $output .= sprintf(
-                "%s'%s' => [\n",
-                $indent,
-                $lookupKey,
-            );
+            $output .= sprintf("%s%s: [\n", $indent, $argName);
             /** @var GlobLiteral|GlobLiteral[] $value */
             foreach ($hashMap as $key => $value) {
                 $output .= sprintf(
@@ -146,7 +151,7 @@ final class MimeDatabaseCompiler
         }
 
         $indent = str_repeat('    ', ++$indentLevel);
-        $output .= sprintf("%s'globs' => [\n", $indent);
+        $output .= sprintf("%sglobs: [\n", $indent);
         /** @var Glob $glob */
         foreach ($lookup['globs'] as $glob) {
             $output .= sprintf(
@@ -158,10 +163,8 @@ final class MimeDatabaseCompiler
                 var_export($glob->caseSensitive, true),
             );
         }
-        $output .= sprintf("%s],\n", $indent);
-
         $indent = str_repeat('    ', --$indentLevel);
-        $output .= sprintf("%s]", $indent);
+        $output .= sprintf("%s    ],\n%s", $indent, $indent);
         return $output;
     }
 
@@ -224,5 +227,10 @@ final class MimeDatabaseCompiler
     private static function compareGlobs(GlobLiteral $a, GlobLiteral $b): int
     {
         return $b->weight <=> $a->weight ?: $b->length <=> $a->length;
+    }
+
+    private function createMagicLookup(array $rules): array
+    {
+        return [];
     }
 }

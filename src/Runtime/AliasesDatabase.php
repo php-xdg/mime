@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Aliases;
+namespace ju1ius\XDGMime\Runtime;
 
 use ju1ius\XDGMime\MimeType;
 

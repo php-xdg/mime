@@ -1,36 +1,36 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Globs;
+namespace ju1ius\XDGMime\Runtime;
 
 final class GlobsDatabase
 {
     /**
+     * @param array<string, GlobLiteral[]> $extensions
+     * @param array<string, GlobLiteral[]> $caseSensitiveExtensions
+     * @param array<string, GlobLiteral> $literals
+     * @param array<string, GlobLiteral> $caseSensitiveLiterals
      * @param Glob[] $globs
-     * @param array<string, Glob[]> $extensions
-     * @param array<string, Glob[]> $casedExtensions
-     * @param array<string, Glob> $literals
-     * @param array<string, Glob> $casedLiterals
      */
     public function __construct(
-        private readonly array $globs,
         private readonly array $extensions,
-        private readonly array $casedExtensions,
+        private readonly array $caseSensitiveExtensions,
         private readonly array $literals,
-        private readonly array $casedLiterals,
+        private readonly array $caseSensitiveLiterals,
+        private readonly array $globs,
     ) {
     }
 
     /**
      * Returns the matching glob(s) for the given filename.
      *
-     * @return Glob[]
+     * @return GlobLiteral[]
      */
     public function match(string $filename): array
     {
         $matches = [];
         // Literals
         $name = basename($filename);
-        if ($match = $this->casedLiterals[$name] ?? null) {
+        if ($match = $this->caseSensitiveLiterals[$name] ?? null) {
             $matches[] = $match;
         }
         // Case-insensitive literals
@@ -45,7 +45,7 @@ final class GlobsDatabase
                 break;
             }
             $ext = substr($ext, $p + 1);
-            if ($extensions = $this->casedExtensions[$ext] ?? null) {
+            if ($extensions = $this->caseSensitiveExtensions[$ext] ?? null) {
                 array_push($matches, ...$extensions);
             }
         }
@@ -72,7 +72,7 @@ final class GlobsDatabase
         return $matches;
     }
 
-    private static function sort(Glob $a, Glob $b): int
+    private static function sort(GlobLiteral $a, GlobLiteral $b): int
     {
         return $b->weight <=> $a->weight ?: $b->length <=> $a->length;
     }

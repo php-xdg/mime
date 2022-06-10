@@ -2,20 +2,20 @@
 
 namespace ju1ius\XDGMime;
 
-use ju1ius\XDGMime\Aliases\AliasesDatabase;
-use ju1ius\XDGMime\Globs\Glob;
-use ju1ius\XDGMime\Globs\GlobsDatabase;
-use ju1ius\XDGMime\Magic\MagicDatabaseInterface;
-use ju1ius\XDGMime\Subclasses\SubclassesDatabase;
+use ju1ius\XDGMime\Runtime\AliasesDatabase;
+use ju1ius\XDGMime\Runtime\GlobLiteral;
+use ju1ius\XDGMime\Runtime\GlobsDatabase;
+use ju1ius\XDGMime\Runtime\MagicDatabaseInterface;
+use ju1ius\XDGMime\Runtime\SubclassesDatabase;
 use ju1ius\XDGMime\Utils\Stat;
 
 class MimeDatabase
 {
     public function __construct(
         private readonly AliasesDatabase $aliasDb,
+        private readonly SubclassesDatabase $subclassesDb,
         private readonly GlobsDatabase $globsDb,
         private readonly MagicDatabaseInterface $magicDb,
-        private readonly SubclassesDatabase $subclassesDb,
     ) {
     }
 
@@ -37,22 +37,24 @@ class MimeDatabase
 
     public function guessTypeByFileName(string $path): MimeType
     {
-        $glob = $this->globsDb->match($path, true);
+        if ($globs = $this->globsDb->match($path)) {
+            return MimeType::of($globs[0]->type);
+        }
 
-        return $glob ? MimeType::of($glob->type) : MimeType::unknown();
+        return MimeType::unknown();
     }
 
-    public function guessTypeByData(string $data, int $maxPriority = 100, int $minPriority = 0): MimeType
+    public function guessTypeByData(string $data): MimeType
     {
-        if ($type = $this->magicDb->matchData($data, $maxPriority, $minPriority)) {
+        if ($type = $this->magicDb->matchData($data)) {
             return MimeType::of($type);
         }
         return MimeType::unknown();
     }
 
-    public function guessTypeByContents(string $path, int $maxPriority = 100, int $minPriority = 0): MimeType
+    public function guessTypeByContents(string $path): MimeType
     {
-        if ($type = $this->magicDb->match($path, $maxPriority, $minPriority)) {
+        if ($type = $this->magicDb->match($path)) {
             return MimeType::of($type);
         }
         return MimeType::unknown();
@@ -106,13 +108,13 @@ class MimeDatabase
             }
             // glob results are sorted by weight DESC, patternLength DESC
             $biggestWeight = $globs[0]->weight;
-            $longestPattern = \strlen($globs[0]->pattern);
+            $longestPattern = $globs[0]->length;
             for ($i = 1; $i < \count($globs); $i++) {
                 $glob = $globs[$i];
                 if ($glob->weight < $biggestWeight) {
                     break;
                 }
-                if (\strlen($glob->pattern) < $longestPattern) {
+                if ($glob->length < $longestPattern) {
                     break;
                 }
                 if ($glob->type !== $globs[0]->type) {
@@ -123,7 +125,7 @@ class MimeDatabase
                 return MimeType::of($globs[0]->type);
             }
             $globs = array_slice($globs, 0, $i);
-            $possible = array_map(fn(Glob $glob) => $glob->type, $globs);
+            $possible = array_map(fn(GlobLiteral $glob) => $glob->type, $globs);
         }
         /**
          * If the glob matching fails or results in multiple conflicting mimetypes,
@@ -138,7 +140,7 @@ class MimeDatabase
          * since these can appear in UTF-8 text, unlike control characters.
          */
         try {
-            $sniffedType = $this->magicDb->match($path, 100, 0, $possible);
+            $sniffedType = $this->magicDb->match($path, $possible);
         } catch (\Exception) {
             $sniffedType = null;
         }
