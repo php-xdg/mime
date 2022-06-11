@@ -1,0 +1,10 @@
+<?xml version='1.0' encoding="UTF-8"?>
+<xs:schema
+  targetNamespace="http://www.w3.org/XML/1998/namespace"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+
+  <!-- see https://gitlab.freedesktop.org/xdg/shared-mime-info/-/issues/186 -->
+  <xs:attribute name="lang" type="xs:string"/>
+
+</xs:schema>

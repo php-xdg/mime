@@ -1,0 +1,365 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  elementFormDefault="qualified"
+  targetNamespace="http://www.freedesktop.org/standards/shared-mime-info"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fdo="http://www.freedesktop.org/standards/shared-mime-info"
+>
+  <xs:import namespace="http://www.w3.org/XML/1998/namespace" schemaLocation="xml.xsd" />
+
+  <xs:element name="mime-info">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="0" maxOccurs="unbounded" ref="fdo:mime-type"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="mime-type">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="comment" type="fdo:translatableString">
+          <xs:annotation>
+            <xs:documentation>
+              A comment describing a document with the respective MIME type. Example: "WMV video"
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="acronym" type="fdo:translatableString">
+          <xs:annotation>
+            <xs:documentation>
+              A comment describing the respective unexpanded MIME type acronym. Example: "WMV"
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="expanded-acronym" type="fdo:translatableString">
+          <xs:annotation>
+            <xs:documentation>
+              Comment describing the respective expanded MIME type acronym. Example: "Windows Media Video"
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="alias">
+          <xs:annotation>
+            <xs:documentation>
+              Indicates that the mime-type is also sometimes known by another name, given by the type attribute.
+              For example, audio/midi has an alias of audio/x-midi.
+              Note that there should not be a mime-type element defining each alias;
+              a single element defines the canonical name for the type and lists all its aliases.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="type" use="required" type="fdo:mimeType"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="sub-class-of">
+          <xs:annotation>
+            <xs:documentation>
+              Indicates that any data of this type is also some other type, given by the type attribute.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="type" use="required" type="fdo:mimeType"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="icon">
+          <xs:annotation>
+            <xs:documentation>
+              Specifies the icon to be used for this particular mime-type, given by the name attribute.
+              Generally the icon used for a mimetype is created based on the mime-type by mapping "/" characters to "-",
+              but users can override this by using the icon element to customize the icon for a particular mimetype.
+              This element is not used in the system database, but only used in the user overridden database.
+              Only one icon element is allowed.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="name" type="xs:NCName" use="required" />
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="generic-icon">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:documentation>
+                Specifies the icon to use as a generic icon for this particular mime-type, given by the name attribute.
+                This is used if there is no specific icon (see icon for how these are found).
+                These are used for categories of similar types (like spreadsheets or archives) that can use a common icon.
+                The Icon Naming Specification lists a set of such icon names.
+                If this element is not specified then the mimetype is used to generate the generic icon
+                by using the top-level media type (e.g. "video" in "video/ogg")
+                and appending "-x-generic" (i.e. "video-x-generic" in the previous example).
+                Only one generic-icon element is allowed.
+              </xs:documentation>
+            </xs:annotation>
+            <xs:attribute name="name">
+              <xs:simpleType>
+                <xs:restriction base="xs:string">
+                  <xs:enumeration value="application-x-executable"/>
+                  <xs:enumeration value="audio-x-generic"/>
+                  <xs:enumeration value="folder"/>
+                  <xs:enumeration value="font-x-generic"/>
+                  <xs:enumeration value="image-x-generic"/>
+                  <xs:enumeration value="package-x-generic"/>
+                  <xs:enumeration value="text-html"/>
+                  <xs:enumeration value="text-x-generic"/>
+                  <xs:enumeration value="text-x-generic-template"/>
+                  <xs:enumeration value="text-x-script"/>
+                  <xs:enumeration value="video-x-generic"/>
+                  <xs:enumeration value="x-office-address-book"/>
+                  <xs:enumeration value="x-office-calendar"/>
+                  <xs:enumeration value="x-office-document"/>
+                  <xs:enumeration value="x-office-presentation"/>
+                  <xs:enumeration value="x-office-spreadsheet"/>
+                </xs:restriction>
+              </xs:simpleType>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="glob">
+          <xs:complexType>
+            <xs:attribute name="pattern" use="required">
+              <xs:annotation>
+                <xs:documentation>
+                  Any file whose name matches this pattern will be given this MIME type
+                  (subject to conflicting rules in other files, of course).
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="weight" type="fdo:priorityType" default="50">
+              <xs:annotation>
+                <xs:documentation>
+                  used when resolving conflicts with other glob matches.
+                  The default weight value is 50, and the maximum is 100.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+            <xs:attribute name="case-sensitive" type="xs:boolean"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="glob-deleteall" type="fdo:void">
+          <xs:annotation>
+            <xs:documentation>
+              Indicates that patterns from previously parsed directories must be discarded.
+              The patterns defined in this file (if any) are used instead.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="magic">
+          <xs:complexType>
+            <xs:annotation>
+              <xs:documentation>
+                A list of match elements, any of which may match.
+                Each match element corresponds to one line of file(1)'s magic.mime file.
+                They can be nested in the same way to provide the equivalent of continuation lines.
+                That is, &lt;a&gt;&lt;b/&gt;&lt;c/&gt;&lt;/a&gt; means "a and (b or c)".
+              </xs:documentation>
+            </xs:annotation>
+            <xs:sequence>
+              <xs:element name="match" type="fdo:matchElement" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="priority" type="fdo:priorityType" default="50">
+              <xs:annotation>
+                <xs:documentation>
+                  The priority to use for all the contained matches.
+                  Low numbers should be used for more generic types (such as 'gzip compressed data')
+                  and higher values for specific subtypes (such as a word processor format that happens to use gzip to compress the file).
+                  The default priority value is 50, and the maximum is 100.
+                </xs:documentation>
+              </xs:annotation>
+            </xs:attribute>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="magic-deleteall" type="fdo:void">
+          <xs:annotation>
+            <xs:documentation>
+              Indicates that magic matches from previously parsed directories must be discarded.
+              The magic defined in this file (if any) is used instead.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+        <xs:element name="treemagic">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="treematch" type="fdo:treeMatchElement" maxOccurs="unbounded"/>
+            </xs:sequence>
+            <xs:attribute name="priority" type="fdo:priorityType" default="50"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:element name="root-XML">
+          <xs:annotation>
+            <xs:documentation>
+              If a file is identified as being an XML file, these rules allow a more specific MIME type
+              to be chosen based on the namespaceURI and localName of the document element.
+            </xs:documentation>
+          </xs:annotation>
+          <xs:complexType>
+            <xs:attribute name="localName" use="required" type="xs:NCName"/>
+            <xs:attribute name="namespaceURI" use="required" type="xs:anyURI"/>
+          </xs:complexType>
+        </xs:element>
+        <xs:any namespace="##other">
+          <xs:annotation>
+            <xs:documentation>
+              Applications may also define their own elements, provided they are namespaced to prevent collisions.
+              Unknown elements are copied directly to the output XML files like comment elements.
+              A typical use for this would be to indicate the default handler application for a particular desktop
+              ("Galeon is the GNOME default text/html browser").
+              Note that this doesn't indicate the user's preferred application, only the (fixed) default.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:any>
+      </xs:choice>
+      <xs:attribute name="type" use="required" type="fdo:mimeType"/>
+    </xs:complexType>
+  </xs:element>
+
+  <!-- Complex Types -->
+
+  <xs:complexType name="matchElement">
+    <xs:sequence>
+      <xs:element name="match" type="fdo:matchElement" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="type" use="required">
+      <xs:simpleType>
+        <xs:restriction base="xs:NCName">
+          <xs:enumeration value="string"/>
+          <xs:enumeration value="big16"/>
+          <xs:enumeration value="big32"/>
+          <xs:enumeration value="little16"/>
+          <xs:enumeration value="little32"/>
+          <xs:enumeration value="host16"/>
+          <xs:enumeration value="host32"/>
+          <xs:enumeration value="byte"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="offset" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The byte offset(s) in the file to check.
+          This may be a single number or a range in the form "start:end",
+          indicating that all offsets in the range should be checked.
+          The range is inclusive.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:union memberTypes="fdo:rangeType xs:nonNegativeInteger"/>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="value" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          The value to compare the file contents with, in the format indicated by the type attribute.
+          The string type supports the C character escapes (\0, \t, \n, \r, \xAB for hex, \777 for octal).
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mask">
+      <xs:annotation>
+        <xs:documentation>
+          The number to AND the value in the file with before comparing it to "value".
+          Masks for numerical types can be any number, while masks for strings must be in base 16, and start with 0x.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:union memberTypes="fdo:hexNumber xs:nonNegativeInteger"/>
+      </xs:simpleType>
+    </xs:attribute>
+  </xs:complexType>
+
+  <xs:complexType name="treeMatchElement">
+    <xs:sequence>
+      <xs:element name="treematch" type="fdo:treeMatchElement" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="path" use="required">
+      <xs:annotation>
+        <xs:documentation>
+          A path that must be present on the mounted volume/filesystem.
+          The path is interpreted as a relative path starting at the root of the tested volume/filesystem.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="type">
+      <xs:annotation>
+        <xs:documentation>
+          The type of path.
+        </xs:documentation>
+      </xs:annotation>
+      <xs:simpleType>
+        <xs:restriction base="xs:string">
+          <xs:enumeration value="file"/>
+          <xs:enumeration value="directory"/>
+          <xs:enumeration value="link"/>
+        </xs:restriction>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="match-case" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Whether path should be matched case-sensitively.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="executable" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Whether the file must be executable.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="non-empty" type="xs:boolean">
+      <xs:annotation>
+        <xs:documentation>
+          Whether the directory must be non-empty.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+    <xs:attribute name="mimetype" type="fdo:mimeType">
+      <xs:annotation>
+        <xs:documentation>
+          The mimetype for the file at path.
+        </xs:documentation>
+      </xs:annotation>
+    </xs:attribute>
+  </xs:complexType>
+
+  <!-- Simple Types -->
+
+  <xs:simpleType name="void">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value=""/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="mimeType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="[A-Za-z][A-Za-z-]*/[\dA-Za-z][\dA-Za-z_.+-]*"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="priorityType">
+    <xs:restriction base="xs:nonNegativeInteger">
+      <xs:maxInclusive value="100"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="rangeType">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\d+:\d+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="hexNumber">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="0x([\dA-Fa-f][\dA-Fa-f])+"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="translatableString">
+    <xs:simpleContent>
+      <xs:extension base="xs:string">
+        <xs:attribute ref="xml:lang" />
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+</xs:schema>

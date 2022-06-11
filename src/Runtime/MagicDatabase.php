@@ -2,39 +2,27 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
-use ju1ius\XDGMime\Magic\AbstractRule;
-
 final class MagicDatabase implements MagicDatabaseInterface
 {
     /**
-     * @param array<string, array{int, AbstractRule}[]> $rules
-     * @param int $maxRuleLength
+     * @param MagicRule[] $rules
      */
     public function __construct(
+        private readonly int $lookupBufferSize,
         private readonly array $rules,
-        private readonly int $maxRuleLength,
     ) {
     }
 
-    /**
-     * Read data from the file and do magic sniffing on it.
-     *
-     * `$maxPriority` & `$minPriority` can be used to specify the maximum & minimum priority rules to look for.
-     *
-     * `$possible` can be a list of mimetypes to check, or null (the default) to check all mimetypes until one matches.
-     *
-     * Returns the MIME type found, or null if no entries match.
-     * Raises IOError if the file can't be opened.
-     */
     public function match(string $path, ?array $allowedTypes = null): ?string
     {
-        $fp = fopen($path, 'rb');
-        $buffer = fread($fp, $this->maxRuleLength);
-        fclose($fp);
-
-        if ($buffer === false) {
+        if (false === $fp = @fopen($path, 'rb')) {
             return null;
         }
+        if (false === $buffer = @fread($fp, $this->lookupBufferSize)) {
+            fclose($fp);
+            return null;
+        }
+        fclose($fp);
 
         return $this->matchData($buffer, $allowedTypes);
     }
@@ -42,30 +30,28 @@ final class MagicDatabase implements MagicDatabaseInterface
     public function matchData(string $data, ?array $allowedTypes = null): ?string
     {
         if ($allowedTypes) {
-            $types = [];
-            foreach ($allowedTypes as $type) {
-                foreach ($this->rules[$type] as [$priority, $rule]) {
-                    $types[] = [$priority, $type, $rule];
-                }
-            }
-            usort($types, fn(array $a, array $b) => $a[0] - $b[0]);
+            $rules = array_filter($this->rules, fn($r) => $allowedTypes[$r->type] ?? false);
         } else {
-            $types = $this->rules;
+            $rules = $this->rules;
         }
 
-        $length = min(\strlen($data), $this->maxRuleLength);
+        $length = min(\strlen($data), $this->lookupBufferSize);
 
-        /**
-         * @var int $priority
-         * @var string $type
-         * @var AbstractRule $rule
-         */
-        foreach ($types as [$priority, $type, $rule]) {
+        foreach ($rules as $rule) {
             if ($rule->matches($data, $length)) {
-                return $type;
+                return $rule->type;
             }
+        }
+
+        if ($this->looksLikePlainText($data)) {
+            return 'text/plain';
         }
 
         return null;
+    }
+
+    private function looksLikePlainText(string $data): bool
+    {
+        return (bool)preg_match('/\A[^\x00-\x08\x0E-\x1F\x7F]+\z/Sx', substr($data, 0, 32));
     }
 }

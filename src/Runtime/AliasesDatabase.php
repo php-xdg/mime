@@ -2,8 +2,6 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
-use ju1ius\XDGMime\MimeType;
-
 class AliasesDatabase
 {
     public function __construct(
@@ -11,19 +9,8 @@ class AliasesDatabase
     ) {
     }
 
-    public function canonical(MimeType $alias): MimeType
+    public function canonical(string $type): string
     {
-        return $this->get($alias, $alias);
-    }
-
-    /**
-     * Get an alias, or the provided default if not found.
-     */
-    public function get(MimeType $alias, ?MimeType $default = null): ?MimeType
-    {
-        if ($type = $this->aliases[(string)$alias] ?? null) {
-            return MimeType::of($type);
-        }
-        return $default;
+        return $this->aliases[$type] ?? $type;
     }
 }

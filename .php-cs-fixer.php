@@ -1,6 +1,9 @@
 <?php
 
 $finder = \PhpCsFixer\Finder::create()
+    ->exclude([
+        __DIR__ . '/tests/Resources',
+    ])
     ->in([
         __DIR__ . '/src',
         __DIR__ . '/tests',

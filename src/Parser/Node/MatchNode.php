@@ -12,14 +12,15 @@ final class MatchNode
     public array $and = [];
 
     public function __construct(
-        public int $priority,
         public string $type,
         string $offset,
         public string $value,
         public string $mask,
+        public int $wordSize,
     ) {
         $range = explode(':', $offset);
-        $this->start = $this->end = (int)$range[0];
+        $this->start = (int)$range[0];
+        $this->end = $this->start + 1;
         if (\count($range) > 1) {
             $this->end = (int)$range[1];
         }
@@ -27,10 +28,19 @@ final class MatchNode
 
     public function getMaxLength(): int
     {
-        $length = $this->end + \strlen($this->value);
-        foreach ($this->and as $match) {
-            $length = max($length, $match->getMaxLength());
-        }
-        return $length;
+        return array_reduce(
+            $this->and,
+            fn($length, $match) => max($length, $match->getMaxLength()),
+            $this->end + \strlen($this->value),
+        );
+    }
+
+    public function isSimpleString(): bool
+    {
+        return (
+            $this->type === 'string'
+            && $this->mask === ''
+            && array_reduce($this->and, fn($v, $m) => $v && $m->isSimpleString(), true)
+        );
     }
 }

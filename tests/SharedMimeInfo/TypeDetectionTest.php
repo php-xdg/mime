@@ -2,18 +2,16 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
-use ju1ius\XDGMime\Compiler\MimeDatabaseCompiler;
 use ju1ius\XDGMime\MimeDatabase;
-use ju1ius\XDGMime\Parser\MimeDatabaseParser;
 use ju1ius\XDGMime\Test\MimeTypeAssert;
+use ju1ius\XDGMime\Test\ResourceHelper;
 use ju1ius\XDGMime\Test\SharedMimeInfo\Utils\SharedMimeInfoTestDTO;
 use ju1ius\XDGMime\Test\SharedMimeInfo\Utils\SharedMimeInfoTestFileParser;
+use ju1ius\XDGMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\TestCase;
 
 final class TypeDetectionTest extends TestCase
 {
-    private const RESOURCE_PATH = __DIR__ . '/../Resources/shared-mime-info/tests/mime-detection';
-
     private static ?MimeDatabase $db = null;
 
     /**
@@ -28,7 +26,7 @@ final class TypeDetectionTest extends TestCase
     public function guessTypeByFilenameProvider(): iterable
     {
         $parser = new SharedMimeInfoTestFileParser();
-        foreach ($parser->parse(self::RESOURCE_PATH . '/list') as $dto) {
+        foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->filenameLookupXFail) {
                 continue;
             }
@@ -48,7 +46,7 @@ final class TypeDetectionTest extends TestCase
     public function guessTypeByContentsProvider(): iterable
     {
         $parser = new SharedMimeInfoTestFileParser();
-        foreach ($parser->parse(self::RESOURCE_PATH . '/list') as $dto) {
+        foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->magicLookupXFail) {
                 continue;
             }
@@ -68,7 +66,7 @@ final class TypeDetectionTest extends TestCase
     public function guessTypeProvider(): iterable
     {
         $parser = new SharedMimeInfoTestFileParser();
-        foreach ($parser->parse(self::RESOURCE_PATH . '/list') as $dto) {
+        foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->fullLookupXFail) {
                 continue;
             }
@@ -76,17 +74,15 @@ final class TypeDetectionTest extends TestCase
         }
     }
 
+    private static function getTestList(): string
+    {
+        return ResourceHelper::getPath('shared-mime-info/tests/mime-detection/list');
+    }
+
     private static function getDatabase(): MimeDatabase
     {
-        if (self::$db) {
-            return self::$db;
-        }
-
-        $parser = new MimeDatabaseParser();
-        $compiler = new MimeDatabaseCompiler();
-        $code = $compiler->compile($parser->parse([
-            __DIR__ . '/../Resources/shared-mime-info/data/freedesktop.org.xml.in',
-        ]));
-        return self::$db = eval(substr($code, 5));
+        return self::$db ??= TestDatabaseFactory::createFromFile(
+            ResourceHelper::getPath('shared-mime-info/data/freedesktop.org.xml.in'),
+        );
     }
 }

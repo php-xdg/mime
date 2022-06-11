@@ -9,7 +9,6 @@ use ju1ius\XDGMime\Magic\MagicDatabaseBuilder;
 use ju1ius\XDGMime\Parser\MimeDatabaseParser;
 use ju1ius\XDGMime\Subclasses\SubclassesDatabaseBuilder;
 use ju1ius\XDGMime\Utils\XdgBaseDir;
-use Symfony\Component\Filesystem\Path;
 
 class MimeDatabaseFactory
 {
@@ -51,8 +50,8 @@ class MimeDatabaseFactory
         }
         $parser = new MimeDatabaseParser();
         $compiler = new MimeDatabaseCompiler();
-        $ast = $parser->parse($files);
-        $code = $compiler->compile($ast);
+        $ast = $parser->parse(...$files);
+        $code = $compiler->compileToString($ast);
     }
 
     private static function findXmlFilesIn(array $directories): array
@@ -61,7 +60,7 @@ class MimeDatabaseFactory
         foreach ($directories as $directory) {
             $overrides = null;
             foreach (glob("{$directory}/*.xml") as $file) {
-                if (basename($file) === 'Overrides.xml') {
+                if (basename($file) === 'Override.xml') {
                     $overrides = $file;
                 } else {
                     $files[] = $file;

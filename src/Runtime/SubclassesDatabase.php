@@ -17,22 +17,24 @@ final class SubclassesDatabase
     ) {
     }
 
-    /**
-     * @return MimeType[]
-     */
-    public function getParents(MimeType $type): array
+    public function isSubclassOf(string $type, string $other): bool
     {
-        return array_map(MimeType::of(...), $this->subclasses[(string)$type] ?? []);
-    }
-
-    public function isSubclassOf(MimeType|string $type, MimeType|string $parent): bool
-    {
-        if ($type === $parent) {
-            return true;
-        }
-        if ($parents = $this->subclasses[(string)$type] ?? null) {
-            return \in_array((string)$parent, $parents, true);
+        foreach ($this->ancestorsOf($type, true) as $ancestor) {
+            if ($ancestor === $other) {
+                return true;
+            }
         }
         return false;
+    }
+
+    public function ancestorsOf(string $type, bool $includeSelf = false): \Traversable
+    {
+        if ($includeSelf) {
+            yield $type;
+        }
+        foreach ($this->subclasses[$type] ?? [] as $parent) {
+            yield $parent;
+            yield from $this->ancestorsOf($parent);
+        }
     }
 }

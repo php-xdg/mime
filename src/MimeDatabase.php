@@ -3,50 +3,53 @@
 namespace ju1ius\XDGMime;
 
 use ju1ius\XDGMime\Runtime\AliasesDatabase;
-use ju1ius\XDGMime\Runtime\GlobLiteral;
 use ju1ius\XDGMime\Runtime\GlobsDatabase;
 use ju1ius\XDGMime\Runtime\MagicDatabaseInterface;
 use ju1ius\XDGMime\Runtime\SubclassesDatabase;
 use ju1ius\XDGMime\Utils\Stat;
 
-class MimeDatabase
+class MimeDatabase implements MimeDatabaseInterface
 {
     public function __construct(
-        private readonly AliasesDatabase $aliasDb,
-        private readonly SubclassesDatabase $subclassesDb,
-        private readonly GlobsDatabase $globsDb,
-        private readonly MagicDatabaseInterface $magicDb,
+        protected AliasesDatabase $aliases,
+        protected SubclassesDatabase $subclasses,
+        protected GlobsDatabase $globs,
+        protected MagicDatabaseInterface $magic,
     ) {
     }
 
     /**
      * Returns the canonical type of the given mime type.
      */
-    public function getCanonicalType(MimeType|string $type): MimeType
+    public function getCanonicalType(MimeType $type): MimeType
     {
-        return $this->aliasDb->canonical(MimeType::of($type));
+        return MimeType::of($this->aliases->canonical((string)$type));
     }
 
     /**
      * @return MimeType[]
      */
-    public function getParentTypes(MimeType|string $type): array
+    public function getAncestors(MimeType $type): array
     {
-        return $this->subclassesDb->getParents(MimeType::of($type));
+        $ancestors = [];
+        foreach ($this->subclasses->ancestorsOf((string)$type) as $ancestor) {
+            $ancestors[] = MimeType::of($ancestor);
+        }
+        return array_unique($ancestors, \SORT_REGULAR);
     }
 
     public function guessTypeByFileName(string $path): MimeType
     {
-        if ($globs = $this->globsDb->match($path)) {
+        if ($globs = $this->globs->match($path)) {
             return MimeType::of($globs[0]->type);
         }
 
         return MimeType::unknown();
     }
 
-    public function guessTypeByData(string $data): MimeType
+    public function guessTypeByData(string $buffer): MimeType
     {
-        if ($type = $this->magicDb->matchData($data)) {
+        if ($type = $this->magic->matchData($buffer)) {
             return MimeType::of($type);
         }
         return MimeType::unknown();
@@ -54,7 +57,7 @@ class MimeDatabase
 
     public function guessTypeByContents(string $path): MimeType
     {
-        if ($type = $this->magicDb->match($path)) {
+        if ($type = $this->magic->match($path)) {
             return MimeType::of($type);
         }
         return MimeType::unknown();
@@ -68,7 +71,7 @@ class MimeDatabase
      * It can also handle special filesystem objects like directories and sockets.
      *
      * @param string $path file path to examine (need not exist)
-     * @param bool   $followLinks whether to follow symlinks
+     * @param bool $followLinks whether to follow symlinks
      *
      * @return MimeType
      */
@@ -93,12 +96,16 @@ class MimeDatabase
 
         /**
          * Otherwise, start by doing a glob match of the filename.
+         *
+         * NOTE: while mentioned by the specs, the following steps are not implemented
+         * by the xdg-mime reference library, and cause the shared-mime-info tests to fail.
+         *
          * Keep only globs with the biggest weight.
          * If the patterns are different, keep only globs with the longest pattern.
          * If after this, there is one or more matching glob, and all the matching globs result in the same mimetype
          * use that mimetype as the result.
          */
-        $globs = $this->globsDb->match($path);
+        $globs = $this->globs->match($path);
         $hasConflictingGlobs = false;
         $possible = null;
 
@@ -111,12 +118,12 @@ class MimeDatabase
             $longestPattern = $globs[0]->length;
             for ($i = 1; $i < \count($globs); $i++) {
                 $glob = $globs[$i];
-                if ($glob->weight < $biggestWeight) {
-                    break;
-                }
-                if ($glob->length < $longestPattern) {
-                    break;
-                }
+                //if ($glob->weight < $biggestWeight) {
+                //    break;
+                //}
+                //if ($glob->length < $longestPattern) {
+                //    break;
+                //}
                 if ($glob->type !== $globs[0]->type) {
                     $hasConflictingGlobs = true;
                 }
@@ -124,8 +131,13 @@ class MimeDatabase
             if (!$hasConflictingGlobs) {
                 return MimeType::of($globs[0]->type);
             }
-            $globs = array_slice($globs, 0, $i);
-            $possible = array_map(fn(GlobLiteral $glob) => $glob->type, $globs);
+            //$globs = array_slice($globs, 0, $i);
+            // TODO: possible should include parent types
+            //$possible = [];
+            //foreach ($globs as $glob) {
+            //    $possible = [...$possible, ...$this->subclasses->ancestorsOf($glob->type)];
+            //}
+            //$possible = array_unique($possible);
         }
         /**
          * If the glob matching fails or results in multiple conflicting mimetypes,
@@ -139,17 +151,10 @@ class MimeDatabase
          * but note that files with high-bit-set characters should still be treated as text
          * since these can appear in UTF-8 text, unlike control characters.
          */
-        try {
-            $sniffedType = $this->magicDb->match($path, $possible);
-        } catch (\Exception) {
-            $sniffedType = null;
-        }
-
+        $sniffedType = $this->magic->match($path, $possible);
         if (!$sniffedType) {
-            if ($this->looksLikeTextFile($path)) {
-                $sniffedType = 'text/plain';
-            } elseif (Stat::isExecutable($stat)) {
-                $sniffedType = 'application/executable';
+            if (Stat::isExecutable($stat)) {
+                $sniffedType = 'application/x-executable';
             } else {
                 $sniffedType = 'application/octet-stream';
             }
@@ -169,7 +174,7 @@ class MimeDatabase
          * would be application/x-ole-storage which the MS-Word type inherits.
          */
         foreach ($globs as $glob) {
-            if ($this->subclassesDb->isSubclassOf($glob->type, $sniffedType)) {
+            if ($this->subclasses->isSubclassOf($glob->type, $sniffedType)) {
                 return MimeType::of($glob->type);
             }
         }
@@ -177,19 +182,6 @@ class MimeDatabase
          * Otherwise use the result of the glob match that has the highest weight.
          */
         return MimeType::of($globs[0]->type);
-    }
-
-    private function looksLikeTextFile(string $path): bool
-    {
-        $fp = fopen($path, 'rb');
-        if ($fp === false) {
-            return false;
-        }
-
-        $data = fread($fp, 32);
-        fclose($fp);
-
-        return (bool)preg_match('/[^\x00-\x08\x0E-\x1F\x7F]+/Sx', $data);
     }
 
     private function guessTypeByStat(int $mode): MimeType

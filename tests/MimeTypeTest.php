@@ -38,6 +38,8 @@ class MimeTypeTest extends TestCase
     public function testMimeTypeStrictEquality(): void
     {
         Assert::assertSame(MimeType::of('audio/mpeg'), MimeType::of('audio/mpeg'));
+        $type = MimeType::defaultBinary();
+        Assert::assertSame($type, MimeType::of($type));
     }
 
     /**
@@ -59,5 +61,34 @@ class MimeTypeTest extends TestCase
         $type = MimeType::of('image/JPEG');
         Assert::assertSame('image', $type->media);
         Assert::assertSame('jpeg', $type->subtype);
+    }
+
+    public function testWithSubtype(): void
+    {
+        $plain = MimeType::of('text/plain');
+        $html = $plain->withSubtype('html');
+        Assert::assertSame(MimeType::of('text/html'), $html);
+    }
+
+    /**
+     * @dataProvider knownTypesConstructorsProvider
+     */
+    public function testKnownTypesConstructors(callable $fn, string $expected): void
+    {
+        Assert::assertSame(MimeType::of($expected), $fn());
+    }
+
+    public function knownTypesConstructorsProvider(): \Traversable
+    {
+        yield [MimeType::defaultText(...), 'text/plain'];
+        yield [MimeType::defaultBinary(...), 'application/octet-stream'];
+        yield [MimeType::defaultExecutable(...), 'application/x-executable'];
+        yield [MimeType::directory(...), 'inode/directory'];
+        yield [MimeType::symlink(...), 'inode/symlink'];
+        yield [MimeType::characterDevice(...), 'inode/chardevice'];
+        yield [MimeType::blockDevice(...), 'inode/blockdevice'];
+        yield [MimeType::fifo(...), 'inode/fifo'];
+        yield [MimeType::socket(...), 'inode/socket'];
+        yield [MimeType::door(...), 'inode/door'];
     }
 }

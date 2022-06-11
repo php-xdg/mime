@@ -2,17 +2,25 @@
 
 namespace ju1ius\XDGMime\Parser;
 
-use ju1ius\XDGMime\Exception\ParseError;
+use ju1ius\XDGMime\Parser\Exception\ParseError;
 use ju1ius\XDGMime\Parser\Node\GlobNode;
+use ju1ius\XDGMime\Parser\Node\MagicNode;
 use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
 
 final class MimeDatabaseParser
 {
+    private const FDO_NS = 'http://www.freedesktop.org/standards/shared-mime-info';
+
     private array $types;
 
-    public function parse(array $files): array
+    public function __construct(
+        private readonly MimeInfoValidatorInterface $validator = new MimeInfoXSDValidator(),
+    ) {
+    }
+
+    public function parse(string ...$files): array
     {
         $this->types = [];
         foreach ($files as $file) {
@@ -21,13 +29,38 @@ final class MimeDatabaseParser
         return $this->types;
     }
 
+    public function parseXml(string ...$documents): array
+    {
+        $this->types = [];
+        foreach ($documents as $xml) {
+            $doc = new \DOMDocument();
+            $doc->loadXML($xml);
+            $this->parseDocument($doc);
+        }
+        return $this->types;
+    }
+
     private function parseFile(string $file): void
     {
         $doc = new \DOMDocument();
         $doc->load($file, \LIBXML_PARSEHUGE|\LIBXML_COMPACT);
-        $xpath = new \DOMXPath($doc, true);
-        $xpath->registerNamespace('fd', $doc->documentElement->namespaceURI);
-        foreach ($xpath->query('/fd:mime-info/fd:mime-type') as $node) {
+        $this->parseDocument($doc);
+    }
+
+    private function parseDocument(\DOMDocument $document): void
+    {
+        $this->validator->validate($document);
+        $name = $document->documentElement->localName;
+        if ($name !== 'mime-info') {
+            throw new ParseError(sprintf(
+                'Unknown root element <%s>, expected <mime-info>',
+                $name,
+            ));
+        }
+
+        $xpath = new \DOMXPath($document, true);
+        $xpath->registerNamespace('fdo', self::FDO_NS);
+        foreach ($xpath->query('/fdo:mime-info/fdo:mime-type') as $node) {
             $this->parseMimeType($node, $xpath);
         }
     }
@@ -36,34 +69,34 @@ final class MimeDatabaseParser
     {
         $name = $node->getAttribute('type');
         $type = $this->types[$name] ??= new TypeNode($name);
-        if ($xpath->query('./fd:glob-deleteall', $node)) {
+        if ($xpath->query('./fdo:glob-deleteall', $node)) {
             $type->globs = [];
         }
-        if ($xpath->query('./fd:magic-deleteall', $node)) {
+        if ($xpath->query('./fdo:magic-deleteall', $node)) {
             $type->magic = [];
         }
-        foreach ($xpath->query('./fd:alias', $node) as $aliasNode) {
+        foreach ($xpath->query('./fdo:alias', $node) as $aliasNode) {
             $type->aliases[] = $aliasNode->getAttribute('type');
         }
-        foreach ($xpath->query('./fd:sub-class-of', $node) as $subClassNode) {
+        foreach ($xpath->query('./fdo:sub-class-of', $node) as $subClassNode) {
             $type->subclassOf[] = $subClassNode->getAttribute('type');
         }
-        foreach ($xpath->query('./fd:glob', $node) as $globNode) {
+        foreach ($xpath->query('./fdo:glob', $node) as $globNode) {
             $type->globs[] = $this->parseGlob($globNode, $name);
         }
-        foreach ($xpath->query('./fd:magic', $node) as $magicNode) {
-            $priority = $this->getIntegerAttribute($magicNode, 'priority', 50);
-            foreach ($xpath->query('./fd:match', $magicNode) as $matchNode) {
-                try {
-                    $type->magic[] = $this->parseMagicMatch($matchNode, $priority);
-                } catch (ParseError) {
-                    continue;
-                }
+        foreach ($xpath->query('./fdo:magic', $node) as $magicNode) {
+            $magic = new MagicNode(
+                $name,
+                $this->getIntegerAttribute($magicNode, 'priority', 50),
+            );
+            foreach ($xpath->query('./fdo:match', $magicNode) as $matchNode) {
+                $magic->matches[] = $this->parseMagicMatch($matchNode);
             }
+            $type->magic[] = $magic;
         }
-        foreach ($xpath->query('./fd:treemagic', $node) as $magicNode) {
+        foreach ($xpath->query('./fdo:treemagic', $node) as $magicNode) {
             $priority = $this->getIntegerAttribute($magicNode, 'priority', 50);
-            foreach ($xpath->query('./fd:treematch', $magicNode) as $matchNode) {
+            foreach ($xpath->query('./fdo:treematch', $magicNode) as $matchNode) {
                 $type->treeMagic[] = $this->parseTreeMagicMatch($matchNode, $priority);
             }
         }
@@ -79,18 +112,13 @@ final class MimeDatabaseParser
         );
     }
 
-    private function parseMagicMatch(\DOMElement $node, int $priority): MatchNode
+    private function parseMagicMatch(\DOMElement $node): MatchNode
     {
         $type = $node->getAttribute('type');
         $wordSize = match ($type) {
             'string', 'byte', 'big16', 'little16', 'big32', 'little32' => 1,
             'host16' => 2,
             'host32' => 4,
-            '' => throw new ParseError('Missing <match> @type attribute.'),
-            default => throw new ParseError(sprintf(
-                'Unknown magic type: "%s"',
-                $type,
-            )),
         };
         [$value, $mask] = $this->parseMatchValue(
             $type,
@@ -98,17 +126,16 @@ final class MimeDatabaseParser
             $node->getAttribute('mask'),
         );
         $match = new MatchNode(
-            $priority,
             $type,
             $node->getAttribute('offset'),
             $value,
             $mask ?? '',
+            $wordSize,
         );
 
         $child = $node->firstElementChild;
         while ($child) {
-            if ($child->localName !== 'match') continue;
-            $match->and[] = $this->parseMagicMatch($child, $priority);
+            $match->and[] = $this->parseMagicMatch($child);
             $child = $child->nextElementSibling;
         }
 
@@ -129,7 +156,6 @@ final class MimeDatabaseParser
 
         $child = $node->firstElementChild;
         while ($child) {
-            if ($child->localName !== 'treematch') continue;
             $match->and[] = $this->parseTreeMagicMatch($child, $priority);
             $child = $child->nextElementSibling;
         }
@@ -213,7 +239,7 @@ final class MimeDatabaseParser
      */
     private function parseIntMask(string $value, string $mask, int $bytes, bool $bigEndian): array
     {
-        $value = (int)$value;
+        $value = $this->stringToInteger($value);
         if (
             ($bytes === 1 && ($value & ~0xFF))
             || ($bytes === 2 && ($value & ~0xFFFF))
@@ -228,14 +254,14 @@ final class MimeDatabaseParser
         $parsedValue = '';
         for ($b = 0; $b < $bytes; $b++) {
             $shift = 8 * ($bigEndian ? ($bytes - $b - 1) : $b);
-            $parsedValue .= chr(($value >> $shift) & 0xFF);
+            $parsedValue .= \chr(($value >> $shift) & 0xFF);
         }
 
         if ($mask === '') {
             return [$parsedValue, $mask];
         }
 
-        $mask = (int)$mask;
+        $mask = $this->stringToInteger($mask);
         $parsedMask = '';
         for ($b = 0; $b < $bytes; $b++) {
             $shift = 8 * ($bigEndian ? ($bytes - $b - 1) : $b);
@@ -245,31 +271,19 @@ final class MimeDatabaseParser
         return [$parsedValue, $parsedMask];
     }
 
-    private function escapeString(string $value): string
+    /**
+     * Parses integers in hexadecimal (0x01, 0X01), octal (0777), or decimal notations.
+     */
+    private function stringToInteger(string $value): int
     {
-        $output = '';
-        for ($i = 0; $i < \strlen($value); $i++) {
-            $c = $value[$i];
-            $o = \ord($c);
-            if ($o <= 0x1F || $o >= 0x7F) {
-                $output .= match ($o) {
-                    0x09 => '\t',
-                    0x0A => '\n',
-                    0x0B => '\v',
-                    0x0C => '\f',
-                    0x0D => '\r',
-                    0x1B => '\e',
-                    default => sprintf('\x%02X', $o),
-                };
-            } else {
-                $output .= match ($c) {
-                    '\\' => '\\\\',
-                    '"' => '\"',
-                    '$' => '\$',
-                    default => $c,
-                };
-            }
-        }
-        return $output;
+        return match ($value[0] ?? null) {
+            '0' => match ($value[1] ?? null) {
+                null => 0,
+                'x', 'X' => hexdec($value),
+                default => octdec($value),
+            },
+            null => throw new ParseError('Empty integer value.'),
+            default => (int)$value,
+        };
     }
 }

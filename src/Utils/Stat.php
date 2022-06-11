@@ -5,19 +5,19 @@ namespace ju1ius\XDGMime\Utils;
 final class Stat
 {
     // STAT_IFREG
-    const FILE = 0o100000;
+    public const FILE = 0o100000;
     // STAT_IFDIR
-    const DIRECTORY = 0o040000;
+    public const DIRECTORY = 0o040000;
     // STAT_IFCHR
-    const CHARACTER_DEVICE = 0o020000;
+    public const CHARACTER_DEVICE = 0o020000;
     // STAT_IFBLK
-    const BLOCK_DEVICE = 0o060000;
+    public const BLOCK_DEVICE = 0o060000;
     // STAT_IFIFO
-    const FIFO = 0o010000;
+    public const FIFO = 0o010000;
     // STAT_IFLNK
-    const SYMLINK = 0o120000;
+    public const SYMLINK = 0o120000;
     // STAT_IFSOCK
-    const SOCKET = 0o140000;
+    public const SOCKET = 0o140000;
 
     // STAT_IMODE
     private const MODE_MASK = 0o7777;
