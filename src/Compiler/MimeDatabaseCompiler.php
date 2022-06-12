@@ -18,7 +18,6 @@ final class MimeDatabaseCompiler
     {
         $lookup = $this->createLookup($types);
         $tpl = <<<'PHP'
-        use ju1ius\XDGMime\MimeDatabase;
         use ju1ius\XDGMime\Runtime\AliasesDatabase;
         use ju1ius\XDGMime\Runtime\Glob;
         use ju1ius\XDGMime\Runtime\GlobLiteral;
@@ -26,6 +25,7 @@ final class MimeDatabaseCompiler
         use ju1ius\XDGMime\Runtime\MagicDatabase;
         use ju1ius\XDGMime\Runtime\MagicMatch;
         use ju1ius\XDGMime\Runtime\MagicRule;
+        use ju1ius\XDGMime\Runtime\MimeDatabase;
         use ju1ius\XDGMime\Runtime\SubclassesDatabase;
 
         return new MimeDatabase(
@@ -34,6 +34,7 @@ final class MimeDatabaseCompiler
             new GlobsDatabase(%s),
             new MagicDatabase(%s),
         );
+
         PHP;
 
         return sprintf(
@@ -57,43 +58,50 @@ final class MimeDatabaseCompiler
         if (!is_dir($path)) {
             mkdir($path, 0o777, true);
         }
-        file_put_contents(
-            "{$path}/database.php",
-            <<<'PHP'
-            <?php
-            return new ju1ius\XDGMime\LazyMimeDatabase(__DIR__);
-            PHP
-        );
         file_put_contents("{$path}/aliases.php", sprintf(
             <<<'PHP'
             <?php
+            
             return new ju1ius\XDGMime\Runtime\AliasesDatabase(%s);
+
             PHP,
-            $this->compileAliases($lookup['aliases'], 1),
+            $this->compileAliases($lookup['aliases']),
         ));
         file_put_contents("{$path}/subclasses.php", sprintf(
             <<<'PHP'
             <?php
+            
             return new ju1ius\XDGMime\Runtime\SubclassesDatabase(%s);
+
             PHP,
-            $this->compileAliases($lookup['subclasses'], 1),
+            $this->compileSubClasses($lookup['subclasses']),
         ));
         file_put_contents("{$path}/globs.php", sprintf(
             <<<'PHP'
             <?php
+            
+            use ju1ius\XDGMime\Runtime\Glob;
+            use ju1ius\XDGMime\Runtime\GlobLiteral;
+            
             return new ju1ius\XDGMime\Runtime\GlobsDatabase(%s);
+
             PHP,
-            $this->compileAliases($lookup['globs'], 1),
+            $this->compileGlobs($lookup['globs']),
         ));
         file_put_contents("{$path}/magic.php", sprintf(
             <<<'PHP'
             <?php
+            
+            use ju1ius\XDGMime\Runtime\MagicMatch;
+            use ju1ius\XDGMime\Runtime\MagicRule;
+            
             return new ju1ius\XDGMime\Runtime\MagicDatabase(%s);
+
             PHP,
-            $this->compileMagicRules($lookup['magic'], 1),
+            $this->compileMagicRules($lookup['magic']),
         ));
         // TODO: treemagic
-        file_put_contents("{$path}/treemagic.php", '');
+        file_put_contents("{$path}/treemagic.php", "<?php\n");
     }
 
     /**

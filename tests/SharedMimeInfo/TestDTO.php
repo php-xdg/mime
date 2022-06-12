@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\SharedMimeInfo\Utils;
+namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
-final class SharedMimeInfoTestDTO
+final class TestDTO
 {
     public function __construct(
         public readonly string $filename,

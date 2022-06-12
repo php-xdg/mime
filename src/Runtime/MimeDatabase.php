@@ -1,11 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime;
+namespace ju1ius\XDGMime\Runtime;
 
-use ju1ius\XDGMime\Runtime\AliasesDatabase;
-use ju1ius\XDGMime\Runtime\GlobsDatabase;
-use ju1ius\XDGMime\Runtime\MagicDatabaseInterface;
-use ju1ius\XDGMime\Runtime\SubclassesDatabase;
+use ju1ius\XDGMime\MimeType;
 use ju1ius\XDGMime\Utils\Stat;
 
 class MimeDatabase implements MimeDatabaseInterface

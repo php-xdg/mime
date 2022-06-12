@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\SharedMimeInfo\Utils;
+namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
 use Symfony\Component\Filesystem\Path;
 
@@ -14,10 +14,10 @@ use Symfony\Component\Filesystem\Path;
  *  Use 'o' to express the opposite, i.e. no expected failure for this kind of lookup.
  *  Example: 'ox' means N=o D=x (and F is 'o', implicitly), lookup by data should fail.
  */
-final class SharedMimeInfoTestFileParser
+final class TestListParser
 {
     /**
-     * @return iterable<SharedMimeInfoTestDTO>
+     * @return iterable<TestDTO>
      */
     public function parse(string $path): iterable
     {
@@ -31,7 +31,7 @@ final class SharedMimeInfoTestFileParser
                 $filename = Path::makeAbsolute($filename, \dirname($path));
             }
             $flags = $this->parseFlags($parts[2] ?? '');
-            yield new SharedMimeInfoTestDTO($filename, $expected, ...$flags);
+            yield new TestDTO($filename, $expected, ...$flags);
         }
     }
 

@@ -3,8 +3,8 @@
 namespace ju1ius\XDGMime\Test;
 
 use ju1ius\XDGMime\Compiler\MimeDatabaseCompiler;
-use ju1ius\XDGMime\MimeDatabase;
 use ju1ius\XDGMime\Parser\MimeDatabaseParser;
+use ju1ius\XDGMime\Runtime\MimeDatabase;
 
 final class TestDatabaseFactory
 {

@@ -2,11 +2,9 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
-use ju1ius\XDGMime\MimeDatabase;
+use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Test\MimeTypeAssert;
 use ju1ius\XDGMime\Test\ResourceHelper;
-use ju1ius\XDGMime\Test\SharedMimeInfo\Utils\SharedMimeInfoTestDTO;
-use ju1ius\XDGMime\Test\SharedMimeInfo\Utils\SharedMimeInfoTestFileParser;
 use ju1ius\XDGMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\TestCase;
 
@@ -17,7 +15,7 @@ final class TypeDetectionTest extends TestCase
     /**
      * @dataProvider guessTypeByFilenameProvider
      */
-    public function testGuessTypeByFilename(SharedMimeInfoTestDTO $dto): void
+    public function testGuessTypeByFilename(TestDTO $dto): void
     {
         $type = self::getDatabase()->guessTypeByFileName($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
@@ -25,7 +23,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeByFilenameProvider(): iterable
     {
-        $parser = new SharedMimeInfoTestFileParser();
+        $parser = new TestListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->filenameLookupXFail) {
                 continue;
@@ -37,7 +35,7 @@ final class TypeDetectionTest extends TestCase
     /**
      * @dataProvider guessTypeByContentsProvider
      */
-    public function testGuessTypeByContents(SharedMimeInfoTestDTO $dto): void
+    public function testGuessTypeByContents(TestDTO $dto): void
     {
         $type = self::getDatabase()->guessTypeByContents($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
@@ -45,7 +43,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeByContentsProvider(): iterable
     {
-        $parser = new SharedMimeInfoTestFileParser();
+        $parser = new TestListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->magicLookupXFail) {
                 continue;
@@ -57,7 +55,7 @@ final class TypeDetectionTest extends TestCase
     /**
      * @dataProvider guessTypeProvider
      */
-    public function testGuessType(SharedMimeInfoTestDTO $dto): void
+    public function testGuessType(TestDTO $dto): void
     {
         $type = self::getDatabase()->guessType($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
@@ -65,7 +63,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeProvider(): iterable
     {
-        $parser = new SharedMimeInfoTestFileParser();
+        $parser = new TestListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->fullLookupXFail) {
                 continue;
@@ -76,13 +74,13 @@ final class TypeDetectionTest extends TestCase
 
     private static function getTestList(): string
     {
-        return ResourceHelper::getPath('shared-mime-info/tests/mime-detection/list');
+        return ResourceHelper::getSharedMimeInfoPath('tests/mime-detection/list');
     }
 
     private static function getDatabase(): MimeDatabase
     {
         return self::$db ??= TestDatabaseFactory::createFromFile(
-            ResourceHelper::getPath('shared-mime-info/data/freedesktop.org.xml.in'),
+            ResourceHelper::getSharedMimeInfoPath('data/freedesktop.org.xml.in'),
         );
     }
 }

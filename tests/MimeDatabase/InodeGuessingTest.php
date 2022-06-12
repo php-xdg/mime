@@ -2,8 +2,8 @@
 
 namespace ju1ius\XDGMime\Test\MimeDatabase;
 
-use ju1ius\XDGMime\MimeDatabase;
 use ju1ius\XDGMime\MimeType;
+use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Test\MimeTypeAssert;
 use ju1ius\XDGMime\Test\ResourceHelper;
 use ju1ius\XDGMime\Test\TestDatabaseFactory;

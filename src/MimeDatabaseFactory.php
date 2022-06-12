@@ -7,6 +7,7 @@ use ju1ius\XDGMime\Compiler\MimeDatabaseCompiler;
 use ju1ius\XDGMime\Globs\GlobsDatabaseBuilder;
 use ju1ius\XDGMime\Magic\MagicDatabaseBuilder;
 use ju1ius\XDGMime\Parser\MimeDatabaseParser;
+use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Subclasses\SubclassesDatabaseBuilder;
 use ju1ius\XDGMime\Utils\XdgBaseDir;
 
