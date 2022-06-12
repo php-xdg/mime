@@ -106,7 +106,7 @@ final class MimeDatabaseCompiler
             $this->compileMagicRules($lookup['magic']),
         ));
         // TODO: treemagic
-        $this->fs->dumpFile("{$path}/treemagic.php", "<?php\n");
+        //$this->fs->dumpFile("{$path}/treemagic.php", "<?php\n");
     }
 
     /**
