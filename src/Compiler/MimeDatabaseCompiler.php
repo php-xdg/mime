@@ -8,9 +8,17 @@ use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
 use ju1ius\XDGMime\Runtime\Glob;
 use ju1ius\XDGMime\Runtime\GlobLiteral;
+use Symfony\Component\Filesystem\Filesystem;
 
 final class MimeDatabaseCompiler
 {
+    private readonly Filesystem $fs;
+
+    public function __construct()
+    {
+        $this->fs = new Filesystem();
+    }
+
     /**
      * @param array<string, TypeNode> $types
      */
@@ -49,16 +57,13 @@ final class MimeDatabaseCompiler
     public function compileToFile(array $types, string $path): void
     {
         $code = "<?php\n\n" . $this->compileToString($types);
-        file_put_contents($path, $code);
+        $this->fs->dumpFile($path, $code);
     }
 
     public function compileToDirectory(array $types, string $path): void
     {
         $lookup = $this->createLookup($types);
-        if (!is_dir($path)) {
-            mkdir($path, 0o777, true);
-        }
-        file_put_contents("{$path}/aliases.php", sprintf(
+        $this->fs->dumpFile("{$path}/aliases.php", sprintf(
             <<<'PHP'
             <?php
             
@@ -67,7 +72,7 @@ final class MimeDatabaseCompiler
             PHP,
             $this->compileAliases($lookup['aliases']),
         ));
-        file_put_contents("{$path}/subclasses.php", sprintf(
+        $this->fs->dumpFile("{$path}/subclasses.php", sprintf(
             <<<'PHP'
             <?php
             
@@ -76,7 +81,7 @@ final class MimeDatabaseCompiler
             PHP,
             $this->compileSubClasses($lookup['subclasses']),
         ));
-        file_put_contents("{$path}/globs.php", sprintf(
+        $this->fs->dumpFile("{$path}/globs.php", sprintf(
             <<<'PHP'
             <?php
             
@@ -88,7 +93,7 @@ final class MimeDatabaseCompiler
             PHP,
             $this->compileGlobs($lookup['globs']),
         ));
-        file_put_contents("{$path}/magic.php", sprintf(
+        $this->fs->dumpFile("{$path}/magic.php", sprintf(
             <<<'PHP'
             <?php
             
@@ -101,7 +106,7 @@ final class MimeDatabaseCompiler
             $this->compileMagicRules($lookup['magic']),
         ));
         // TODO: treemagic
-        file_put_contents("{$path}/treemagic.php", "<?php\n");
+        $this->fs->dumpFile("{$path}/treemagic.php", "<?php\n");
     }
 
     /**
