@@ -132,12 +132,12 @@ class MimeDatabase implements MimeDatabaseInterface
                 return MimeType::of($globs[0]->type);
             }
             //$globs = array_slice($globs, 0, $i);
-            // TODO: possible should include parent types
-            //$possible = [];
-            //foreach ($globs as $glob) {
-            //    $possible = [...$possible, ...$this->subclasses->ancestorsOf($glob->type)];
-            //}
-            //$possible = array_unique($possible);
+            $possible = [];
+            foreach ($globs as $glob) {
+                foreach ($this->subclasses->ancestorsOf($glob->type, true) as $type) {
+                    $possible[$type] = true;
+                }
+            }
         }
         /**
          * If the glob matching fails or results in multiple conflicting mimetypes,
