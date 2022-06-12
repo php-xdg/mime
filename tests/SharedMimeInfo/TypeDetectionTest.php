@@ -6,6 +6,7 @@ use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Test\MimeTypeAssert;
 use ju1ius\XDGMime\Test\ResourceHelper;
 use ju1ius\XDGMime\Test\TestDatabaseFactory;
+use ju1ius\XDGMime\XdgMimeDatabase;
 use PHPUnit\Framework\TestCase;
 
 final class TypeDetectionTest extends TestCase
@@ -79,8 +80,6 @@ final class TypeDetectionTest extends TestCase
 
     private static function getDatabase(): MimeDatabase
     {
-        return self::$db ??= TestDatabaseFactory::createFromFile(
-            ResourceHelper::getSharedMimeInfoPath('data/freedesktop.org.xml.in'),
-        );
+        return self::$db ??= new XdgMimeDatabase();
     }
 }

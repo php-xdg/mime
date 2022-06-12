@@ -19,12 +19,13 @@ class LazyMimeDatabase extends MimeDatabase
 
     public function getAncestors(MimeType $type): array
     {
-        $this->subclasses ??= include "{$this->directory}/subclasses.php";
+        $this->subclasses ??= require "{$this->directory}/subclasses.php";
         return parent::getAncestors($type);
     }
 
     public function guessType(string $path, bool $followLinks = true): MimeType
     {
+        $this->subclasses ??= require "{$this->directory}/subclasses.php";
         $this->globs ??= require "{$this->directory}/globs.php";
         $this->magic ??= require "{$this->directory}/magic.php";
         return parent::guessType($path, $followLinks);

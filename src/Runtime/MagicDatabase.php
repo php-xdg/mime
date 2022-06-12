@@ -2,7 +2,7 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
-final class MagicDatabase implements MagicDatabaseInterface
+final class MagicDatabase
 {
     /**
      * @param MagicRule[] $rules

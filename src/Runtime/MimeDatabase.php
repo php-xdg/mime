@@ -11,7 +11,7 @@ class MimeDatabase implements MimeDatabaseInterface
         protected AliasesDatabase $aliases,
         protected SubclassesDatabase $subclasses,
         protected GlobsDatabase $globs,
-        protected MagicDatabaseInterface $magic,
+        protected MagicDatabase $magic,
     ) {
     }
 
