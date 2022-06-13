@@ -133,10 +133,8 @@ final class MimeDatabaseParser
             $wordSize,
         );
 
-        $child = $node->firstElementChild;
-        while ($child) {
+        for ($child = $node->firstElementChild; $child; $child = $child->nextElementSibling) {
             $match->and[] = $this->parseMagicMatch($child);
-            $child = $child->nextElementSibling;
         }
 
         return $match;
@@ -150,14 +148,12 @@ final class MimeDatabaseParser
             $node->getAttribute('type') ?: null,
             $this->getBooleanAttribute($node, 'match-case'),
             $this->getBooleanAttribute($node, 'executable'),
-            $this->getBooleanAttribute($node, 'non_empty'),
+            $this->getBooleanAttribute($node, 'non-empty'),
             $node->getAttribute('mimetype') ?: null,
         );
 
-        $child = $node->firstElementChild;
-        while ($child) {
+        for ($child = $node->firstElementChild; $child; $child = $child->nextElementSibling) {
             $match->and[] = $this->parseTreeMagicMatch($child, $priority);
-            $child = $child->nextElementSibling;
         }
 
         return $match;
