@@ -15,17 +15,11 @@ trait MimeDatabaseTrait
     private GlobsDatabase $globs;
     private MagicDatabase $magic;
 
-    /**
-     * Returns the canonical type of the given mime type.
-     */
     public function getCanonicalType(MimeType $type): MimeType
     {
         return MimeType::of($this->aliases->canonical((string)$type));
     }
 
-    /**
-     * @return MimeType[]
-     */
     public function getAncestors(MimeType $type): array
     {
         $ancestors = [];
@@ -60,18 +54,6 @@ trait MimeDatabaseTrait
         return MimeType::unknown();
     }
 
-    /**
-     * Find the MIME type of a file using the XDG recommended checking order.
-     *
-     * This first checks the filename, then uses file contents
-     * if the name doesn't give an unambiguous MIME type.
-     * It can also handle special filesystem objects like directories and sockets.
-     *
-     * @param string $path file path to examine (need not exist)
-     * @param bool $followLinks whether to follow symlinks
-     *
-     * @return MimeType
-     */
     public function guessType(string $path, bool $followLinks = true): MimeType
     {
         /*

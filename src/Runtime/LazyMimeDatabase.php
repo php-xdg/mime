@@ -2,6 +2,7 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
+use ju1ius\XDGMime\MimeDatabaseInterface;
 use ju1ius\XDGMime\MimeType;
 
 class LazyMimeDatabase implements MimeDatabaseInterface

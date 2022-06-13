@@ -2,7 +2,7 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
-use ju1ius\XDGMime\Runtime\MimeDatabaseInterface;
+use ju1ius\XDGMime\MimeDatabaseInterface;
 use ju1ius\XDGMime\Test\MimeTypeAssert;
 use ju1ius\XDGMime\Test\ResourceHelper;
 use ju1ius\XDGMime\XdgMimeDatabase;
