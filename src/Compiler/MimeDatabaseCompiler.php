@@ -6,8 +6,15 @@ use ju1ius\XDGMime\Parser\Node\GlobNode;
 use ju1ius\XDGMime\Parser\Node\MagicNode;
 use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
+use ju1ius\XDGMime\Runtime\AliasesDatabase;
 use ju1ius\XDGMime\Runtime\Glob;
 use ju1ius\XDGMime\Runtime\GlobLiteral;
+use ju1ius\XDGMime\Runtime\GlobsDatabase;
+use ju1ius\XDGMime\Runtime\MagicDatabase;
+use ju1ius\XDGMime\Runtime\MagicMatch;
+use ju1ius\XDGMime\Runtime\MagicRule;
+use ju1ius\XDGMime\Runtime\MimeDatabase;
+use ju1ius\XDGMime\Runtime\SubclassesDatabase;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class MimeDatabaseCompiler
@@ -25,86 +32,65 @@ final class MimeDatabaseCompiler
     public function compileToString(array $types): string
     {
         $lookup = $this->createLookup($types);
-        $tpl = <<<'PHP'
-        use ju1ius\XDGMime\Runtime\AliasesDatabase;
-        use ju1ius\XDGMime\Runtime\Glob;
-        use ju1ius\XDGMime\Runtime\GlobLiteral;
-        use ju1ius\XDGMime\Runtime\GlobsDatabase;
-        use ju1ius\XDGMime\Runtime\MagicDatabase;
-        use ju1ius\XDGMime\Runtime\MagicMatch;
-        use ju1ius\XDGMime\Runtime\MagicRule;
-        use ju1ius\XDGMime\Runtime\MimeDatabase;
-        use ju1ius\XDGMime\Runtime\SubclassesDatabase;
 
-        return new MimeDatabase(
-            new AliasesDatabase(%s),
-            new SubclassesDatabase(%s),
-            new GlobsDatabase(%s),
-            new MagicDatabase(%s),
-        );
+        $code = new CodeBuilder();
 
-        PHP;
+        $code->write('return ')->new(MimeDatabase::class)->raw("(\n");
+        $code->indent();
 
-        return sprintf(
-            $tpl,
-            $this->compileAliases($lookup['aliases'], 1),
-            $this->compileSubClasses($lookup['subclasses'], 1),
-            $this->compileGlobs($lookup['globs'], 1),
-            $this->compileMagicRules($lookup['magic'], 1),
-        );
+        $code->write('');
+        $this->compileAliases($lookup['aliases'], $code);
+        $code->raw(",\n");
+
+        $code->write('');
+        $this->compileSubClasses($lookup['subclasses'], $code);
+        $code->raw(",\n");
+
+        $code->write('');
+        $this->compileGlobs($lookup['globs'], $code);
+        $code->raw(",\n");
+
+        $code->write('');
+        $this->compileMagicRules($lookup['magic'], $code);
+        $code->raw(",\n");
+
+        $code->dedent()->writeln(');');
+
+        return (string)$code;
     }
 
     public function compileToFile(array $types, string $path): void
     {
-        $code = "<?php\n\n" . $this->compileToString($types);
+        $code = CodeBuilder::forFile()
+            ->raw($this->compileToString($types))
+        ;
         $this->fs->dumpFile($path, $code);
     }
 
     public function compileToDirectory(array $types, string $path): void
     {
         $lookup = $this->createLookup($types);
-        $this->fs->dumpFile("{$path}/aliases.php", sprintf(
-            <<<'PHP'
-            <?php
-            
-            return new ju1ius\XDGMime\Runtime\AliasesDatabase(%s);
 
-            PHP,
-            $this->compileAliases($lookup['aliases']),
-        ));
-        $this->fs->dumpFile("{$path}/subclasses.php", sprintf(
-            <<<'PHP'
-            <?php
-            
-            return new ju1ius\XDGMime\Runtime\SubclassesDatabase(%s);
+        $code = CodeBuilder::forFile()->write('return ');
+        $this->compileAliases($lookup['aliases'], $code);
+        $code->raw(";\n");
+        $this->fs->dumpFile("{$path}/aliases.php", $code);
 
-            PHP,
-            $this->compileSubClasses($lookup['subclasses']),
-        ));
-        $this->fs->dumpFile("{$path}/globs.php", sprintf(
-            <<<'PHP'
-            <?php
-            
-            use ju1ius\XDGMime\Runtime\Glob;
-            use ju1ius\XDGMime\Runtime\GlobLiteral;
-            
-            return new ju1ius\XDGMime\Runtime\GlobsDatabase(%s);
+        $code = CodeBuilder::forFile()->write('return ');
+        $this->compileSubClasses($lookup['subclasses'], $code);
+        $code->raw(";\n");
+        $this->fs->dumpFile("{$path}/subclasses.php", $code);
 
-            PHP,
-            $this->compileGlobs($lookup['globs']),
-        ));
-        $this->fs->dumpFile("{$path}/magic.php", sprintf(
-            <<<'PHP'
-            <?php
-            
-            use ju1ius\XDGMime\Runtime\MagicMatch;
-            use ju1ius\XDGMime\Runtime\MagicRule;
-            
-            return new ju1ius\XDGMime\Runtime\MagicDatabase(%s);
+        $code = CodeBuilder::forFile()->write('return ');
+        $this->compileGlobs($lookup['globs'], $code);
+        $code->raw(";\n");
+        $this->fs->dumpFile("{$path}/globs.php", $code);
 
-            PHP,
-            $this->compileMagicRules($lookup['magic']),
-        ));
+        $code = CodeBuilder::forFile()->write('return ');
+        $this->compileMagicRules($lookup['magic'], $code);
+        $code->raw(";\n");
+        $this->fs->dumpFile("{$path}/magic.php", $code);
+
         // TODO: treemagic
         //$this->fs->dumpFile("{$path}/treemagic.php", "<?php\n");
     }
@@ -143,153 +129,135 @@ final class MimeDatabaseCompiler
         ];
     }
 
-    private function compileSubClasses(array $lookup, int $indentLevel = 0): string
+    private function compileSubClasses(array $lookup, CodeBuilder $code): void
     {
-        $indent = str_repeat('    ', $indentLevel);
-        $entries = [];
+        $code->new(SubclassesDatabase::class)->raw("([\n");
+        $code->indent();
         foreach ($lookup as $key => $value) {
-            $entries[] = sprintf(
-                '%s    %s => [%s],',
-                $indent,
-                var_export($key, true),
-                implode(', ', array_map(fn($v) => var_export($v, true), $value)),
-            );
+            $code->write('')
+                ->string($key)->raw(' => ')->repr($value)
+                ->raw(",\n")
+            ;
         }
-        return sprintf(
-            "[\n%s\n%s]",
-            implode("\n", $entries),
-            $indent,
-        );
+        $code->dedent()->write('])');
     }
 
-    private function compileAliases(array $lookup, int $indentLevel = 0): string
+    private function compileAliases(array $lookup, CodeBuilder $code): void
     {
-        $indent = str_repeat('    ', $indentLevel);
-        $entries = [];
+        $code->new(AliasesDatabase::class)->raw("([\n");
+        $code->indent();
         foreach ($lookup as $key => $value) {
-            $entries[] = sprintf(
-                '%s    %s => %s,',
-                $indent,
-                var_export($key, true),
-                var_export($value, true),
-            );
+            $code->write('')
+                ->string($key)
+                ->raw(' => ')
+                ->string($value)
+                ->raw(",\n")
+            ;
         }
-        return sprintf(
-            "[\n%s\n%s]",
-            implode("\n", $entries),
-            $indent,
-        );
+        $code->dedent()->write('])');
     }
 
-    private function compileGlobs(array $lookup, int $indentLevel = 0): string
+    private function compileGlobs(array $lookup, CodeBuilder $code): void
     {
+        $code->new(GlobsDatabase::class)->raw("(\n");
+        $code->indent();
         $literalKeys = [
             'extensions',
             'caseSensitiveExtensions',
             'literals',
             'caseSensitiveLiterals',
         ];
-        $output = "\n";
         foreach ($literalKeys as $lookupKey) {
-            $indent = str_repeat('    ', ++$indentLevel);
             $hashMap = $lookup[$lookupKey];
             if (!$hashMap) {
-                $output .= sprintf("%s%s: [],\n", $indent, $lookupKey);
+                $code->writeln(sprintf('%s: [],', $lookupKey));
                 continue;
             }
-            $output .= sprintf("%s%s: [\n", $indent, $lookupKey);
+            $code->writeln(sprintf('%s: [', $lookupKey))->indent();
             /** @var GlobLiteral|GlobLiteral[] $value */
             foreach ($hashMap as $key => $value) {
-                $output .= sprintf(
-                    "%s    '%s' => %s,\n",
-                    $indent,
-                    $key,
-                    \is_array($value)
-                        ? sprintf(
-                            '[%s]',
-                            implode(', ', array_map($this->compileGlobLiteral(...), $value))
-                        )
-                        : $this->compileGlobLiteral($value),
-                );
+                $code->write('')->string((string)$key)->raw(' => ');
+                if (\is_array($value)) {
+                    $code
+                        ->raw('[')
+                        ->join(', ', $value, fn($v) => $this->compileGlobLiteral($v, $code))
+                        ->raw(']')
+                    ;
+                } else {
+                    $this->compileGlobLiteral($value, $code);
+                }
+                $code->raw(",\n");
             }
-            $indent = str_repeat('    ', --$indentLevel);
-            $output .= sprintf("%s    ],\n", $indent);
+            $code->dedent()->writeln('],');
         }
-
-        $indent = str_repeat('    ', ++$indentLevel);
-        $output .= sprintf("%sglobs: [\n", $indent);
+        $code->writeln('globs: [')->indent();
         /** @var Glob $glob */
         foreach ($lookup['globs'] as $glob) {
-            $output .= sprintf(
-                "%s    new Glob(%s, %d, %s, %s),\n",
-                $indent,
-                var_export($glob->type, true),
-                $glob->weight,
-                var_export($glob->pattern, true),
-                var_export($glob->caseSensitive, true),
-            );
+            $code->write('')->new(Glob::class)->raw('(')
+                ->string($glob->type)->raw(', ')
+                ->repr($glob->weight)->raw(', ')
+                ->string($glob->pattern)->raw(', ')
+                ->repr($glob->caseSensitive)
+                ->raw("),\n")
+            ;
         }
-        $indent = str_repeat('    ', --$indentLevel);
-        $output .= sprintf("%s    ],\n%s", $indent, $indent);
-        return $output;
+        $code->dedent()->writeln('],')->dedent()->write(')');
     }
 
-    private function compileGlobLiteral(GlobLiteral $glob): string
+    private function compileGlobLiteral(GlobLiteral $glob, CodeBuilder $code): void
     {
-        return sprintf(
-            'new GlobLiteral(%s, %d, %d)',
-            var_export($glob->type, true),
-            $glob->weight,
-            $glob->length,
-        );
+        $code->new(GlobLiteral::class)->raw('(')
+            ->string($glob->type)->raw(', ')
+            ->raw("{$glob->weight}, {$glob->length}")
+            ->raw(')')
+        ;
     }
 
-    private function compileMagicRules(array $lookup, int $indentLevel = 0): string
+    private function compileMagicRules(array $lookup, CodeBuilder $code): void
     {
-        $indent = str_repeat('    ', ++$indentLevel);
-        $output = sprintf(
-            "\n%slookupBufferSize: %d,\n",
-            $indent,
-            $lookup['lookupBufferSize'],
-        );
+        $code->new(MagicDatabase::class)->raw("(\n");
+        $code->indent();
+        $code->writeln(sprintf('lookupBufferSize: %d,', $lookup['lookupBufferSize']));
 
-        $output .= sprintf("%srules: [\n", $indent);
+        $code->writeln('rules: [')->indent();
         /** @var MagicNode $rule */
         foreach ($lookup['rules'] as $rule) {
-            $indent = str_repeat('    ', ++$indentLevel);
-            $output .= sprintf(
-                "%snew MagicRule('%s', %d, [\n",
-                $indent,
-                $rule->type,
-                $rule->priority,
-            );
+            $code
+                ->write('')
+                ->new(MagicRule::class)->raw('(')
+                ->string($rule->type)->raw(', ')
+                ->repr($rule->priority)->raw(', ')
+                ->raw("[\n")
+                ->indent()
+            ;
             foreach ($rule->matches as $match) {
-                $output .= sprintf(
-                    "%s    %s,\n",
-                    $indent,
-                    $this->compileMagicMatch($match),
-                );
+                $code->write('');
+                $this->compileMagicMatch($match, $code);
+                $code->raw(",\n");
             }
-            $output .= sprintf("%s]),\n", $indent);
-            $indent = str_repeat('    ', --$indentLevel);
+            $code->dedent()->writeln(']),');
         }
-        $output .= sprintf("%s],\n", $indent);
-
-        $indent = str_repeat('    ', --$indentLevel);
-        return $output . $indent;
+        $code->dedent()->writeln('],');
+        $code->dedent()->write(')');
     }
 
-    private function compileMagicMatch(MatchNode $match): string
+    private function compileMagicMatch(MatchNode $match, CodeBuilder $code): void
     {
-        return sprintf(
-            'new MagicMatch(%d, %d, %s, %s, %d, [%s])',
-            $match->start,
-            $match->end,
-            $this->reprString($match->value),
-            $this->reprString($match->mask),
-            $match->wordSize,
-            implode(', ', array_map($this->compileMagicMatch(...), $match->and)),
-        );
+        $code
+            ->new(MagicMatch::class)->raw('(')
+            ->raw("{$match->start}, {$match->end}, ")
+            ->string($match->value)->raw(', ')
+            ->string($match->mask)->raw(', ')
+            ->repr($match->wordSize)
+        ;
+        if ($match->and) {
+            $code
+                ->raw(', [')
+                ->join(', ', $match->and, fn($and) => $this->compileMagicMatch($and, $code))
+                ->raw(']')
+            ;
+        }
+        $code->raw(')');
     }
 
     /**
@@ -357,35 +325,5 @@ final class MimeDatabaseCompiler
             'lookupBufferSize' => $lookupBufferSize,
             'rules' => $rules,
         ];
-    }
-
-    private function reprString(string $value): string
-    {
-        if (!$value || ctype_print($value)) {
-            return var_export($value, true);
-        }
-        $output = '';
-        for ($i = 0; $i < \strlen($value); $i++) {
-            $c = $value[$i];
-            $o = \ord($c);
-            if ($o <= 0x1F || $o >= 0x7F) {
-                $output .= match ($o) {
-                    0x09 => '\t',
-                    0x0A => '\n',
-                    0x0B => '\v',
-                    0x0C => '\f',
-                    0x0D => '\r',
-                    default => sprintf('\x%02X', $o),
-                };
-            } else {
-                $output .= match ($c) {
-                    '\\' => '\\\\',
-                    '"' => '\"',
-                    '$' => '\$',
-                    default => $c,
-                };
-            }
-        }
-        return sprintf('"%s"', $output);
     }
 }
