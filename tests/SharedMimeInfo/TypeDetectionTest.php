@@ -2,16 +2,15 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
-use ju1ius\XDGMime\Runtime\MimeDatabase;
+use ju1ius\XDGMime\Runtime\MimeDatabaseInterface;
 use ju1ius\XDGMime\Test\MimeTypeAssert;
 use ju1ius\XDGMime\Test\ResourceHelper;
-use ju1ius\XDGMime\Test\TestDatabaseFactory;
 use ju1ius\XDGMime\XdgMimeDatabase;
 use PHPUnit\Framework\TestCase;
 
 final class TypeDetectionTest extends TestCase
 {
-    private static ?MimeDatabase $db = null;
+    private static ?MimeDatabaseInterface $db = null;
 
     /**
      * @dataProvider guessTypeByFilenameProvider
@@ -78,7 +77,7 @@ final class TypeDetectionTest extends TestCase
         return ResourceHelper::getSharedMimeInfoPath('tests/mime-detection/list');
     }
 
-    private static function getDatabase(): MimeDatabase
+    private static function getDatabase(): MimeDatabaseInterface
     {
         return self::$db ??= new XdgMimeDatabase();
     }

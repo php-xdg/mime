@@ -4,48 +4,57 @@ namespace ju1ius\XDGMime\Runtime;
 
 use ju1ius\XDGMime\MimeType;
 
-class LazyMimeDatabase extends MimeDatabase
+class LazyMimeDatabase implements MimeDatabaseInterface
 {
+    use MimeDatabaseTrait {
+        getCanonicalType as private doGetCanonicalType;
+        getAncestors as private doGetAncestors;
+        guessType as private doGuessType;
+        guessTypeByFileName as private doGuessTypeByFileName;
+        guessTypeByData as private doGuessTypeByData;
+        guessTypeByContents as private doGuessTypeByContents;
+    }
+
     public function __construct(
         private readonly string $directory,
     ) {
     }
 
-    public function getCanonicalType(MimeType $type): MimeType
+    final public function getCanonicalType(MimeType $type): MimeType
     {
         $this->aliases ??= require "{$this->directory}/aliases.php";
-        return parent::getCanonicalType($type);
+        return $this->doGetCanonicalType($type);
     }
 
-    public function getAncestors(MimeType $type): array
+    final public function getAncestors(MimeType $type): array
     {
         $this->subclasses ??= require "{$this->directory}/subclasses.php";
-        return parent::getAncestors($type);
+        return $this->doGetAncestors($type);
     }
 
-    public function guessType(string $path, bool $followLinks = true): MimeType
+    final public function guessType(string $path, bool $followLinks = true): MimeType
     {
         $this->subclasses ??= require "{$this->directory}/subclasses.php";
         $this->globs ??= require "{$this->directory}/globs.php";
         $this->magic ??= require "{$this->directory}/magic.php";
-        return parent::guessType($path, $followLinks);
+        return $this->doGuessType($path, $followLinks);
     }
 
-    public function guessTypeByFileName(string $path): MimeType
+    final public function guessTypeByFileName(string $path): MimeType
     {
         $this->globs ??= require "{$this->directory}/globs.php";
-        return parent::guessTypeByFileName($path);
+        return $this->doGuessTypeByFileName($path);
     }
 
-    public function guessTypeByData(string $buffer): MimeType
+    final public function guessTypeByData(string $buffer): MimeType
     {
         $this->magic ??= require "{$this->directory}/magic.php";
-        return parent::guessTypeByData($buffer);
+        return $this->doGuessTypeByData($buffer);
     }
 
-    public function guessTypeByContents(string $path): MimeType
+    final public function guessTypeByContents(string $path): MimeType
     {
         $this->magic ??= require "{$this->directory}/magic.php";
-        return parent::guessTypeByContents($path);
+        return $this->doGuessTypeByContents($path);
     }
 }
