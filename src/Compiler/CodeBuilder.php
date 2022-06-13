@@ -4,6 +4,9 @@ namespace ju1ius\XDGMime\Compiler;
 
 use Stringable;
 
+/**
+ * @internal
+ */
 final class CodeBuilder implements Stringable
 {
     /** @var string[] */
@@ -15,6 +18,11 @@ final class CodeBuilder implements Stringable
         private int $indentLevel = 0,
         private readonly string $indentString = '    ',
     ) {
+    }
+
+    public static function create(int $indentLevel = 0): self
+    {
+        return new self($indentLevel);
     }
 
     public static function forFile(bool $strictTypes = true): self
