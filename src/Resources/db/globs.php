@@ -1,9 +1,10 @@
-<?php
+<?php declare(strict_types=1);
 
 use ju1ius\XDGMime\Runtime\Glob;
 use ju1ius\XDGMime\Runtime\GlobLiteral;
+use ju1ius\XDGMime\Runtime\GlobsDatabase;
 
-return new ju1ius\XDGMime\Runtime\GlobsDatabase(
+return new GlobsDatabase(
     extensions: [
         'a26' => [new GlobLiteral('application/x-atari-2600-rom', 50, 5)],
         'a78' => [new GlobLiteral('application/x-atari-7800-rom', 50, 5)],

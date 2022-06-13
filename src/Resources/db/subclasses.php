@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
-return new ju1ius\XDGMime\Runtime\SubclassesDatabase([
+use ju1ius\XDGMime\Runtime\SubclassesDatabase;
+
+return new SubclassesDatabase([
     'application/epub+zip' => ['application/zip'],
     'application/vnd.amazon.mobi8-ebook' => ['application/x-mobipocket-ebook'],
     'application/mathematica' => ['text/plain'],

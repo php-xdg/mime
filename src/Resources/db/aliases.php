@@ -1,6 +1,8 @@
-<?php
+<?php declare(strict_types=1);
 
-return new ju1ius\XDGMime\Runtime\AliasesDatabase([
+use ju1ius\XDGMime\Runtime\AliasesDatabase;
+
+return new AliasesDatabase([
     'application/x-mobi8-ebook' => 'application/vnd.amazon.mobi8-ebook',
     'application/vnd.adobe.illustrator' => 'application/illustrator',
     'application/x-mathematica' => 'application/mathematica',
