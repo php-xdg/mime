@@ -131,30 +131,24 @@ final class MimeDatabaseCompiler
 
     private function compileSubClasses(array $lookup, CodeBuilder $code): void
     {
-        $code->new(SubclassesDatabase::class)->raw("([\n");
-        $code->indent();
-        foreach ($lookup as $key => $value) {
-            $code->write('')
-                ->string($key)->raw(' => ')->repr($value)
-                ->raw(",\n")
-            ;
-        }
-        $code->dedent()->write('])');
+        $code
+            ->new(SubclassesDatabase::class)->raw("([\n")
+            ->indent()
+            ->each($lookup, fn($v, $k, $code) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n"))
+            ->dedent()
+            ->write('])')
+        ;
     }
 
     private function compileAliases(array $lookup, CodeBuilder $code): void
     {
-        $code->new(AliasesDatabase::class)->raw("([\n");
-        $code->indent();
-        foreach ($lookup as $key => $value) {
-            $code->write('')
-                ->string($key)
-                ->raw(' => ')
-                ->string($value)
-                ->raw(",\n")
-            ;
-        }
-        $code->dedent()->write('])');
+        $code
+            ->new(AliasesDatabase::class)->raw("([\n")
+            ->indent()
+            ->each($lookup, fn($v, $k, $code) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n"))
+            ->dedent()
+            ->write('])')
+        ;
     }
 
     private function compileGlobs(array $lookup, CodeBuilder $code): void

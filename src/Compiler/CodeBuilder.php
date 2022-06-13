@@ -69,6 +69,14 @@ final class CodeBuilder implements Stringable
         return $this;
     }
 
+    public function each(iterable $values, callable $cb): self
+    {
+        foreach ($values as $k => $v) {
+            $cb($v, $k, $this);
+        }
+        return $this;
+    }
+
     public function join(string $glue, iterable $values, callable $cb): self
     {
         $first = true;
