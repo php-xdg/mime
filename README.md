@@ -100,7 +100,7 @@ To fix this, we will add a new MIME type declaration:
 ```xml
 <?xml version="1.0" encoding="UTF-8" ?>
 <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
-  <mime-type type="application/typescript">
+  <mime-type type="text/typescript">
     <!-- TypeScript files are plain text files -->
     <sub-class-of type="text/plain"/>
     <!--

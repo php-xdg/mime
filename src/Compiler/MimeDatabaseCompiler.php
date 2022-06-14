@@ -187,6 +187,7 @@ final class MimeDatabaseCompiler
             }
             $code->dedent()->writeln('],');
         }
+
         $code->writeln('globs: [')->indent();
         /** @var Glob $glob */
         foreach ($lookup['globs'] as $glob) {

@@ -25,10 +25,17 @@ final class MimeDatabaseGenerator
 
     public function generate(string $outputDirectory): void
     {
+        $files = array_unique($this->loadFiles());
+        if (!$files) {
+            throw new \LengthException(
+                'No files were found using the given configuration.'
+                . ' Try adjusting the XDG_DATA_HOME and XDG_DATA_DIRS environment variables,'
+                . ' or adding your own custom paths.'
+            );
+        }
         $parser = new MimeDatabaseParser();
         $compiler = new MimeDatabaseCompiler();
-        $ast = $parser->parse(...$this->loadFiles());
-        $compiler->compileToDirectory($ast, $outputDirectory);
+        $compiler->compileToDirectory($parser->parse(...$files), $outputDirectory);
     }
 
     private function loadFiles(): array
@@ -40,7 +47,7 @@ final class MimeDatabaseGenerator
         foreach ($this->customPaths as $path) {
             if (is_dir($path)) {
                 $files = array_merge($files, $this->findXmlFilesIn($path));
-            } else {
+            } elseif (is_file($path)) {
                 $files[] = $path;
             }
         }
