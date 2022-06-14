@@ -2,22 +2,29 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
+use ju1ius\XDGMime\Utils\Bytes;
+
 /**
  * @internal
  */
 final class MagicMatch
 {
+    public readonly string $value;
+    public readonly string $mask;
+
     /**
      * @param self[] $and
      */
     public function __construct(
         public readonly int $start,
         public readonly int $end,
-        public readonly string $value,
-        public readonly string $mask = '',
-        public readonly int $wordSize = 1,
+        string $value,
+        string $mask = '',
+        int $swap = 0,
         public readonly array $and = [],
     ) {
+        $this->value = ($swap & 0b0001) ? Bytes::swap($value, $swap & 0b1110) : $value;
+        $this->mask = ($swap & 0b0001) ? Bytes::swap($mask, $swap & 0b1110) : $mask;
     }
 
     public function matches(string $buffer, int $length): bool

@@ -38,6 +38,8 @@ final class MimeDatabaseCompiler
 
         $code = new CodeBuilder();
 
+        $this->compileEndiannessCheck($code);
+
         $code->write('return ')->new(MimeDatabase::class)->raw("(\n");
         $code->indent();
 
@@ -89,7 +91,9 @@ final class MimeDatabaseCompiler
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/globs.php", $code);
 
-        $code = CodeBuilder::forFile()->write('return ');
+        $code = CodeBuilder::forFile();
+        $this->compileEndiannessCheck($code);
+        $code->write('return ');
         $this->compileMagicRules($lookup['magic'], $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/magic.php", $code);
@@ -246,8 +250,12 @@ final class MimeDatabaseCompiler
             ->raw("{$match->start}, {$match->end}, ")
             ->string($match->value)->raw(', ')
             ->string($match->mask)->raw(', ')
-            ->repr($match->wordSize)
         ;
+        if ($match->wordSize > 1) {
+            $code->raw(sprintf('%d|$swap', $match->wordSize));
+        } else {
+            $code->raw('0');
+        }
         if ($match->and) {
             $code
                 ->raw(', [')
@@ -256,6 +264,12 @@ final class MimeDatabaseCompiler
             ;
         }
         $code->raw(')');
+    }
+
+    public function compileEndiannessCheck(CodeBuilder $code): void
+    {
+        $code->writeln('$swap = unpack("S", "\x01\x00")[1];');
+        $code->writeln('');
     }
 
     /**
