@@ -1,12 +1,13 @@
 {
   "name": "ju1ius/xdg-mime",
-  "description": "Query the XDG Mime database.",
+  "description": "PHP implementation of the Freedesktop Shared MIME-info Database standard.",
   "authors": [
     {
       "name": "ju1ius",
       "email": "jules.bernable@gmail.com"
     }
   ],
+  "keywords": ["mime", "mime-type", "xdg", "freedesktop"],
   "autoload": {
     "psr-4": {
       "ju1ius\\XDGMime\\": "src/"
