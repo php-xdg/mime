@@ -3,8 +3,9 @@
 use ju1ius\XDGMime\Runtime\MagicDatabase;
 use ju1ius\XDGMime\Runtime\MagicMatch;
 use ju1ius\XDGMime\Runtime\MagicRule;
+use ju1ius\XDGMime\Utils\Bytes;
 
-$swap = unpack("S", "\x01\x00")[1];
+$swap = Bytes::isLittleEndianPlatform() ? 1 : 0;
 
 return new MagicDatabase(
     lookupBufferSize: 18729,

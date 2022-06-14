@@ -92,7 +92,6 @@ final class CodeBuilder implements Stringable
 
     public function new(string $fqcn): self
     {
-        $this->imports[$fqcn] = true;
         $this->raw('new ')->className($fqcn);
         return $this;
     }
@@ -106,12 +105,17 @@ final class CodeBuilder implements Stringable
         return $this;
     }
 
-    public function className(string $class): self
+    public function className(string $class, bool $import = true): self
     {
-        $this->body .= match ($p = strrpos($class, '\\')) {
-            false => $class,
-            default => substr($class, $p + 1),
-        };
+        if ($import) {
+            $this->use($class);
+            $this->body .= match ($p = strrpos($class, '\\')) {
+                false => $class,
+                default => substr($class, $p + 1),
+            };
+        } else {
+            $this->body .= $class;
+        }
         return $this;
     }
 

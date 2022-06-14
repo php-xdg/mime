@@ -15,6 +15,7 @@ use ju1ius\XDGMime\Runtime\MagicMatch;
 use ju1ius\XDGMime\Runtime\MagicRule;
 use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Runtime\SubclassesDatabase;
+use ju1ius\XDGMime\Utils\Bytes;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**
@@ -268,8 +269,12 @@ final class MimeDatabaseCompiler
 
     public function compileEndiannessCheck(CodeBuilder $code): void
     {
-        $code->writeln('$swap = unpack("S", "\x01\x00")[1];');
-        $code->writeln('');
+        $code
+            ->write('$swap = ')
+            ->className(Bytes::class)
+            ->raw("::isLittleEndianPlatform() ? 1 : 0;\n")
+            ->writeln('')
+        ;
     }
 
     /**

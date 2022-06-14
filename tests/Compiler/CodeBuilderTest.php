@@ -133,12 +133,15 @@ final class CodeBuilderTest extends TestCase
     {
         $code = CodeBuilder::create()
             ->className('\Foo\Bar')->raw("\n")
-            ->className('\Baz')->raw("\n")
+            ->className('\Baz', false)->raw("\n")
             ->className('finfo')->raw("\n")
             ->getSource();
         $expected = <<<'EOS'
+        use \Foo\Bar;
+        use finfo;
+
         Bar
-        Baz
+        \Baz
         finfo
 
         EOS;
