@@ -1,5 +1,7 @@
 # ju1ius/xdg-mime
 
+[![codecov](https://codecov.io/gh/ju1ius/xdg-mime/branch/main/graph/badge.svg?token=EO5QT1GNKW)](https://codecov.io/gh/ju1ius/xdg-mime)
+
 This package is a pure PHP implementation of the
 [XDG Shared MIME-Info Database](http://standards.freedesktop.org/shared-mime-info-spec/) specification.
 
