@@ -33,7 +33,7 @@ $ composer require ju1ius/xdg-mime
 ### Built-in database
 
 For convenience, this package ships with a pre-compiled database, built from the
-[latest shared-mime-info database](https://gitlab.freedesktop.org/xdg/shared-mime-info/-/blob/master/data/shared-mime-info-spec.xml).
+[latest shared-mime-info database](https://gitlab.freedesktop.org/xdg/shared-mime-info/-/blob/master/data/freedesktop.org.xml.in).
 
 ```php
 use ju1ius\XDGMime\XdgMimeDatabase;
