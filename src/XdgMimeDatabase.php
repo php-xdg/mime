@@ -20,41 +20,41 @@ final class XdgMimeDatabase implements MimeDatabaseInterface
     ) {
     }
 
-    final public function getCanonicalType(MimeType $type): MimeType
+    public function getCanonicalType(MimeType $type): MimeType
     {
-        $this->aliases ??= require "{$this->directory}/aliases.php";
+        $this->aliases ??= require $this->directory . '/aliases.php';
         return $this->doGetCanonicalType($type);
     }
 
-    final public function getAncestors(MimeType $type): array
+    public function getAncestors(MimeType $type): array
     {
-        $this->subclasses ??= require "{$this->directory}/subclasses.php";
+        $this->subclasses ??= require $this->directory . '/subclasses.php';
         return $this->doGetAncestors($type);
     }
 
-    final public function guessType(string $path, bool $followLinks = true): MimeType
+    public function guessType(string $path, bool $followLinks = true): MimeType
     {
-        $this->subclasses ??= require "{$this->directory}/subclasses.php";
-        $this->globs ??= require "{$this->directory}/globs.php";
-        $this->magic ??= require "{$this->directory}/magic.php";
+        $this->subclasses ??= require $this->directory . '/subclasses.php';
+        $this->globs ??= require $this->directory . '/globs.php';
+        $this->magic ??= require $this->directory . '/magic.php';
         return $this->doGuessType($path, $followLinks);
     }
 
-    final public function guessTypeByFileName(string $path): MimeType
+    public function guessTypeByFileName(string $path): MimeType
     {
-        $this->globs ??= require "{$this->directory}/globs.php";
+        $this->globs ??= require $this->directory . '/globs.php';
         return $this->doGuessTypeByFileName($path);
     }
 
-    final public function guessTypeByData(string $buffer): MimeType
+    public function guessTypeByData(string $buffer): MimeType
     {
-        $this->magic ??= require "{$this->directory}/magic.php";
+        $this->magic ??= require $this->directory . '/magic.php';
         return $this->doGuessTypeByData($buffer);
     }
 
-    final public function guessTypeByContents(string $path): MimeType
+    public function guessTypeByContents(string $path): MimeType
     {
-        $this->magic ??= require "{$this->directory}/magic.php";
+        $this->magic ??= require $this->directory . '/magic.php';
         return $this->doGuessTypeByContents($path);
     }
 }
