@@ -40,7 +40,7 @@ final class MimeDatabaseGenerator
         }
         foreach ($this->customPaths as $path) {
             if (is_dir($path)) {
-                $files = array_merge($files, $this->findXmlFilesIn($path));
+                $files = array_merge($files, $this->findXmlFilesIn([$path]));
             } else {
                 $files[] = $path;
             }
