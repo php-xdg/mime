@@ -6,6 +6,7 @@ use ju1ius\XDGMime\Parser\Exception\ParseError;
 use ju1ius\XDGMime\Parser\Node\GlobNode;
 use ju1ius\XDGMime\Parser\Node\MagicNode;
 use ju1ius\XDGMime\Parser\Node\MatchNode;
+use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
 
@@ -16,6 +17,9 @@ final class MimeDatabaseParser
 {
     private const FDO_NS = 'http://www.freedesktop.org/standards/shared-mime-info';
 
+    /**
+     * @var array<string, TypeNode>
+     */
     private array $types;
 
     public function __construct(
@@ -23,6 +27,9 @@ final class MimeDatabaseParser
     ) {
     }
 
+    /**
+     * @return array<string, TypeNode>
+     */
     public function parse(string ...$files): array
     {
         $this->types = [];
@@ -98,10 +105,14 @@ final class MimeDatabaseParser
             $type->magic[] = $magic;
         }
         foreach ($xpath->query('./fdo:treemagic', $node) as $magicNode) {
-            $priority = $this->getIntegerAttribute($magicNode, 'priority', 50);
+            $treeMagic = new TreeMagicNode(
+                $name,
+                $this->getIntegerAttribute($magicNode, 'priority', 50),
+            );
             foreach ($xpath->query('./fdo:treematch', $magicNode) as $matchNode) {
-                $type->treeMagic[] = $this->parseTreeMagicMatch($matchNode, $priority);
+                $treeMagic->matches[] = $this->parseTreeMagicMatch($matchNode);
             }
+            $type->treeMagic[] = $treeMagic;
         }
     }
 
@@ -143,10 +154,9 @@ final class MimeDatabaseParser
         return $match;
     }
 
-    private function parseTreeMagicMatch(\DOMElement $node, int $priority): TreeMatchNode
+    private function parseTreeMagicMatch(\DOMElement $node): TreeMatchNode
     {
         $match = new TreeMatchNode(
-            $priority,
             $node->getAttribute('path'),
             $node->getAttribute('type') ?: null,
             $this->getBooleanAttribute($node, 'match-case'),
@@ -156,7 +166,7 @@ final class MimeDatabaseParser
         );
 
         for ($child = $node->firstElementChild; $child; $child = $child->nextElementSibling) {
-            $match->and[] = $this->parseTreeMagicMatch($child, $priority);
+            $match->and[] = $this->parseTreeMagicMatch($child);
         }
 
         return $match;

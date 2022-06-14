@@ -13,7 +13,6 @@ final class TreeMatchNode
     public array $and = [];
 
     public function __construct(
-        public int $priority,
         public string $path,
         public ?string $type = null,
         public bool $caseSensitive = false,
