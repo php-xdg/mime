@@ -5,7 +5,6 @@ namespace ju1ius\XDGMime\Test\MimeDatabase;
 use ju1ius\XDGMime\MimeDatabaseInterface;
 use ju1ius\XDGMime\MimeType;
 use ju1ius\XDGMime\Test\MimeTypeAssert;
-use ju1ius\XDGMime\Test\ResourceHelper;
 use ju1ius\XDGMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\TestCase;
 
