@@ -1,0 +1,45 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: PHP ${{ matrix.php-version }} + ${{ matrix.dependencies }}
+    runs-on: ubuntu-latest
+    continue-on-error: false
+    strategy:
+      matrix:
+        php-version:
+          - '8.1'
+        dependencies:
+          - highest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php-version }}
+          coverage: pcov
+          tools: composer:v2, phpunit
+
+      - name: Install Composer dependencies (${{ matrix.dependencies }})
+        uses: ramsey/composer-install@v1
+        with:
+          dependency-versions: ${{ matrix.dependencies }}
+          composer-options: --prefer-dist --prefer-stable
+
+      - name: Run tests with coverage
+        run: phpunit -c phpunit.xml --coverage-clover build/logs/clover.xml
+
+      - name: Send coverage to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          file: build/logs/clover.xml
