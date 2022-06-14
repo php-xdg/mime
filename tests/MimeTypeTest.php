@@ -20,6 +20,13 @@ class MimeTypeTest extends TestCase
         Assert::assertSame('vnd.stuff.x-foo', $type->subtype);
     }
 
+    public function testItCannotBeCloned(): void
+    {
+        $this->expectException(\BadMethodCallException::class);
+        $type = MimeType::defaultText();
+        $other = clone $type;
+    }
+
     /**
      * @dataProvider invalidMimeTypeProvider
      */

@@ -17,11 +17,6 @@ final class MimeType implements \Stringable
     ) {
     }
 
-    // No cloning !
-    private function __clone()
-    {
-    }
-
     public static function of(self|string $name): self
     {
         if ($name instanceof self) {
@@ -53,6 +48,14 @@ final class MimeType implements \Stringable
     public function __toString(): string
     {
         return $this->media . '/' . $this->subtype;
+    }
+
+    public function __clone()
+    {
+        throw new \BadMethodCallException(sprintf(
+            'Instances of %s are not cloneable.',
+            __CLASS__,
+        ));
     }
 
     //
