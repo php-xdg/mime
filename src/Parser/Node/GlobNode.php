@@ -2,6 +2,9 @@
 
 namespace ju1ius\XDGMime\Parser\Node;
 
+/**
+ * @internal
+ */
 final class GlobNode
 {
     public readonly bool $isExtensionGlob;

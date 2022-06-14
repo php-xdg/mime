@@ -9,6 +9,9 @@ use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
 
+/**
+ * @internal
+ */
 final class MimeDatabaseParser
 {
     private const FDO_NS = 'http://www.freedesktop.org/standards/shared-mime-info';

@@ -2,6 +2,9 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
+/**
+ * @internal
+ */
 final class Glob extends GlobLiteral
 {
     public function __construct(

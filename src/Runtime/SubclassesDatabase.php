@@ -6,6 +6,8 @@ use ju1ius\XDGMime\MimeType;
 
 /**
  * A mapping from MIME types to types they inherit from.
+ *
+ * @internal
  */
 final class SubclassesDatabase
 {

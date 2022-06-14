@@ -2,7 +2,10 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
-class AliasesDatabase
+/**
+ * @internal
+ */
+final class AliasesDatabase
 {
     public function __construct(
         private readonly array $aliases,

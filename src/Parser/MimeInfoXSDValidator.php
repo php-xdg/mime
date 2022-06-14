@@ -4,6 +4,9 @@ namespace ju1ius\XDGMime\Parser;
 
 use ju1ius\XDGMime\Parser\Exception\ParseError;
 
+/**
+ * @internal
+ */
 final class MimeInfoXSDValidator implements MimeInfoValidatorInterface
 {
     private const SCHEMA = __DIR__ . '/schemas/shared-mime-info.xsd';

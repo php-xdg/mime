@@ -17,6 +17,9 @@ use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Runtime\SubclassesDatabase;
 use Symfony\Component\Filesystem\Filesystem;
 
+/**
+ * @internal
+ */
 final class MimeDatabaseCompiler
 {
     private readonly Filesystem $fs;

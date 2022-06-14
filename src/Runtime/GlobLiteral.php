@@ -2,6 +2,9 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
+/**
+ * @internal
+ */
 class GlobLiteral
 {
     public function __construct(
