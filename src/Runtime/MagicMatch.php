@@ -23,8 +23,14 @@ final class MagicMatch
         int $swap = 0,
         public readonly array $and = [],
     ) {
-        $this->value = ($swap & 0b0001) ? Bytes::swap($value, $swap & 0b1110) : $value;
-        $this->mask = ($swap & 0b0001) ? Bytes::swap($mask, $swap & 0b1110) : $mask;
+        /**
+         * `$swap` will be either:
+         *  - 0 if no byte-swapping is needed (we are on a big-endian platform)
+         *  - $wordSize | 0x01 if byte-swapping is needed.
+         * Therefore, we check if byte 0x01 is set, and unset it to get the actual wordSize.
+         */
+        $this->value = ($swap & 0b0001) ? Bytes::be2le($value, $swap & 0b1110) : $value;
+        $this->mask = ($swap & 0b0001) ? Bytes::be2le($mask, $swap & 0b1110) : $mask;
     }
 
     public function matches(string $buffer, int $length): bool

@@ -13,7 +13,7 @@ final class BytesTest extends TestCase
      */
     public function testSwap(string $bytes, int $wordSize, string $expected): void
     {
-        Assert::assertSame($expected, Bytes::swap($bytes, $wordSize));
+        Assert::assertSame($expected, Bytes::be2le($bytes, $wordSize));
     }
 
     public function swapProvider(): \Traversable

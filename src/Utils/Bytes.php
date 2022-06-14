@@ -4,8 +4,26 @@ namespace ju1ius\XDGMime\Utils;
 
 final class Bytes
 {
-    public static function swap(string $bytes, int $wordSize): string
+    /**
+     * @codeCoverageIgnore This is platform-dependent
+     */
+    public static function isLittleEndianPlatform(): bool
     {
-        return implode('', array_map(strrev(...), str_split($bytes, $wordSize)));
+        return unpack('S', "\x01\x00")[1] === 0x01;
+    }
+
+    /**
+     * Converts a binary string of unsigned integers from big-endian to little-endian.
+     *
+     * `$wordSize` can be:
+     *   - 2 for 16bit numbers
+     *   - 4 for 32bit numbers
+     */
+    public static function be2le(string $bytes, int $wordSize): string
+    {
+        return match ($wordSize) {
+            2 => pack('v*', ...unpack('n*', $bytes)),
+            4 => pack('V*', ...unpack('N*', $bytes)),
+        };
     }
 }
