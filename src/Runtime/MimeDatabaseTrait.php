@@ -56,6 +56,10 @@ trait MimeDatabaseTrait
 
     public function guessType(string $path, bool $followLinks = true): MimeType
     {
+        if (!is_readable($path)) {
+            return $this->guessTypeByFileName($path);
+        }
+
         /*
          * The RECOMMENDED order to perform the checks is:
          *
@@ -63,12 +67,8 @@ trait MimeDatabaseTrait
          * (eg, by a ContentType HTTP header, a MIME email attachment, an extended attribute or some other means)
          * then that should be used instead of guessing.
          */
-        if (!file_exists($path)) {
-            return $this->guessTypeByFileName($path);
-        }
-
-        $stat = Stat::mode($path, $followLinks);
-        if (!Stat::isFile($stat)) {
+        $stat = Stat::of($path, $followLinks);
+        if (!$stat->isFile()) {
             // special filesystem objects
             return $this->guessTypeByStat($stat);
         }
@@ -132,7 +132,7 @@ trait MimeDatabaseTrait
          */
         $sniffedType = $this->magic->match($path, $possible);
         if (!$sniffedType) {
-            if (Stat::isExecutable($stat)) {
+            if ($stat->isExecutable()) {
                 $sniffedType = 'application/x-executable';
             } else {
                 $sniffedType = 'application/octet-stream';
@@ -163,9 +163,9 @@ trait MimeDatabaseTrait
         return MimeType::of($globs[0]->type);
     }
 
-    private function guessTypeByStat(int $mode): MimeType
+    private function guessTypeByStat(Stat $stat): MimeType
     {
-        return match (Stat::type($mode)) {
+        return match ($stat->getType()) {
             Stat::DIRECTORY => MimeType::directory(),
             Stat::SYMLINK => MimeType::symlink(),
             Stat::CHARACTER_DEVICE => MimeType::characterDevice(),

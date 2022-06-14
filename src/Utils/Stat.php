@@ -2,6 +2,15 @@
 
 namespace ju1ius\XDGMime\Utils;
 
+use ju1ius\XDGMime\Exception\IOError;
+
+/**
+ * Object-oriented interface for `stat()` and `lstat()`.
+ *
+ * @see https://www.php.net/manual/fr/function.stat.php
+*
+ * @internal
+ */
 final class Stat
 {
     // STAT_IFREG
@@ -24,24 +33,44 @@ final class Stat
     // STAT_IFMT
     private const TYPE_MASK = 0o170000;
 
-    public static function mode(string $path, bool $followLinks = false): int
-    {
-        $stat = $followLinks ? stat($path) : lstat($path);
-        return $stat['mode'];
+    private function __construct(
+        public readonly int $device,
+        public readonly int $inode,
+        public readonly int $mode,
+        public readonly int $numLinks,
+        public readonly int $userId,
+        public readonly int $groupId,
+        public readonly int $deviceType,
+        public readonly int $size,
+        public readonly int $atime,
+        public readonly int $mtime,
+        public readonly int $ctime,
+        public readonly int $blockSize,
+        public readonly int $numBlocks,
+    ) {
     }
 
-    public static function type(int $mode): int
+    public static function of(string $path, bool $followLinks = false): self
     {
-        return $mode & self::TYPE_MASK;
+        if ($stat = $followLinks ? @stat($path) : @lstat($path)) {
+            $stat = array_filter($stat, \is_int(...), \ARRAY_FILTER_USE_KEY);
+            return new self(...$stat);
+        }
+        throw new IOError(sprintf('Could not stat "%s"', $path));
     }
 
-    public static function isFile(int $mode): bool
+    public function getType(): int
     {
-        return ($mode & self::TYPE_MASK) === self::FILE;
+        return $this->mode & self::TYPE_MASK;
     }
 
-    public static function isExecutable(int $mode): bool
+    public function isFile(): bool
     {
-        return (bool)(($mode & self::MODE_MASK) & 0o111);
+        return ($this->mode & self::TYPE_MASK) === self::FILE;
+    }
+
+    public function isExecutable(): bool
+    {
+        return (bool)(($this->mode & self::MODE_MASK) & 0o111);
     }
 }

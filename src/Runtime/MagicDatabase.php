@@ -15,14 +15,10 @@ final class MagicDatabase
 
     public function match(string $path, ?array $allowedTypes = null): ?string
     {
-        if (false === $fp = @fopen($path, 'rb')) {
+        $buffer = @file_get_contents($path, false, null, 0, $this->lookupBufferSize);
+        if ($buffer === false) {
             return null;
         }
-        if (false === $buffer = @fread($fp, $this->lookupBufferSize)) {
-            fclose($fp);
-            return null;
-        }
-        fclose($fp);
 
         return $this->matchData($buffer, $allowedTypes);
     }
