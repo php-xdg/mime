@@ -4,6 +4,9 @@ namespace ju1ius\XDGMime\Runtime;
 
 use ju1ius\XDGMime\MimeDatabaseInterface;
 
+/**
+ * @internal
+ */
 final class MimeDatabase implements MimeDatabaseInterface
 {
     use MimeDatabaseTrait;
