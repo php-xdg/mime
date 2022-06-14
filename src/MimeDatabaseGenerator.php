@@ -35,12 +35,11 @@ final class MimeDatabaseGenerator
     {
         $files = [];
         if ($this->useXdgDirs) {
-            $dataPaths = $this->loadXdgDataPaths('mime/packages');
-            $files = $this->findXmlFilesIn($dataPaths);
+            $files = $this->findXmlFilesIn(...$this->loadXdgDataPaths());
         }
         foreach ($this->customPaths as $path) {
             if (is_dir($path)) {
-                $files = array_merge($files, $this->findXmlFilesIn([$path]));
+                $files = array_merge($files, $this->findXmlFilesIn($path));
             } else {
                 $files[] = $path;
             }
@@ -48,7 +47,7 @@ final class MimeDatabaseGenerator
         return $files;
     }
 
-    private function findXmlFilesIn(array $directories): array
+    private function findXmlFilesIn(string ...$directories): array
     {
         $files = [];
         foreach ($directories as $directory) {
@@ -67,9 +66,15 @@ final class MimeDatabaseGenerator
         return $files;
     }
 
-    private function loadXdgDataPaths(string $path): array
+    private function loadXdgDataPaths(): array
     {
-        $it = XdgDataDirIterator::fromGlobals();
-        return array_reverse(iterator_to_array($it->dataPaths($path)));
+        $dataPaths = [];
+        foreach (XdgDataDirIterator::fromGlobals() as $dataDir) {
+            if (is_dir($path = "{$dataDir}/mime/packages")) {
+                $dataPaths[] = $path;
+            }
+        }
+
+        return array_reverse($dataPaths);
     }
 }

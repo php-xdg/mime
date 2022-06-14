@@ -29,17 +29,7 @@ final class XdgDataDirIterator implements \IteratorAggregate
         return new self($env);
     }
 
-    public function dataPaths(string $path): \Traversable
-    {
-        foreach ($this->dataDirs() as $dataDir) {
-            $p = "{$dataDir}/{$path}";
-            if (file_exists($p)) {
-                yield $p;
-            }
-        }
-    }
-
-    public function dataDirs(): \Traversable
+    public function getIterator(): \Traversable
     {
         $home = $this->env['HOME'] ?? null;
         if ($dataHome = $this->env['XDG_DATA_HOME'] ?? null) {
@@ -51,10 +41,5 @@ final class XdgDataDirIterator implements \IteratorAggregate
         foreach ($dataDirs as $dataDir) {
             yield $dataDir;
         }
-    }
-
-    public function getIterator(): \Traversable
-    {
-        return $this->dataDirs();
     }
 }

@@ -16,6 +16,16 @@ final class XdgDataDirIteratorTest extends TestCase
         Assert::assertSame($expected, iterator_to_array(new XdgDataDirIterator($env)));
     }
 
+    /**
+     * @backupGlobals enabled
+     * @dataProvider dataDirsProvider
+     */
+    public function testDataDirsFromGlobals(array $env, array $expected): void
+    {
+        self::populateEnv($env);
+        Assert::assertSame($expected, iterator_to_array(XdgDataDirIterator::fromGlobals()));
+    }
+
     public function dataDirsProvider(): \Traversable
     {
         yield 'empty env' => [
@@ -42,5 +52,16 @@ final class XdgDataDirIteratorTest extends TestCase
             ['HOME' => '/foo', 'XDG_DATA_HOME' => '/bar', 'XDG_DATA_DIRS' => '/baz:/qux'],
             ['/bar', '/baz', '/qux'],
         ];
+    }
+
+    private static function populateEnv(array $env): void
+    {
+        foreach (['HOME', 'XDG_DATA_HOME', 'XDG_DATA_DIRS'] as $key) {
+            // ensures we won't call `getenv()`
+            $_ENV[$key] = '';
+        }
+        foreach ($env as $key => $value) {
+            $_ENV[$key] = $value;
+        }
     }
 }
