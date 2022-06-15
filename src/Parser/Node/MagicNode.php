@@ -23,6 +23,12 @@ final class MagicNode
         return max(array_map(fn($m) => $m->getMaxLength(), $this->matches));
     }
 
+    /**
+     * Currently unused, but could be useful if we want to test the potential performance gains
+     * of compiling MatchRules into regular expressions.
+     *
+     * @codeCoverageIgnore
+     */
     public function isSimpleStringMatch(): bool
     {
         return array_reduce($this->matches, fn($v, $m) => $v && $m->isSimpleString(), true);

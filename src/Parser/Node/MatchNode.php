@@ -38,6 +38,12 @@ final class MatchNode
         );
     }
 
+    /**
+     * Currently unused, but could be useful if we want to test the potential performance gains
+     * of compiling MatchRules into regular expressions.
+     *
+     * @codeCoverageIgnore
+     */
     public function isSimpleString(): bool
     {
         return (
