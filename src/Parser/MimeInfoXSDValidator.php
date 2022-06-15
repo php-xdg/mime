@@ -9,7 +9,7 @@ use ju1ius\XDGMime\Parser\Exception\ParseError;
  */
 final class MimeInfoXSDValidator implements MimeInfoValidatorInterface
 {
-    private const SCHEMA = __DIR__ . '/schemas/shared-mime-info.xsd';
+    private const SCHEMA = __DIR__ . '/../Resources/schemas/shared-mime-info.xsd';
 
     public function validate(\DOMDocument $document): void
     {
