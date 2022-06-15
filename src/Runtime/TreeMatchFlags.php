@@ -2,6 +2,9 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
+/**
+ * @internal
+ */
 final class TreeMatchFlags
 {
     const CASE_SENSITIVE = 0b001;

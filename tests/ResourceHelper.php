@@ -18,4 +18,9 @@ final class ResourceHelper
     {
         return self::getPath("files/{$path}");
     }
+
+    public static function getTreePath(string $path): string
+    {
+        return self::getPath("trees/{$path}");
+    }
 }

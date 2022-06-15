@@ -16,6 +16,7 @@ final class MimeDatabase implements MimeDatabaseInterface
         private SubclassesDatabase $subclasses,
         private GlobsDatabase $globs,
         private MagicDatabase $magic,
+        private TreeMagicDatabase $treeMagic,
     ) {
     }
 }
