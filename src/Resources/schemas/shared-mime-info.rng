@@ -1,0 +1,450 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar
+  ns="http://www.freedesktop.org/standards/shared-mime-info"
+  xmlns="http://relaxng.org/ns/structure/1.0"
+  xmlns:a="http://relaxng.org/ns/compatibility/annotations/1.0"
+  datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes"
+>
+
+  <start>
+    <element name="mime-info">
+      <zeroOrMore>
+        <ref name="mime-type"/>
+      </zeroOrMore>
+    </element>
+  </start>
+
+  <define name="mime-type">
+    <element name="mime-type">
+      <attribute name="type">
+        <ref name="mimeType"/>
+      </attribute>
+      <interleave>
+        <optional>
+          <element name="icon">
+            <attribute name="name">
+              <data type="NCName"/>
+            </attribute>
+            <a:documentation>
+              Specifies the icon to be used for this particular mime-type, given by the name attribute.
+              Generally the icon used for a mimetype is created based on the mime-type by mapping "/" characters to "-",
+              but users can override this by using the icon element to customize the icon for a particular mimetype.
+              This element is not used in the system database, but only used in the user overridden database.
+              Only one icon element is allowed.
+            </a:documentation>
+          </element>
+        </optional>
+        <optional>
+          <element name="generic-icon">
+            <attribute name="name">
+              <data type="NCName"/>
+            </attribute>
+            <a:documentation>
+              Specifies the icon to use as a generic icon for this particular mime-type, given by the name attribute.
+              This is used if there is no specific icon (see icon for how these are found).
+              These are used for categories of similar types (like spreadsheets or archives) that can use a common icon.
+              The Icon Naming Specification lists a set of such icon names.
+              If this element is not specified then the mimetype is used to generate the generic icon
+              by using the top-level media type (e.g. "video" in "video/ogg")
+              and appending "-x-generic" (i.e. "video-x-generic" in the previous example).
+              Only one generic-icon element is allowed.
+            </a:documentation>
+          </element>
+        </optional>
+        <optional>
+          <element name="glob-deleteall">
+            <a:documentation>
+              Indicates that patterns from previously parsed directories must be discarded.
+              The patterns defined in this file (if any) are used instead.
+            </a:documentation>
+            <empty/>
+          </element>
+        </optional>
+        <optional>
+          <element name="magic-deleteall">
+            <a:documentation>
+              Indicates that magic matches from previously parsed directories must be discarded.
+              The magic defined in this file (if any) is used instead.
+            </a:documentation>
+            <empty/>
+          </element>
+        </optional>
+        <zeroOrMore>
+          <choice>
+            <element name="comment">
+              <ref name="translatableText"/>
+              <a:documentation>
+                Human-readable textual description of the MIME type,
+                usually composed of an acronym of the file name extension and a short description,
+                like "ODS spreadsheet".
+              </a:documentation>
+            </element>
+            <element name="acronym">
+              <ref name="translatableText"/>
+              <a:documentation>
+                Gives experienced users a terse idea of the document contents, for example "ODS", "GEDCOM", "JPEG" or "XML"
+              </a:documentation>
+            </element>
+            <element name="expanded-acronym">
+              <ref name="translatableText"/>
+              <a:documentation>
+                The expanded versions of the acronym elements,
+                for example "OpenDocument Spreadsheet", "GEnealogical Data COMmunication", or "eXtensible Markup Language".
+                The purpose of these elements is to provide users a way to look up information on various MIME types
+                or file formats in third-party resources.
+              </a:documentation>
+            </element>
+            <element name="alias">
+              <attribute name="type">
+                <ref name="mimeType"/>
+              </attribute>
+              <a:documentation>
+                Indicates that the mime-type is also sometimes known by another name, given by the type attribute.
+                For example, audio/midi has an alias of audio/x-midi.
+                Note that there should not be a mime-type element defining each alias;
+                a single element defines the canonical name for the type and lists all its aliases.
+              </a:documentation>
+            </element>
+            <element name="sub-class-of">
+              <attribute name="type">
+                <ref name="mimeType"/>
+              </attribute>
+              <a:documentation>
+                Indicates that any data of this type is also some other type, given by the type attribute.
+              </a:documentation>
+            </element>
+            <ref name="glob"/>
+            <element name="magic">
+              <a:documentation>
+                A list of &lt;match&gt; elements, any of which may match.
+              </a:documentation>
+              <optional>
+                <attribute name="priority" a:defaultValue="50">
+                  <ref name="priorityType"/>
+                  <a:documentation>
+                    The priority to use for all the contained matches.
+                    Low numbers should be used for more generic types (such as 'gzip compressed data')
+                    and higher values for specific subtypes (such as a word processor format that happens to use gzip to compress the file).
+                    The default priority value is 50, and the maximum is 100.
+                  </a:documentation>
+                </attribute>
+              </optional>
+              <oneOrMore>
+                <ref name="match"/>
+              </oneOrMore>
+            </element>
+            <element name="treemagic">
+              <a:documentation>
+                A list of &lt;treematch&gt; elements, any of which may match.
+              </a:documentation>
+              <optional>
+                <attribute name="priority" a:defaultValue="50">
+                  <ref name="priorityType"/>
+                  <a:documentation>
+                    The priority to use for all the contained rules.
+                  </a:documentation>
+                </attribute>
+              </optional>
+              <oneOrMore>
+                <ref name="treematch"/>
+              </oneOrMore>
+            </element>
+            <element name="root-XML">
+              <a:documentation>
+                If a file is identified as being an XML file, these rules allow a more specific MIME type
+                to be chosen based on the namespaceURI and localName of the document element.
+              </a:documentation>
+              <attribute name="namespaceURI">
+                <data type="anyURI"/>
+              </attribute>
+              <attribute name="localName">
+                <data type="NCName"/>
+                <a:documentation>
+                  If this attribute is present but empty then the document element may have any name,
+                  but the namespaceURI must still match.
+                </a:documentation>
+              </attribute>
+            </element>
+          </choice>
+        </zeroOrMore>
+        <ref name="foreignNodes"/>
+      </interleave>
+    </element>
+  </define>
+
+  <define name="glob">
+    <element name="glob">
+      <a:documentation>
+        The first glob element represents the "main" extension for the file type.
+        While this doesn't affect the mimetype matching algorithm,
+        this information can be useful when a single main extension is needed for a mimetype,
+        for instance so that applications can choose an appropriate extension when saving a file.
+      </a:documentation>
+      <attribute name="pattern">
+        <a:documentation>
+          A standard glob pattern.
+          Any file whose name matches this pattern will be given this MIME type
+          (subject to conflicting rules in other files, of course).
+        </a:documentation>
+        <ref name="nonEmptyString"/>
+      </attribute>
+      <optional>
+        <attribute name="weight" a:defaultValue="50">
+          <ref name="priorityType"/>
+          <a:documentation>
+            Used when resolving conflicts with other glob matches
+          </a:documentation>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="case-sensitive">
+          <ref name="boolean"/>
+        </attribute>
+      </optional>
+    </element>
+  </define>
+
+  <define name="match">
+    <element name="match">
+      <a:documentation>
+        Each match element corresponds to one line of file(1)'s magic.mime file.
+        They can be nested in the same way to provide the equivalent of continuation lines.
+        That is, &lt;a&gt;&lt;b/&gt;&lt;c/&gt;&lt;/a&gt; means "a and (b or c)".
+      </a:documentation>
+      <choice>
+        <ref name="stringMatch"/>
+        <ref name="integerMatch"/>
+      </choice>
+      <attribute name="offset">
+        <a:documentation>
+          The byte offset(s) in the file to check.
+          This may be a single number or a range in the form "start:end",
+          indicating that all offsets in the range should be checked.
+          The range is inclusive.
+        </a:documentation>
+        <choice>
+          <ref name="rangeType"/>
+          <data type="nonNegativeInteger"/>
+        </choice>
+      </attribute>
+      <zeroOrMore>
+        <ref name="match"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="stringMatch">
+    <attribute name="type">
+      <value>string</value>
+    </attribute>
+    <attribute name="value">
+      <ref name="nonEmptyString"/>
+      <a:documentation>
+        The string to compare the file contents with.
+        Supports the standard C character escapes (\0, \t, \n, \r, \xAB for hex, \777 for octal).
+      </a:documentation>
+    </attribute>
+    <optional>
+      <attribute name="mask">
+        <ref name="hexNumber"/>
+      </attribute>
+      <a:documentation>
+        The number to AND the value in the file with before comparing it to "value".
+        Must be in hexadecimal notation (i.e. 0xFF00).
+      </a:documentation>
+    </optional>
+  </define>
+
+  <define name="integerMatch">
+    <attribute name="type">
+      <choice>
+        <value>big16</value>
+        <value>big32</value>
+        <value>little16</value>
+        <value>little32</value>
+        <value>host16</value>
+        <value>host32</value>
+        <value>byte</value>
+      </choice>
+    </attribute>
+    <attribute name="value">
+      <choice>
+        <ref name="hexNumber"/>
+        <ref name="octalNumber"/>
+        <data type="nonNegativeInteger"/>
+      </choice>
+      <a:documentation>
+        The integer to compare the file contents with.
+        Can be written in hexadecimal (0xFF), octal (0755) or integer form.
+      </a:documentation>
+    </attribute>
+    <optional>
+      <attribute name="mask">
+        <choice>
+          <ref name="hexNumber"/>
+          <ref name="octalNumber"/>
+          <data type="nonNegativeInteger"/>
+        </choice>
+      </attribute>
+      <a:documentation>
+        The number to AND the value in the file with before comparing it to "value".
+        Can be written in hexadecimal (0xFF), octal (0755) or integer form.
+      </a:documentation>
+    </optional>
+  </define>
+
+  <define name="treematch">
+    <element name="treematch">
+      <attribute name="path">
+        <ref name="nonEmptyString"/>
+        <a:documentation>
+          A path that must be present on the mounted volume/filesystem.
+          The path is interpreted as a relative path starting at the root of the tested volume/filesystem.
+        </a:documentation>
+      </attribute>
+      <optional>
+        <attribute name="type">
+          <a:documentation>The type of path.</a:documentation>
+          <choice>
+            <value>file</value>
+            <value>link</value>
+            <value>directory</value>
+          </choice>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="match-case">
+          <a:documentation>Whether path should be matched case-sensitively.</a:documentation>
+          <ref name="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="executable">
+          <a:documentation>Whether the file must be executable.</a:documentation>
+          <ref name="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="non-empty">
+          <a:documentation>Whether the directory must be non-empty.</a:documentation>
+          <ref name="boolean"/>
+        </attribute>
+      </optional>
+      <optional>
+        <attribute name="mimetype">
+          <a:documentation>The mimetype for the file at path.</a:documentation>
+          <ref name="mimeType"/>
+        </attribute>
+      </optional>
+      <zeroOrMore>
+        <ref name="treematch"/>
+      </zeroOrMore>
+    </element>
+  </define>
+
+  <define name="mimeType">
+    <data type="string">
+      <param name="pattern">[A-Za-z][A-Za-z\-]*/[\dA-Za-z][\dA-Za-z_.+\-]*</param>
+    </data>
+  </define>
+
+  <define name="priorityType">
+    <data type="nonNegativeInteger">
+      <param name="maxInclusive">100</param>
+    </data>
+  </define>
+
+  <define name="rangeType">
+    <data type="string">
+      <param name="pattern">\d+:\d+</param>
+    </data>
+  </define>
+
+  <define name="hexNumber">
+    <data type="string">
+      <param name="pattern">0x[\dA-Fa-f]+</param>
+    </data>
+  </define>
+
+  <define name="octalNumber">
+    <data type="string">
+      <param name="pattern">0\d+</param>
+    </data>
+  </define>
+
+  <define name="boolean">
+    <choice>
+      <value>true</value>
+      <value>false</value>
+    </choice>
+  </define>
+
+  <define name="translatableText">
+    <optional>
+      <attribute name="lang" ns="http://www.w3.org/XML/1998/namespace">
+        <data type="string"/>
+      </attribute>
+    </optional>
+    <text/>
+  </define>
+
+  <define name="nonEmptyString">
+    <data type="string">
+      <param name="minLength">1</param>
+    </data>
+  </define>
+
+  <!-- http://books.xmlschemata.org/relaxng/relax-CHP-11-SECT-4.html -->
+
+  <define name="foreignNodes">
+    <zeroOrMore>
+      <choice>
+        <ref name="foreignAttributes"/>
+        <ref name="foreignElements"/>
+      </choice>
+    </zeroOrMore>
+  </define>
+
+  <define name="foreignElements">
+    <zeroOrMore>
+      <element>
+        <anyName>
+          <except>
+            <nsName ns=""/>
+            <nsName ns="http://www.freedesktop.org/standards/shared-mime-info"/>
+          </except>
+        </anyName>
+        <ref name="anything"/>
+      </element>
+    </zeroOrMore>
+  </define>
+
+  <define name="foreignAttributes">
+    <zeroOrMore>
+      <attribute>
+        <anyName>
+          <except>
+            <nsName ns=""/>
+            <nsName ns="http://www.freedesktop.org/standards/shared-mime-info"/>
+          </except>
+        </anyName>
+      </attribute>
+    </zeroOrMore>
+  </define>
+
+  <define name="anything">
+    <zeroOrMore>
+      <choice>
+        <element>
+          <anyName/>
+          <ref name="anything"/>
+        </element>
+        <attribute>
+          <anyName/>
+        </attribute>
+        <text/>
+      </choice>
+    </zeroOrMore>
+  </define>
+
+</grammar>

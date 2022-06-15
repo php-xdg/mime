@@ -1,21 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Parser;
+namespace ju1ius\XDGMime\Parser\Validator;
 
 use ju1ius\XDGMime\Parser\Exception\ParseError;
+use ju1ius\XDGMime\Parser\MimeInfoValidatorInterface;
 
-/**
- * @internal
- */
-final class MimeInfoXSDValidator implements MimeInfoValidatorInterface
+abstract class AbstractSchemaValidator implements MimeInfoValidatorInterface
 {
-    private const SCHEMA = __DIR__ . '/../Resources/schemas/shared-mime-info.xsd';
-
-    public function validate(\DOMDocument $document): void
+    final public function validate(\DOMDocument $document): void
     {
         $useInternalErrors = libxml_use_internal_errors(true);
         libxml_clear_errors();
-        $document->schemaValidate(self::SCHEMA);
+        $this->doValidate($document);
         $errors = libxml_get_errors();
         libxml_clear_errors();
         libxml_use_internal_errors($useInternalErrors);
@@ -29,4 +25,6 @@ final class MimeInfoXSDValidator implements MimeInfoValidatorInterface
             ));
         }
     }
+
+    abstract protected function doValidate(\DOMDocument $document): void;
 }

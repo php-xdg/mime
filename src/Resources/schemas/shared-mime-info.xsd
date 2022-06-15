@@ -90,33 +90,12 @@
                 Only one generic-icon element is allowed.
               </xs:documentation>
             </xs:annotation>
-            <xs:attribute name="name">
-              <xs:simpleType>
-                <xs:restriction base="xs:string">
-                  <xs:enumeration value="application-x-executable"/>
-                  <xs:enumeration value="audio-x-generic"/>
-                  <xs:enumeration value="folder"/>
-                  <xs:enumeration value="font-x-generic"/>
-                  <xs:enumeration value="image-x-generic"/>
-                  <xs:enumeration value="package-x-generic"/>
-                  <xs:enumeration value="text-html"/>
-                  <xs:enumeration value="text-x-generic"/>
-                  <xs:enumeration value="text-x-generic-template"/>
-                  <xs:enumeration value="text-x-script"/>
-                  <xs:enumeration value="video-x-generic"/>
-                  <xs:enumeration value="x-office-address-book"/>
-                  <xs:enumeration value="x-office-calendar"/>
-                  <xs:enumeration value="x-office-document"/>
-                  <xs:enumeration value="x-office-presentation"/>
-                  <xs:enumeration value="x-office-spreadsheet"/>
-                </xs:restriction>
-              </xs:simpleType>
-            </xs:attribute>
+            <xs:attribute name="name" type="xs:NCName" use="required" />
           </xs:complexType>
         </xs:element>
         <xs:element name="glob">
           <xs:complexType>
-            <xs:attribute name="pattern" use="required">
+            <xs:attribute name="pattern" use="required" type="fdo:nonEmptyString">
               <xs:annotation>
                 <xs:documentation>
                   Any file whose name matches this pattern will be given this MIME type
@@ -132,7 +111,7 @@
                 </xs:documentation>
               </xs:annotation>
             </xs:attribute>
-            <xs:attribute name="case-sensitive" type="xs:boolean"/>
+            <xs:attribute name="case-sensitive" type="fdo:boolean"/>
           </xs:complexType>
         </xs:element>
         <xs:element name="glob-deleteall" type="fdo:void">
@@ -245,7 +224,7 @@
         <xs:union memberTypes="fdo:rangeType xs:nonNegativeInteger"/>
       </xs:simpleType>
     </xs:attribute>
-    <xs:attribute name="value" use="required">
+    <xs:attribute name="value" use="required" type="fdo:nonEmptyString">
       <xs:annotation>
         <xs:documentation>
           The value to compare the file contents with, in the format indicated by the type attribute.
@@ -270,7 +249,7 @@
     <xs:sequence>
       <xs:element name="treematch" type="fdo:treeMatchElement" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
-    <xs:attribute name="path" use="required">
+    <xs:attribute name="path" use="required" type="fdo:nonEmptyString">
       <xs:annotation>
         <xs:documentation>
           A path that must be present on the mounted volume/filesystem.
@@ -292,21 +271,21 @@
         </xs:restriction>
       </xs:simpleType>
     </xs:attribute>
-    <xs:attribute name="match-case" type="xs:boolean">
+    <xs:attribute name="match-case" type="fdo:boolean">
       <xs:annotation>
         <xs:documentation>
           Whether path should be matched case-sensitively.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="executable" type="xs:boolean">
+    <xs:attribute name="executable" type="fdo:boolean">
       <xs:annotation>
         <xs:documentation>
           Whether the file must be executable.
         </xs:documentation>
       </xs:annotation>
     </xs:attribute>
-    <xs:attribute name="non-empty" type="xs:boolean">
+    <xs:attribute name="non-empty" type="fdo:boolean">
       <xs:annotation>
         <xs:documentation>
           Whether the directory must be non-empty.
@@ -361,5 +340,18 @@
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
+
+  <xs:simpleType name="boolean">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="true"/>
+      <xs:enumeration value="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="nonEmptyString">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 </xs:schema>

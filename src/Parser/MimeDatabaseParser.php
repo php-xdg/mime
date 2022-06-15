@@ -9,6 +9,7 @@ use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
+use ju1ius\XDGMime\Parser\Validator\MimeInfoRngValidator;
 use ju1ius\XDGMime\Runtime\TreeMatchFlags;
 
 /**
@@ -24,7 +25,7 @@ final class MimeDatabaseParser
     private array $types;
 
     public function __construct(
-        private readonly MimeInfoValidatorInterface $validator = new MimeInfoXSDValidator(),
+        private readonly MimeInfoValidatorInterface $validator = new MimeInfoRngValidator(),
     ) {
     }
 
