@@ -5,6 +5,8 @@ namespace ju1ius\XDGMime\Compiler;
 use ju1ius\XDGMime\Parser\Node\GlobNode;
 use ju1ius\XDGMime\Parser\Node\MagicNode;
 use ju1ius\XDGMime\Parser\Node\MatchNode;
+use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
+use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
 use ju1ius\XDGMime\Runtime\AliasesDatabase;
 use ju1ius\XDGMime\Runtime\Glob;
@@ -15,6 +17,9 @@ use ju1ius\XDGMime\Runtime\MagicMatch;
 use ju1ius\XDGMime\Runtime\MagicRule;
 use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Runtime\SubclassesDatabase;
+use ju1ius\XDGMime\Runtime\TreeMagicDatabase;
+use ju1ius\XDGMime\Runtime\TreeMagicMatch;
+use ju1ius\XDGMime\Runtime\TreeMagicRule;
 use ju1ius\XDGMime\Utils\Bytes;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -60,6 +65,10 @@ final class MimeDatabaseCompiler
         $this->compileMagicRules($lookup['magic'], $code);
         $code->raw(",\n");
 
+        $code->write('');
+        $this->compileTreeMagicRules($lookup['treemagic'], $code);
+        $code->raw(",\n");
+
         $code->dedent()->writeln(');');
 
         return (string)$code;
@@ -99,8 +108,11 @@ final class MimeDatabaseCompiler
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/magic.php", $code);
 
-        // TODO: treemagic
-        //$this->fs->dumpFile("{$path}/treemagic.php", "<?php\n");
+        $code = CodeBuilder::forFile();
+        $code->write('return ');
+        $this->compileTreeMagicRules($lookup['treemagic'], $code);
+        $code->raw(";\n");
+        $this->fs->dumpFile("{$path}/treemagic.php", $code);
     }
 
     /**
@@ -112,6 +124,7 @@ final class MimeDatabaseCompiler
         $subclasses = [];
         $globs = [];
         $magicRules = [];
+        $treeMagicRules = [];
         foreach ($types as $canonical => $type) {
             if ($type->subclassOf) {
                 $subclasses[$canonical] = $type->subclassOf;
@@ -125,7 +138,9 @@ final class MimeDatabaseCompiler
             foreach ($type->magic as $rule) {
                 $magicRules[] = $rule;
             }
-            // TODO: TreeMagic
+            foreach ($type->treeMagic as $rule) {
+                $treeMagicRules[] = $rule;
+            }
         }
 
         return [
@@ -133,7 +148,7 @@ final class MimeDatabaseCompiler
             'aliases' => $aliases,
             'globs' => $this->createGlobLookup($globs),
             'magic' => $this->createMagicLookup($magicRules),
-            'treemagic' => [],
+            'treemagic' => $this->createTreeMagicLookup($treeMagicRules),
         ];
     }
 
@@ -267,7 +282,7 @@ final class MimeDatabaseCompiler
         $code->raw(')');
     }
 
-    public function compileEndiannessCheck(CodeBuilder $code): void
+    private function compileEndiannessCheck(CodeBuilder $code): void
     {
         $code
             ->write('$swap = ')
@@ -275,6 +290,44 @@ final class MimeDatabaseCompiler
             ->raw("::isLittleEndianPlatform() ? 1 : 0;\n")
             ->writeln('')
         ;
+    }
+
+    private function compileTreeMagicRules(array $lookup, CodeBuilder $code): void
+    {
+        $code->new(TreeMagicDatabase::class)->raw("([\n");
+        $code->indent();
+        /** @var TreeMagicNode $rule */
+        foreach ($lookup as $rule) {
+            $code->write('')->new(TreeMagicRule::class)->raw('(');
+            $code
+                ->string($rule->type)->raw(', ')
+                ->repr($rule->priority)->raw(", [\n")
+                ->indent()
+            ;
+            foreach ($rule->matches as $match) {
+                $code->write('');
+                $this->compileTreeMagicMatch($match, $code);
+                $code->raw(",\n");
+            }
+            $code->dedent()->writeln(']),');
+        }
+        $code->dedent()->write('])');
+    }
+
+    private function compileTreeMagicMatch(TreeMatchNode $match, CodeBuilder $code): void
+    {
+        $code
+            ->new(TreeMagicMatch::class)->raw('(')
+            ->string($match->path)->raw(', ')
+            ->int($match->flags)->raw(', ')
+            ->repr($match->mimeType)
+        ;
+        if ($match->and) {
+            $code->raw(', [');
+            $code->join(', ', $match->and, fn($m) => $this->compileTreeMagicMatch($m, $code));
+            $code->raw(']');
+        }
+        $code->raw(')');
     }
 
     /**
@@ -342,5 +395,16 @@ final class MimeDatabaseCompiler
             'lookupBufferSize' => $lookupBufferSize,
             'rules' => $rules,
         ];
+    }
+
+    /**
+     * @param TreeMagicNode[] $rules
+     *
+     * @return TreeMagicNode[]
+     */
+    private function createTreeMagicLookup(array $rules): array
+    {
+        usort($rules, fn(TreeMagicNode $a, TreeMagicNode $b) => $b->priority <=> $a->priority ?: $a->type <=> $b->type);
+        return $rules;
     }
 }

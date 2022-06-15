@@ -50,6 +50,24 @@ class MimeTypeTest extends TestCase
     }
 
     /**
+     * @dataProvider isProvider
+     */
+    public function testIs(MimeType $type, MimeType|string $other, bool $expected): void
+    {
+        Assert::assertSame($expected, $type->is($other));
+    }
+
+    public function isProvider(): iterable
+    {
+        yield  [MimeType::of('foo/bar'), MimeType::of('foo/bar'), true];
+        yield  [MimeType::of('foo/bar'), MimeType::of('Foo/Bar'), true];
+        yield  [MimeType::of('foo/bar'), MimeType::of('foo/baz'), false];
+        yield  [MimeType::of('foo/bar'), 'foo/bar', true];
+        yield  [MimeType::of('foo/bar'), 'Foo/Bar', true];
+        yield  [MimeType::of('foo/bar'), 'foo/baz', false];
+    }
+
+    /**
      * @dataProvider toStringProvider
      */
     public function testThatItConvertsToString($mime): void

@@ -2,26 +2,37 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
+use ju1ius\XDGMime\MimeDatabaseInterface;
+use ju1ius\XDGMime\MimeType;
 use ju1ius\XDGMime\Test\ResourceHelper;
+use ju1ius\XDGMime\XdgMimeDatabase;
+use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 final class TreeMagicDetectionTest extends TestCase
 {
+    private static ?MimeDatabaseInterface $db = null;
+
     /**
+     * @fixme The tests seem to imply that the algorithm should return several MIME types.
+     *
      * @dataProvider detectionProvider
      */
     public function testDetection(TreeMagicTestDTO $dto): void
     {
-        self::markTestIncomplete('Tree magic detection not implemented');
+        $type = self::getDatabase()->guessTypeForTree($dto->path);
+        $expected = array_map(MimeType::of(...), $dto->types);
+        if ($dto->xFail) {
+            Assert::assertNotContains($type, $expected);
+        } else {
+            Assert::assertContains($type, $expected);
+        }
     }
 
     public function detectionProvider(): \Traversable
     {
         $parser = new TreeMagicListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {
-            if ($dto->xFail) {
-                continue;
-            }
             yield (string)$dto => [$dto];
         }
     }
@@ -29,5 +40,10 @@ final class TreeMagicDetectionTest extends TestCase
     private static function getTestList(): string
     {
         return ResourceHelper::getSharedMimeInfoPath('tests/mime-detection/tree-list');
+    }
+
+    private static function getDatabase(): MimeDatabaseInterface
+    {
+        return self::$db ??= new XdgMimeDatabase();
     }
 }

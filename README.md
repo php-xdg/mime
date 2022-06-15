@@ -14,7 +14,7 @@ This package is a pure PHP implementation of the
 * [ ] MIME type guessing
   * [x] globs
   * [x] magic rules
-  * [ ] treemagic rules
+  * [x] treemagic rules
   * [ ] XML namespaces
 * [ ] MIME type icons
   * [ ] icons 

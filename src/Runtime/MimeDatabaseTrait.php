@@ -4,6 +4,7 @@ namespace ju1ius\XDGMime\Runtime;
 
 use ju1ius\XDGMime\MimeType;
 use ju1ius\XDGMime\Utils\Stat;
+use Symfony\Component\Filesystem\Path;
 
 /**
  * @internal
@@ -14,6 +15,7 @@ trait MimeDatabaseTrait
     private SubclassesDatabase $subclasses;
     private GlobsDatabase $globs;
     private MagicDatabase $magic;
+    private TreeMagicDatabase $treeMagic;
 
     public function getCanonicalType(MimeType $type): MimeType
     {
@@ -161,6 +163,21 @@ trait MimeDatabaseTrait
          * Otherwise use the result of the glob match that has the highest weight.
          */
         return MimeType::of($globs[0]->type);
+    }
+
+    public function guessTypeForTree(string $rootPath): MimeType
+    {
+        $rootPath = Path::canonicalize($rootPath);
+        if (!is_dir($rootPath)) {
+            return MimeType::unknown();
+        }
+
+        if ($matches = $this->treeMagic->match($rootPath, $this)) {
+            // TODO: return array of types?
+            return MimeType::of($matches[0]->type);
+        }
+
+        return MimeType::directory();
     }
 
     private function guessTypeByStat(Stat $stat): MimeType

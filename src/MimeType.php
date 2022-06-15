@@ -45,6 +45,15 @@ final class MimeType implements \Stringable
         return self::of($this->media . '/' . $subtype);
     }
 
+    public function is(self|string $other): bool
+    {
+        if (\is_string($other)) {
+            return strcasecmp($this->media . '/' . $this->subtype, $other) === 0;
+        }
+
+        return $this === $other;
+    }
+
     public function __toString(): string
     {
         return $this->media . '/' . $this->subtype;

@@ -31,4 +31,6 @@ interface MimeDatabaseInterface
     public function guessTypeByData(string $buffer): MimeType;
 
     public function guessTypeByContents(string $path): MimeType;
+
+    public function guessTypeForTree(string $rootPath): MimeType;
 }

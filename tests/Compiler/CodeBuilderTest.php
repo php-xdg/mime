@@ -70,6 +70,26 @@ final class CodeBuilderTest extends TestCase
     }
 
     /**
+     * @dataProvider integerRepresentationProvider
+     */
+    public function testIntegerRepresentation(int $input, int $base, string $expected): void
+    {
+        $code = CodeBuilder::create()->int($input, $base)->getSource();
+        Assert::assertSame($expected, $code);
+    }
+
+    public function integerRepresentationProvider(): \Traversable
+    {
+        yield '0 in binary' => [0, 2, '0'];
+        yield '0 in octal' => [0, 8, '0'];
+        yield '0 in hexadecimal' => [0, 16, '0'];
+        yield '42 in base 10' => [42, 10, '42'];
+        yield '42 in binary' => [42, 2, '0b101010'];
+        yield '42 in octal' => [42, 8, '0o52'];
+        yield '42 in hexadecimal' => [42, 16, '0x2A'];
+    }
+
+    /**
      * @dataProvider genericRepresentationProvider
      */
     public function testGenericRepresentation(mixed $input, string $expected): void

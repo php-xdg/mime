@@ -174,6 +174,20 @@ final class CodeBuilder implements Stringable
         return $this;
     }
 
+    public function int(int $value, int $base = 10): self
+    {
+        $this->body .= match ($value) {
+            0 => '0',
+            default => match ($base) {
+                2 => sprintf('0b%02b', $value),
+                8 => sprintf('0o%02o', $value),
+                10 => (string)$value,
+                16 => sprintf('0x%02X', $value),
+            },
+        };
+        return $this;
+    }
+
     public function getSource(): string
     {
         if ($header = $this->header) {

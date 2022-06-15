@@ -14,10 +14,7 @@ final class TreeMatchNode
 
     public function __construct(
         public string $path,
-        public ?string $type = null,
-        public bool $caseSensitive = false,
-        public bool $executable = false,
-        public bool $nonEmpty = false,
+        public int $flags,
         public ?string $mimeType = null,
     ) {
     }

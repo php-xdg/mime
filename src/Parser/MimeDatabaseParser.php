@@ -9,6 +9,7 @@ use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
+use ju1ius\XDGMime\Runtime\TreeMatchFlags;
 
 /**
  * @internal
@@ -156,12 +157,25 @@ final class MimeDatabaseParser
 
     private function parseTreeMagicMatch(\DOMElement $node): TreeMatchNode
     {
+        $flags = 0;
+        if ($this->getBooleanAttribute($node, 'match-case')) {
+            $flags |= TreeMatchFlags::CASE_SENSITIVE;
+        }
+        if ($this->getBooleanAttribute($node, 'executable')) {
+            $flags |= TreeMatchFlags::EXECUTABLE;
+        }
+        if ($this->getBooleanAttribute($node, 'non-empty')) {
+            $flags |= TreeMatchFlags::NON_EMPTY;
+        }
+        $flags |= match ($node->getAttribute('type')) {
+            'file' => TreeMatchFlags::TYPE_FILE,
+            'directory' => TreeMatchFlags::TYPE_DIR,
+            'link' => TreeMatchFlags::TYPE_LINK,
+            default => TreeMatchFlags::TYPE_ANY,
+        };
         $match = new TreeMatchNode(
             $node->getAttribute('path'),
-            $node->getAttribute('type') ?: null,
-            $this->getBooleanAttribute($node, 'match-case'),
-            $this->getBooleanAttribute($node, 'executable'),
-            $this->getBooleanAttribute($node, 'non-empty'),
+            $flags,
             $node->getAttribute('mimetype') ?: null,
         );
 
