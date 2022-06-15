@@ -1,0 +1,33 @@
+<mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
+  <mime-type type="text/x-test">
+    <sub-class-of type="text/plain"/>
+    <glob pattern="*.test"/>
+  </mime-type>
+  <mime-type type="x-content/foo">
+    <treemagic>
+      <treematch path="dir" type="directory" non-empty="true">
+        <treematch path="file" type="file">
+          <treematch path="link" type="link"/>
+        </treematch>
+      </treematch>
+    </treemagic>
+  </mime-type>
+  <mime-type type="x-content/bar">
+    <treemagic>
+      <treematch path="example.test" mimetype="text/x-test" />
+    </treemagic>
+  </mime-type>
+  <mime-type type="x-content/failure">
+    <!-- This test tries to hit as much failing code paths as possible -->
+    <treemagic>
+      <treematch path="nope">
+        <treematch path="nope/.gitkeep" type="file" executable="true"/>
+        <treematch path="nope/.gitkeep" type="link"/>
+        <treematch path="nope/.gitkeep" type="directory" />
+        <!-- The following directory must be created before tests -->
+        <treematch path="nope/empty" non-empty="true"/>
+        <treematch path="nope/.gitkeep" mimetype="x-unknown/dont-exist"/>
+      </treematch>
+    </treemagic>
+  </mime-type>
+</mime-info>

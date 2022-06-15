@@ -52,7 +52,7 @@ final class TreeMagicMatch
                 continue;
             }
 
-            if (($this->flags & TreeMatchFlags::NON_EMPTY) && $this->isEmptyDirectory($file)) {
+            if (($this->flags & TreeMatchFlags::NON_EMPTY) && $file->isDir() && $this->isEmptyDirectory($file)) {
                 continue;
             }
 
@@ -107,9 +107,6 @@ final class TreeMagicMatch
 
     private function isEmptyDirectory(\SplFileInfo $file): bool
     {
-        if (!$file->isDir()) {
-            return false;
-        }
         foreach (new \FilesystemIterator($file->getPathname()) as $file) {
             return false;
         }
