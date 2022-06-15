@@ -10,6 +10,12 @@ use PHPUnit\Framework\TestCase;
 
 final class TypeDetectionTest extends TestCase
 {
+    /**
+     * Magic number retrieved by just looking at the compiled database.
+     * Remember to update this when the default database is recompiled.
+     */
+    private const LOOKUP_BUFFER_LENGTH = 18729;
+
     private static ?MimeDatabaseInterface $db = null;
 
     /**
@@ -37,8 +43,10 @@ final class TypeDetectionTest extends TestCase
      */
     public function testGuessTypeByContents(TypeDetectionTestDTO $dto): void
     {
-        $type = self::getDatabase()->guessTypeByContents($dto->filename);
-        MimeTypeAssert::equals($dto->expectedType, $type);
+        $db = self::getDatabase();
+        MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByContents($dto->filename));
+        $buffer = file_get_contents($dto->filename, false, null, 0, self::LOOKUP_BUFFER_LENGTH);
+        MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByData($buffer));
     }
 
     public function guessTypeByContentsProvider(): iterable
