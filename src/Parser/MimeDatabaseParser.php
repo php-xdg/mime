@@ -19,14 +19,16 @@ final class MimeDatabaseParser
 {
     private const FDO_NS = 'http://www.freedesktop.org/standards/shared-mime-info';
 
+    private readonly MimeInfoValidatorInterface $validator;
+
     /**
      * @var array<string, TypeNode>
      */
     private array $types;
 
-    public function __construct(
-        private readonly MimeInfoValidatorInterface $validator = new MimeInfoRngValidator(),
-    ) {
+    public function __construct()
+    {
+        $this->validator = new MimeInfoRngValidator();
     }
 
     /**

@@ -1,4 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!--
+  DEPRECATED: libxml2 does not support XML Schema 1.1,
+  which is required to fully validate the shared-mime-info XML files.
+  Use the provided RelaxNG schema instead.
+-->
 <xs:schema
   elementFormDefault="qualified"
   targetNamespace="http://www.freedesktop.org/standards/shared-mime-info"
