@@ -2,7 +2,10 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
-final class TestDTO
+use ju1ius\XDGMime\Test\ResourceHelper;
+use Symfony\Component\Filesystem\Path;
+
+final class TypeDetectionTestDTO
 {
     public function __construct(
         public readonly string $filename,
@@ -21,7 +24,7 @@ final class TestDTO
             $this->fullLookupXFail,
         ]);
         return implode(' ', [
-            $this->filename,
+            Path::makeRelative($this->filename, ResourceHelper::getSharedMimeInfoPath('tests/mime-detection')),
             $this->expectedType,
             implode('', $flags),
         ]);

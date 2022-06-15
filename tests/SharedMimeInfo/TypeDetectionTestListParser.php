@@ -14,10 +14,10 @@ use Symfony\Component\Filesystem\Path;
  *  Use 'o' to express the opposite, i.e. no expected failure for this kind of lookup.
  *  Example: 'ox' means N=o D=x (and F is 'o', implicitly), lookup by data should fail.
  */
-final class TestListParser
+final class TypeDetectionTestListParser
 {
     /**
-     * @return iterable<TestDTO>
+     * @return iterable<TypeDetectionTestDTO>
      */
     public function parse(string $path): iterable
     {
@@ -31,7 +31,7 @@ final class TestListParser
                 $filename = Path::makeAbsolute($filename, \dirname($path));
             }
             $flags = $this->parseFlags($parts[2] ?? '');
-            yield new TestDTO($filename, $expected, ...$flags);
+            yield new TypeDetectionTestDTO($filename, $expected, ...$flags);
         }
     }
 

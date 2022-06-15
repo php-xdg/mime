@@ -2,6 +2,9 @@
 
 namespace ju1ius\XDGMime\Test\SharedMimeInfo;
 
+use ju1ius\XDGMime\Test\ResourceHelper;
+use Symfony\Component\Filesystem\Path;
+
 final class TreeMagicTestDTO
 {
     public function __construct(
@@ -14,7 +17,7 @@ final class TreeMagicTestDTO
     public function __toString(): string
     {
         $output = [
-            $this->path,
+            Path::makeRelative($this->path, ResourceHelper::getSharedMimeInfoPath('tests/mime-detection')),
             ...$this->types,
         ];
         if ($this->xFail) {

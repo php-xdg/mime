@@ -15,7 +15,7 @@ final class TypeDetectionTest extends TestCase
     /**
      * @dataProvider guessTypeByFilenameProvider
      */
-    public function testGuessTypeByFilename(TestDTO $dto): void
+    public function testGuessTypeByFilename(TypeDetectionTestDTO $dto): void
     {
         $type = self::getDatabase()->guessTypeByFileName($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
@@ -23,7 +23,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeByFilenameProvider(): iterable
     {
-        $parser = new TestListParser();
+        $parser = new TypeDetectionTestListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->filenameLookupXFail) {
                 continue;
@@ -35,7 +35,7 @@ final class TypeDetectionTest extends TestCase
     /**
      * @dataProvider guessTypeByContentsProvider
      */
-    public function testGuessTypeByContents(TestDTO $dto): void
+    public function testGuessTypeByContents(TypeDetectionTestDTO $dto): void
     {
         $type = self::getDatabase()->guessTypeByContents($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
@@ -43,7 +43,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeByContentsProvider(): iterable
     {
-        $parser = new TestListParser();
+        $parser = new TypeDetectionTestListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->magicLookupXFail) {
                 continue;
@@ -55,7 +55,7 @@ final class TypeDetectionTest extends TestCase
     /**
      * @dataProvider guessTypeProvider
      */
-    public function testGuessType(TestDTO $dto): void
+    public function testGuessType(TypeDetectionTestDTO $dto): void
     {
         $type = self::getDatabase()->guessType($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
@@ -63,7 +63,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeProvider(): iterable
     {
-        $parser = new TestListParser();
+        $parser = new TypeDetectionTestListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->fullLookupXFail) {
                 continue;
