@@ -35,6 +35,7 @@ final class TypeHierarchyTest extends TestCase
             <mime-type type="text/x-bar">
                 <sub-class-of type="text/x-foobar"/>
                 <sub-class-of type="text/x-baz"/>
+                <alias type="application/x-bar"/>
             </mime-type>
         </mime-info>
         XML);
@@ -47,6 +48,11 @@ final class TypeHierarchyTest extends TestCase
         yield 'multiple inheritance' => [
             $db,
             'text/x-bar',
+            ['text/x-foobar', 'text/plain', 'text/x-baz'],
+        ];
+        yield 'aliases are resolved' => [
+            $db,
+            'application/x-bar',
             ['text/x-foobar', 'text/plain', 'text/x-baz'],
         ];
     }
@@ -62,7 +68,7 @@ final class TypeHierarchyTest extends TestCase
 
     public function defaultAncestorsProvider(): \Traversable
     {
-        yield [
+        yield 'application/json' => [
             'application/json',
             ['text/javascript', 'application/ecmascript', 'application/x-executable', 'text/plain'],
         ];

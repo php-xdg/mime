@@ -29,6 +29,7 @@ final class XdgMimeDatabase implements MimeDatabaseInterface
 
     public function getAncestors(MimeType $type): array
     {
+        $this->aliases ??= require $this->directory . '/aliases.php';
         $this->subclasses ??= require $this->directory . '/subclasses.php';
         return $this->doGetAncestors($type);
     }

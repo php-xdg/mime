@@ -24,8 +24,9 @@ trait MimeDatabaseTrait
 
     public function getAncestors(MimeType $type): array
     {
+        $canonical = $this->aliases->canonical((string)$type);
         $ancestors = [];
-        foreach ($this->subclasses->ancestorsOf((string)$type) as $ancestor) {
+        foreach ($this->subclasses->ancestorsOf($canonical) as $ancestor) {
             $ancestors[] = MimeType::of($ancestor);
         }
         return array_unique($ancestors, \SORT_REGULAR);
