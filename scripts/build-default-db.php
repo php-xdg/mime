@@ -12,5 +12,3 @@ $generator = (new MimeDatabaseGenerator())
     ->addCustomPaths($xmlFile)
 ;
 $generator->generate($outputDir);
-
-exit(0);
