@@ -3,15 +3,11 @@
 namespace ju1ius\XDGMime\Parser\Node;
 
 /**
+ * @extends CompositeNode<MatchNode>
  * @internal
  */
-final class MagicNode
+final class MagicNode extends CompositeNode
 {
-    /**
-     * @var MatchNode[]
-     */
-    public array $matches = [];
-
     public function __construct(
         public readonly string $type,
         public readonly int $priority,
@@ -20,7 +16,7 @@ final class MagicNode
 
     public function getMaxLength(): int
     {
-        return max(array_map(fn($m) => $m->getMaxLength(), $this->matches));
+        return max(array_map(fn($m) => $m->getMaxLength(), $this->children));
     }
 
     /**
@@ -31,6 +27,6 @@ final class MagicNode
      */
     public function isSimpleStringMatch(): bool
     {
-        return array_reduce($this->matches, fn($v, $m) => $v && $m->isSimpleString(), true);
+        return array_reduce($this->children, fn($v, $m) => $v && $m->isSimpleString(), true);
     }
 }

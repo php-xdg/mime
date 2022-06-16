@@ -2,13 +2,12 @@
 
 namespace ju1ius\XDGMime\Parser\Node;
 
-final class TreeMagicNode
+/**
+ * @extends CompositeNode<TreeMatchNode>
+ * @internal
+ */
+final class TreeMagicNode extends CompositeNode
 {
-    /**
-     * @var TreeMatchNode[]
-     */
-    public array $matches = [];
-
     public function __construct(
         public readonly string $type,
         public readonly int $priority,

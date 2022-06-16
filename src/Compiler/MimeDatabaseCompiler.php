@@ -5,6 +5,7 @@ namespace ju1ius\XDGMime\Compiler;
 use ju1ius\XDGMime\Parser\Node\GlobNode;
 use ju1ius\XDGMime\Parser\Node\MagicNode;
 use ju1ius\XDGMime\Parser\Node\MatchNode;
+use ju1ius\XDGMime\Parser\Node\MimeInfoNode;
 use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
 use ju1ius\XDGMime\Parser\Node\TypeNode;
@@ -35,12 +36,9 @@ final class MimeDatabaseCompiler
         $this->fs = new Filesystem();
     }
 
-    /**
-     * @param array<string, TypeNode> $types
-     */
-    public function compileToString(array $types): string
+    public function compileToString(MimeInfoNode $info): string
     {
-        $lookup = $this->createLookup($types);
+        $lookup = $this->createLookup($info);
 
         $code = new CodeBuilder();
 
@@ -74,17 +72,17 @@ final class MimeDatabaseCompiler
         return (string)$code;
     }
 
-    public function compileToFile(array $types, string $path): void
+    public function compileToFile(MimeInfoNode $info, string $path): void
     {
         $code = CodeBuilder::forFile()
-            ->raw($this->compileToString($types))
+            ->raw($this->compileToString($info))
         ;
         $this->fs->dumpFile($path, $code);
     }
 
-    public function compileToDirectory(array $types, string $path): void
+    public function compileToDirectory(MimeInfoNode $info, string $path): void
     {
-        $lookup = $this->createLookup($types);
+        $lookup = $this->createLookup($info);
 
         $code = CodeBuilder::forFile()->write('return ');
         $this->compileAliases($lookup['aliases'], $code);
@@ -115,22 +113,20 @@ final class MimeDatabaseCompiler
         $this->fs->dumpFile("{$path}/treemagic.php", $code);
     }
 
-    /**
-     * @param array<string, TypeNode> $types
-     */
-    private function createLookup(array $types): array
+    private function createLookup(MimeInfoNode $info): array
     {
         $aliases = [];
         $subclasses = [];
         $globs = [];
         $magicRules = [];
         $treeMagicRules = [];
-        foreach ($types as $canonical => $type) {
+
+        foreach ($info->children as $type) {
             if ($type->subclassOf) {
-                $subclasses[$canonical] = $type->subclassOf;
+                $subclasses[$type->name] = $type->subclassOf;
             }
             foreach ($type->aliases as $alias) {
-                $aliases[$alias] = $canonical;
+                $aliases[$alias] = $type->name;
             }
             foreach ($type->globs as $glob) {
                 $globs[] = $glob;
@@ -272,10 +268,10 @@ final class MimeDatabaseCompiler
         } else {
             $code->raw('0');
         }
-        if ($match->and) {
+        if ($match->children) {
             $code
                 ->raw(', [')
-                ->join(', ', $match->and, fn($and) => $this->compileMagicMatch($and, $code))
+                ->join(', ', $match->children, fn($and) => $this->compileMagicMatch($and, $code))
                 ->raw(']')
             ;
         }
@@ -304,7 +300,7 @@ final class MimeDatabaseCompiler
                 ->repr($rule->priority)->raw(", [\n")
                 ->indent()
             ;
-            foreach ($rule->matches as $match) {
+            foreach ($rule->children as $match) {
                 $code->write('');
                 $this->compileTreeMagicMatch($match, $code);
                 $code->raw(",\n");
@@ -322,9 +318,9 @@ final class MimeDatabaseCompiler
             ->int($match->flags)->raw(', ')
             ->repr($match->mimeType)
         ;
-        if ($match->and) {
+        if ($match->children) {
             $code->raw(', [');
-            $code->join(', ', $match->and, fn($m) => $this->compileTreeMagicMatch($m, $code));
+            $code->join(', ', $match->children, fn($m) => $this->compileTreeMagicMatch($m, $code));
             $code->raw(']');
         }
         $code->raw(')');

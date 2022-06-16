@@ -3,16 +3,17 @@
 namespace ju1ius\XDGMime\Parser\Node;
 
 /**
+ * @extends CompositeNode<MatchNode>
  * @internal
  */
-final class MatchNode
+final class MatchNode extends CompositeNode
 {
     public int $start;
     public int $end;
     /**
      * @var MatchNode[]
      */
-    public array $and = [];
+    public array $children = [];
 
     public function __construct(
         public string $type,
@@ -32,7 +33,7 @@ final class MatchNode
     public function getMaxLength(): int
     {
         return array_reduce(
-            $this->and,
+            $this->children,
             fn($length, $match) => max($length, $match->getMaxLength()),
             $this->end + \strlen($this->value),
         );
@@ -49,7 +50,7 @@ final class MatchNode
         return (
             $this->type === 'string'
             && $this->mask === ''
-            && array_reduce($this->and, fn($v, $m) => $v && $m->isSimpleString(), true)
+            && array_reduce($this->children, fn($v, $m) => $v && $m->isSimpleString(), true)
         );
     }
 }

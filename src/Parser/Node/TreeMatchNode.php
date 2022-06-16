@@ -3,15 +3,11 @@
 namespace ju1ius\XDGMime\Parser\Node;
 
 /**
+ * @extends CompositeNode<TreeMatchNode>
  * @internal
  */
-final class TreeMatchNode
+final class TreeMatchNode extends CompositeNode
 {
-    /**
-     * @var TreeMatchNode[]
-     */
-    public array $and = [];
-
     public function __construct(
         public string $path,
         public int $flags,
