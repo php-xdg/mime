@@ -5,17 +5,21 @@ namespace ju1ius\XDGMime\Test\MimeDatabase;
 use ju1ius\XDGMime\MimeDatabaseInterface;
 use ju1ius\XDGMime\MimeType;
 use ju1ius\XDGMime\Test\TestDatabaseFactory;
+use ju1ius\XDGMime\XdgMimeDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 final class TypeHierarchyTest extends TestCase
 {
+    private static ?MimeDatabaseInterface $db = null;
+
     /**
      * @dataProvider getAncestorsProvider
      */
-    public function testGetAncestors(MimeDatabaseInterface $db, MimeType $input, array $expected): void
+    public function testGetAncestors(MimeDatabaseInterface $db, string $input, array $expected): void
     {
-        Assert::assertSame($expected, $db->getAncestors($input));
+        $ancestors = $db->getAncestors(MimeType::of($input));
+        Assert::assertSame(self::toMimeTypes($expected), $ancestors);
     }
 
     public function getAncestorsProvider(): \Traversable
@@ -37,13 +41,44 @@ final class TypeHierarchyTest extends TestCase
 
         yield 'single inheritance' => [
             $db,
-            MimeType::of('text/x-foo'),
-            [MimeType::of('text/x-foobar'), MimeType::defaultText()],
+            'text/x-foo',
+            ['text/x-foobar', 'text/plain'],
         ];
         yield 'multiple inheritance' => [
             $db,
-            MimeType::of('text/x-bar'),
-            [MimeType::of('text/x-foobar'), MimeType::defaultText(), MimeType::of('text/x-baz')],
+            'text/x-bar',
+            ['text/x-foobar', 'text/plain', 'text/x-baz'],
         ];
+    }
+
+    /**
+     * @dataProvider defaultAncestorsProvider
+     */
+    public function testWithDefaultDatabase(string $input, array $expected): void
+    {
+        $ancestors = self::getDatabase()->getAncestors(MimeType::of($input));
+        Assert::assertSame(self::toMimeTypes($expected), $ancestors);
+    }
+
+    public function defaultAncestorsProvider(): \Traversable
+    {
+        yield [
+            'application/json',
+            ['text/javascript', 'application/ecmascript', 'application/x-executable', 'text/plain'],
+        ];
+    }
+
+    /**
+     * @param array<string|MimeType> $types
+     * @return array<MimeType>
+     */
+    private static function toMimeTypes(array $types): array
+    {
+        return array_map(MimeType::of(...), $types);
+    }
+
+    private static function getDatabase(): MimeDatabaseInterface
+    {
+        return self::$db ??= new XdgMimeDatabase();
     }
 }

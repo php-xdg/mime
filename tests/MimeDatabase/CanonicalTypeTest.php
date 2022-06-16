@@ -2,13 +2,18 @@
 
 namespace ju1ius\XDGMime\Test\MimeDatabase;
 
+use ju1ius\XDGMime\MimeDatabaseInterface;
 use ju1ius\XDGMime\MimeType;
+use ju1ius\XDGMime\Test\MimeTypeAssert;
 use ju1ius\XDGMime\Test\TestDatabaseFactory;
+use ju1ius\XDGMime\XdgMimeDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 final class CanonicalTypeTest extends TestCase
 {
+    private static ?MimeDatabaseInterface $db = null;
+
     public function testGetCanonicalType(): void
     {
         $xml = <<<'XML'
@@ -24,5 +29,25 @@ final class CanonicalTypeTest extends TestCase
         $textFoo = MimeType::of('text/x-foo');
         Assert::assertSame($appFoo, $db->getCanonicalType($appFoo));
         Assert::assertSame($appFoo, $db->getCanonicalType($textFoo));
+    }
+
+    /**
+     * @dataProvider defaultAliasProvider
+     */
+    public function testWithDefaultDatabase(string $alias, string $expected): void
+    {
+        $type = self::getDatabase()->getCanonicalType(MimeType::of($alias));
+        MimeTypeAssert::equals($expected, $type);
+    }
+
+    public function defaultAliasProvider(): \Traversable
+    {
+        yield ['application/javascript', 'text/javascript'];
+        yield ['application/x-javascript', 'text/javascript'];
+    }
+
+    private static function getDatabase(): MimeDatabaseInterface
+    {
+        return self::$db ??= new XdgMimeDatabase();
     }
 }
