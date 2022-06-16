@@ -1,3 +1,4 @@
 [submodule "tests/Resources/shared-mime-info"]
 	path = resources/shared-mime-info
 	url = https://gitlab.freedesktop.org/xdg/shared-mime-info.git
+	update = rebase

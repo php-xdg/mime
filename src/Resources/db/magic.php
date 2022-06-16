@@ -420,18 +420,6 @@ return new MagicDatabase(
         new MagicRule('application/gzip', 50, [
             new MagicMatch(0, 1, "\x1F\x8B", '', 0),
         ]),
-        new MagicRule('application/javascript', 50, [
-            new MagicMatch(0, 1, '#!/bin/gjs', '', 0),
-            new MagicMatch(0, 1, '#! /bin/gjs', '', 0),
-            new MagicMatch(0, 1, 'eval "exec /bin/gjs', '', 0),
-            new MagicMatch(0, 1, '#!/usr/bin/gjs', '', 0),
-            new MagicMatch(0, 1, '#! /usr/bin/gjs', '', 0),
-            new MagicMatch(0, 1, 'eval "exec /usr/bin/gjs', '', 0),
-            new MagicMatch(0, 1, '#!/usr/local/bin/gjs', '', 0),
-            new MagicMatch(0, 1, '#! /usr/local/bin/gjs', '', 0),
-            new MagicMatch(0, 1, 'eval "exec /usr/local/bin/gjs', '', 0),
-            new MagicMatch(2, 16, '/bin/env gjs', '', 0),
-        ]),
         new MagicRule('application/mac-binhex40', 50, [
             new MagicMatch(11, 12, 'must be converted with BinHex', '', 0),
         ]),
@@ -1423,6 +1411,18 @@ return new MagicDatabase(
             new MagicMatch(0, 1, '<h1', '', 0),
             new MagicMatch(0, 1, '<H1', '', 0),
             new MagicMatch(0, 1, '<!doctype HTML', '', 0),
+        ]),
+        new MagicRule('text/javascript', 50, [
+            new MagicMatch(0, 1, '#!/bin/gjs', '', 0),
+            new MagicMatch(0, 1, '#! /bin/gjs', '', 0),
+            new MagicMatch(0, 1, 'eval "exec /bin/gjs', '', 0),
+            new MagicMatch(0, 1, '#!/usr/bin/gjs', '', 0),
+            new MagicMatch(0, 1, '#! /usr/bin/gjs', '', 0),
+            new MagicMatch(0, 1, 'eval "exec /usr/bin/gjs', '', 0),
+            new MagicMatch(0, 1, '#!/usr/local/bin/gjs', '', 0),
+            new MagicMatch(0, 1, '#! /usr/local/bin/gjs', '', 0),
+            new MagicMatch(0, 1, 'eval "exec /usr/local/bin/gjs', '', 0),
+            new MagicMatch(2, 16, '/bin/env gjs', '', 0),
         ]),
         new MagicRule('text/plain', 50, [
             new MagicMatch(0, 1, 'This is TeX,', '', 0),
