@@ -213,11 +213,7 @@ final class MimeDatabaseParser
     {
         return match ($type) {
             'string' => $this->parseStringMask($value, $mask),
-            'byte' => $this->parseIntMask($value, $mask, 1, false),
-            'host16', 'big16' => $this->parseIntMask($value, $mask, 2, true),
-            'little16' => $this->parseIntMask($value, $mask, 2, false),
-            'host32', 'big32' => $this->parseIntMask($value, $mask, 4, true),
-            'little32' => $this->parseIntMask($value, $mask, 4, false),
+            default => $this->parseIntMask($type, $value, $mask),
         };
     }
 
@@ -226,89 +222,61 @@ final class MimeDatabaseParser
      */
     private function parseStringMask(string $value, string $mask): array
     {
-        $value = stripcslashes($value);
-        if (!$mask) {
-            return [$value, null];
+        $parsedValue = stripcslashes($value);
+        if ($mask === '') {
+            return [$parsedValue, null];
         }
-        if (!preg_match('/^0x([A-Fa-f\d]+)$/', $mask, $m)) {
-            throw new ParseError(sprintf(
-                'Invalid hexadecimal mask: %s',
+        // mask is validated by the schema and is an hexadecimal string in the form 0xFF00
+        $parsedMask = pack('H*', substr($mask, 2));
+        if (\strlen($parsedMask) !== \strlen($parsedValue)) {
+            throw new \ParseError(sprintf(
+                'Mask "%s" parsed length (%d) must equal value "%s" parsed length (%d)',
                 $mask,
+                \strlen($parsedMask),
+                $value,
+                \strlen($parsedValue),
             ));
         }
-        $mask = $m[1];
-        $length = \strlen($value);
-        $parsedMask = array_fill(0, $length, 0);
-        for ($i = 0; $i < \strlen($mask); $i++) {
-            $char = hexdec($mask[$i]);
-            if ($i >= $length * 2) {
-                throw new ParseError(sprintf(
-                    'Mask "%s" is longer than value "%s"',
-                    $mask,
-                    $value,
-                ));
-            }
-            if ($i % 2) {
-                $parsedMask[$i >> 1] |= $char;
-            } else {
-                $parsedMask[$i >> 1] |= $char << 4;
-            }
-        }
-        return [
-            $value,
-            implode('', array_map(\chr(...), $parsedMask)),
-        ];
+        return [$parsedValue, $parsedMask];
     }
 
     /**
-     * @return array{string, string}
+     * @return array{string, ?string}
      */
-    private function parseIntMask(string $value, string $mask, int $bytes, bool $bigEndian): array
+    private function parseIntMask(string $type, string $value, string $mask): array
     {
-        $value = $this->stringToInteger($value);
-        if (
-            ($bytes === 1 && ($value & ~0xFF))
-            || ($bytes === 2 && ($value & ~0xFFFF))
-        ) {
-            throw new ParseError(sprintf(
-                'Number value ot of range (%02X should fit in %d bytes).',
-                $value,
-                $bytes,
-            ));
-        }
+        // host* numbers are stored in network byte-order and must be byte-swapped at runtime.
+        $format = match ($type) {
+            'byte' => 'C*',
+            'host16', 'big16' => 'n*',
+            'little16' => 'v*',
+            'host32', 'big32' => 'N*',
+            'little32' => 'V*',
+        };
 
-        $parsedValue = '';
-        for ($b = 0; $b < $bytes; $b++) {
-            $shift = 8 * ($bigEndian ? ($bytes - $b - 1) : $b);
-            $parsedValue .= \chr(($value >> $shift) & 0xFF);
-        }
-
+        $parsedValue = pack($format, $this->stringToInteger($value));
         if ($mask === '') {
-            return [$parsedValue, $mask];
+            return [$parsedValue, null];
         }
 
-        $mask = $this->stringToInteger($mask);
-        $parsedMask = '';
-        for ($b = 0; $b < $bytes; $b++) {
-            $shift = 8 * ($bigEndian ? ($bytes - $b - 1) : $b);
-            $parsedMask .= \chr(($mask >> $shift) & 0xFF);
-        }
+        $parsedMask = pack($format, $this->stringToInteger($mask));
 
         return [$parsedValue, $parsedMask];
     }
 
     /**
      * Parses integers in hexadecimal (0x01, 0X01), octal (0777), or decimal notations.
+     * It is equivalent to calling <code>strtoul(string, NULL, 0)</code> in C or C++
      */
     private function stringToInteger(string $value): int
     {
-        return match ($value[0] ?? null) {
+        // empty value is prevented by the schema validator
+        return match ($value[0]) {
             '0' => match ($value[1] ?? null) {
                 null => 0,
                 'x', 'X' => hexdec($value),
                 default => octdec($value),
             },
-            null => throw new ParseError('Empty integer value.'),
             default => (int)$value,
         };
     }
