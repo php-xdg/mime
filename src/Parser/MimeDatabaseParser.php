@@ -64,17 +64,9 @@ final class MimeDatabaseParser
     private function parseDocument(\DOMDocument $document): void
     {
         $this->validator->validate($document);
-        $name = $document->documentElement->localName;
-        if ($name !== 'mime-info') {
-            throw new ParseError(sprintf(
-                'Unknown root element <%s>, expected <mime-info>',
-                $name,
-            ));
-        }
-
         $xpath = new \DOMXPath($document, true);
         $xpath->registerNamespace('fdo', self::FDO_NS);
-        foreach ($xpath->query('/fdo:mime-info/fdo:mime-type') as $node) {
+        foreach ($xpath->query('//fdo:mime-type') as $node) {
             $this->parseMimeType($node, $xpath);
         }
     }
