@@ -2,14 +2,12 @@
 
 namespace ju1ius\XDGMime\Parser;
 
-use ju1ius\XDGMime\Parser\Exception\ParseError;
 use ju1ius\XDGMime\Parser\Node\GlobNode;
 use ju1ius\XDGMime\Parser\Node\MagicNode;
 use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\MimeInfoNode;
 use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
-use ju1ius\XDGMime\Parser\Node\TypeNode;
 use ju1ius\XDGMime\Parser\Validator\MimeInfoRngValidator;
 use ju1ius\XDGMime\Runtime\TreeMatchFlags;
 

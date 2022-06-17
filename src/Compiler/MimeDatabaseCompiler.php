@@ -4,17 +4,17 @@ namespace ju1ius\XDGMime\Compiler;
 
 use ju1ius\XDGMime\Parser\Node\GlobNode;
 use ju1ius\XDGMime\Parser\Node\MagicNode;
+use ju1ius\XDGMime\Parser\Node\MagicRegexNode;
 use ju1ius\XDGMime\Parser\Node\MatchNode;
 use ju1ius\XDGMime\Parser\Node\MimeInfoNode;
-use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
 use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
-use ju1ius\XDGMime\Parser\Node\TypeNode;
 use ju1ius\XDGMime\Runtime\AliasesDatabase;
 use ju1ius\XDGMime\Runtime\Glob;
 use ju1ius\XDGMime\Runtime\GlobLiteral;
 use ju1ius\XDGMime\Runtime\GlobsDatabase;
 use ju1ius\XDGMime\Runtime\MagicDatabase;
 use ju1ius\XDGMime\Runtime\MagicMatch;
+use ju1ius\XDGMime\Runtime\MagicRegex;
 use ju1ius\XDGMime\Runtime\MagicRule;
 use ju1ius\XDGMime\Runtime\MimeDatabase;
 use ju1ius\XDGMime\Runtime\SubclassesDatabase;
@@ -30,15 +30,17 @@ use Symfony\Component\Filesystem\Filesystem;
 final class MimeDatabaseCompiler
 {
     private readonly Filesystem $fs;
+    private readonly MagicRegexCompiler $regexCompiler;
 
     public function __construct()
     {
         $this->fs = new Filesystem();
+        $this->regexCompiler = new MagicRegexCompiler();
     }
 
     public function compileToString(MimeInfoNode $info): string
     {
-        $lookup = $this->createLookup($info);
+        $info = Optimizer::create()->process($info);
 
         $code = new CodeBuilder();
 
@@ -48,23 +50,23 @@ final class MimeDatabaseCompiler
         $code->indent();
 
         $code->write('');
-        $this->compileAliases($lookup['aliases'], $code);
+        $this->compileAliases($info, $code);
         $code->raw(",\n");
 
         $code->write('');
-        $this->compileSubClasses($lookup['subclasses'], $code);
+        $this->compileSubClasses($info, $code);
         $code->raw(",\n");
 
         $code->write('');
-        $this->compileGlobs($lookup['globs'], $code);
+        $this->compileGlobs($info, $code);
         $code->raw(",\n");
 
         $code->write('');
-        $this->compileMagicRules($lookup['magic'], $code);
+        $this->compileMagicRules($info, $code);
         $code->raw(",\n");
 
         $code->write('');
-        $this->compileTreeMagicRules($lookup['treemagic'], $code);
+        $this->compileTreeMagicRules($info, $code);
         $code->raw(",\n");
 
         $code->dedent()->writeln(');');
@@ -82,112 +84,77 @@ final class MimeDatabaseCompiler
 
     public function compileToDirectory(MimeInfoNode $info, string $path): void
     {
-        $lookup = $this->createLookup($info);
+        $info = Optimizer::create()->process($info);
 
         $code = CodeBuilder::forFile()->write('return ');
-        $this->compileAliases($lookup['aliases'], $code);
+        $this->compileAliases($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/aliases.php", $code);
 
         $code = CodeBuilder::forFile()->write('return ');
-        $this->compileSubClasses($lookup['subclasses'], $code);
+        $this->compileSubClasses($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/subclasses.php", $code);
 
         $code = CodeBuilder::forFile()->write('return ');
-        $this->compileGlobs($lookup['globs'], $code);
+        $this->compileGlobs($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/globs.php", $code);
 
         $code = CodeBuilder::forFile();
         $this->compileEndiannessCheck($code);
         $code->write('return ');
-        $this->compileMagicRules($lookup['magic'], $code);
+        $this->compileMagicRules($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/magic.php", $code);
 
         $code = CodeBuilder::forFile();
         $code->write('return ');
-        $this->compileTreeMagicRules($lookup['treemagic'], $code);
+        $this->compileTreeMagicRules($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/treemagic.php", $code);
     }
 
-    private function createLookup(MimeInfoNode $info): array
-    {
-        $aliases = [];
-        $subclasses = [];
-        $globs = [];
-        $magicRules = [];
-        $treeMagicRules = [];
-
-        foreach ($info->children as $type) {
-            if ($type->subclassOf) {
-                $subclasses[$type->name] = $type->subclassOf;
-            }
-            foreach ($type->aliases as $alias) {
-                $aliases[$alias] = $type->name;
-            }
-            foreach ($type->globs as $glob) {
-                $globs[] = $glob;
-            }
-            foreach ($type->magic as $rule) {
-                $magicRules[] = $rule;
-            }
-            foreach ($type->treeMagic as $rule) {
-                $treeMagicRules[] = $rule;
-            }
-        }
-
-        return [
-            'subclasses' => $subclasses,
-            'aliases' => $aliases,
-            'globs' => $this->createGlobLookup($globs),
-            'magic' => $this->createMagicLookup($magicRules),
-            'treemagic' => $this->createTreeMagicLookup($treeMagicRules),
-        ];
-    }
-
-    private function compileSubClasses(array $lookup, CodeBuilder $code): void
+    private function compileSubClasses(MimeInfoNode $info, CodeBuilder $code): void
     {
         $code
             ->new(SubclassesDatabase::class)->raw("([\n")
             ->indent()
-            ->each($lookup, fn($v, $k, $code) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n"))
+            ->each($info->hierarchyLookup, fn($v, $k, $code) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n"))
             ->dedent()
             ->write('])')
         ;
     }
 
-    private function compileAliases(array $lookup, CodeBuilder $code): void
+    private function compileAliases(MimeInfoNode $info, CodeBuilder $code): void
     {
         $code
             ->new(AliasesDatabase::class)->raw("([\n")
             ->indent()
-            ->each($lookup, fn($v, $k, $code) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n"))
+            ->each($info->aliasLookup, fn($v, $k, $code) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n"))
             ->dedent()
             ->write('])')
         ;
     }
 
-    private function compileGlobs(array $lookup, CodeBuilder $code): void
+    private function compileGlobs(MimeInfoNode $info, CodeBuilder $code): void
     {
         $code->new(GlobsDatabase::class)->raw("(\n");
         $code->indent();
-        $literalKeys = [
-            'extensions',
-            'caseSensitiveExtensions',
-            'literals',
-            'caseSensitiveLiterals',
+        $props = [
+            'extensionGlobs' => 'extensions',
+            'caseSensitiveExtensionGlobs' => 'caseSensitiveExtensions',
+            'literalGlobs' => 'literals',
+            'caseSensitiveLiteralGlobs' => 'caseSensitiveLiterals',
         ];
-        foreach ($literalKeys as $lookupKey) {
-            $hashMap = $lookup[$lookupKey];
+        foreach ($props as $lookupKey => $argName) {
+            $hashMap = $info->{$lookupKey};
             if (!$hashMap) {
-                $code->writeln(sprintf('%s: [],', $lookupKey));
+                $code->writeln(sprintf('%s: [],', $argName));
                 continue;
             }
-            $code->writeln(sprintf('%s: [', $lookupKey))->indent();
-            /** @var GlobLiteral|GlobLiteral[] $value */
+            $code->writeln(sprintf('%s: [', $argName))->indent();
+            /** @var GlobNode|GlobNode[] $value */
             foreach ($hashMap as $key => $value) {
                 $code->write('')->string((string)$key)->raw(' => ');
                 if (\is_array($value)) {
@@ -205,8 +172,8 @@ final class MimeDatabaseCompiler
         }
 
         $code->writeln('globs: [')->indent();
-        /** @var Glob $glob */
-        foreach ($lookup['globs'] as $glob) {
+        /** @var GlobNode $glob */
+        foreach ($info->globs as $glob) {
             $code->write('')->new(Glob::class)->raw('(')
                 ->string($glob->type)->raw(', ')
                 ->repr($glob->weight)->raw(', ')
@@ -218,41 +185,67 @@ final class MimeDatabaseCompiler
         $code->dedent()->writeln('],')->dedent()->write(')');
     }
 
-    private function compileGlobLiteral(GlobLiteral $glob, CodeBuilder $code): void
+    private function compileGlobLiteral(GlobNode $glob, CodeBuilder $code): void
     {
         $code->new(GlobLiteral::class)->raw('(')
             ->string($glob->type)->raw(', ')
-            ->raw("{$glob->weight}, {$glob->length}")
+            ->int($glob->weight)->raw(', ')
+            ->int(\strlen($glob->pattern))
             ->raw(')')
         ;
     }
 
-    private function compileMagicRules(array $lookup, CodeBuilder $code): void
+    private function compileMagicRules(MimeInfoNode $info, CodeBuilder $code): void
     {
+        $lookupBufferSize = 0;
+        if ($info->magic) {
+            $lookupBufferSize = max(
+                array_map(fn($r) => $r->getMaxLength(), $info->magic)
+            );
+        }
+
         $code->new(MagicDatabase::class)->raw("(\n");
         $code->indent();
-        $code->writeln(sprintf('lookupBufferSize: %d,', $lookup['lookupBufferSize']));
+        $code->writeln(sprintf('lookupBufferSize: %d,', $lookupBufferSize));
 
         $code->writeln('rules: [')->indent();
-        /** @var MagicNode $rule */
-        foreach ($lookup['rules'] as $rule) {
-            $code
-                ->write('')
-                ->new(MagicRule::class)->raw('(')
-                ->string($rule->type)->raw(', ')
-                ->repr($rule->priority)->raw(', ')
-                ->raw("[\n")
-                ->indent()
-            ;
-            foreach ($rule->matches as $match) {
-                $code->write('');
-                $this->compileMagicMatch($match, $code);
-                $code->raw(",\n");
-            }
-            $code->dedent()->writeln(']),');
+        foreach ($info->magic as $node) {
+            match ($node::class) {
+                MagicNode::class => $this->compileMagicNode($node, $code),
+                MagicRegexNode::class => $this->compileMagicRegex($node, $code),
+            };
         }
         $code->dedent()->writeln('],');
         $code->dedent()->write(')');
+    }
+
+    private function compileMagicNode(MagicNode $node, CodeBuilder $code): void
+    {
+        $code
+            ->write('')
+            ->new(MagicRule::class)->raw('(')
+            ->string($node->type)->raw(', ')
+            ->repr($node->priority)->raw(', ')
+            ->raw("[\n")->indent()
+        ;
+        foreach ($node->children as $match) {
+            $code->write('');
+            $this->compileMagicMatch($match, $code);
+            $code->raw(",\n");
+        }
+        $code->dedent()->writeln(']),');
+    }
+
+    private function compileMagicRegex(MagicRegexNode $node, CodeBuilder $code): void
+    {
+        $code
+            ->write('')
+            ->new(MagicRegex::class)->raw('(')
+            ->string($node->type)->raw(', ')
+            ->repr($node->priority)->raw(', ')
+            ->regex($node->pattern)
+            ->raw("),\n")
+        ;
     }
 
     private function compileMagicMatch(MatchNode $match, CodeBuilder $code): void
@@ -288,12 +281,11 @@ final class MimeDatabaseCompiler
         ;
     }
 
-    private function compileTreeMagicRules(array $lookup, CodeBuilder $code): void
+    private function compileTreeMagicRules(MimeInfoNode $info, CodeBuilder $code): void
     {
         $code->new(TreeMagicDatabase::class)->raw("([\n");
         $code->indent();
-        /** @var TreeMagicNode $rule */
-        foreach ($lookup as $rule) {
+        foreach ($info->treeMagic as $rule) {
             $code->write('')->new(TreeMagicRule::class)->raw('(');
             $code
                 ->string($rule->type)->raw(', ')
@@ -324,83 +316,5 @@ final class MimeDatabaseCompiler
             $code->raw(']');
         }
         $code->raw(')');
-    }
-
-    /**
-     * @param GlobNode[] $globs
-     */
-    private function createGlobLookup(array $globs): array
-    {
-        $lookup = [
-            'extensions' => [],
-            'caseSensitiveExtensions' => [],
-            'literals' => [],
-            'caseSensitiveLiterals' => [],
-            'globs' => [],
-        ];
-        foreach ($globs as $node) {
-            if ($node->isLiteral && $node->isExtensionGlob) {
-                $glob = new GlobLiteral($node->type, $node->weight, \strlen($node->pattern));
-                if ($node->caseSensitive) {
-                    $lookup['caseSensitiveExtensions'][$node->extension][] = $glob;
-                } else {
-                    $lookup['extensions'][strtolower($node->extension)][] = $glob;
-                }
-            } elseif ($node->isLiteral) {
-                $glob = new GlobLiteral($node->type, $node->weight, \strlen($node->pattern));
-                if ($node->caseSensitive) {
-                    $lookup['caseSensitiveLiterals'][$node->pattern] = $glob;
-                } else {
-                    $lookup['literals'][strtolower($node->pattern)] = $glob;
-                }
-            } else {
-                $lookup['globs'][] = new Glob($node->type, $node->weight, $node->pattern, $node->caseSensitive);
-            }
-        }
-
-        $compareGlobs = self::compareGlobs(...);
-        foreach (array_keys($lookup['caseSensitiveExtensions']) as $ext) {
-            usort($lookup['caseSensitiveExtensions'][$ext], $compareGlobs);
-        }
-        foreach (array_keys($lookup['extensions']) as $ext) {
-            usort($lookup['extensions'][$ext], $compareGlobs);
-        }
-        //uasort($lookup['case_sensitive_literals'], $compareGlobs);
-        //uasort($lookup['literals'], $compareGlobs);
-        usort($lookup['globs'], $compareGlobs);
-
-        return $lookup;
-    }
-
-    private static function compareGlobs(GlobLiteral $a, GlobLiteral $b): int
-    {
-        return $b->weight <=> $a->weight ?: $b->length <=> $a->length;
-    }
-
-    /**
-     * @param MagicNode[] $rules
-     */
-    private function createMagicLookup(array $rules): array
-    {
-        usort($rules, fn(MagicNode $a, MagicNode $b) => $b->priority <=> $a->priority ?: $a->type <=> $b->type);
-        $lookupBufferSize = 0;
-        foreach ($rules as $rule) {
-            $lookupBufferSize = max($lookupBufferSize, $rule->getMaxLength());
-        }
-        return [
-            'lookupBufferSize' => $lookupBufferSize,
-            'rules' => $rules,
-        ];
-    }
-
-    /**
-     * @param TreeMagicNode[] $rules
-     *
-     * @return TreeMagicNode[]
-     */
-    private function createTreeMagicLookup(array $rules): array
-    {
-        usort($rules, fn(TreeMagicNode $a, TreeMagicNode $b) => $b->priority <=> $a->priority ?: $a->type <=> $b->type);
-        return $rules;
     }
 }
