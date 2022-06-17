@@ -8,6 +8,7 @@ use ju1ius\XDGMime\Parser\AST\MatchNode;
 use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 use ju1ius\XDGMime\Parser\AST\TreeMagicNode;
 use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
+use ju1ius\XDGMime\Parser\Exception\ParseError;
 use ju1ius\XDGMime\Parser\Validator\MimeInfoRngValidator;
 use ju1ius\XDGMime\Runtime\TreeMatchFlags;
 
@@ -116,6 +117,7 @@ final class MimeDatabaseParser
     private function parseMagicMatch(\DOMElement $node): MatchNode
     {
         $type = $node->getAttribute('type');
+        [$start, $length] = $this->parseRange($node->getAttribute('offset'));
         $wordSize = match ($type) {
             'string', 'byte', 'big16', 'little16', 'big32', 'little32' => 1,
             'host16' => 2,
@@ -126,19 +128,36 @@ final class MimeDatabaseParser
             $node->getAttribute('value'),
             $node->getAttribute('mask'),
         );
-        $match = new MatchNode(
-            $type,
-            $node->getAttribute('offset'),
-            $value,
-            $mask ?? '',
-            $wordSize,
-        );
+
+        $match = new MatchNode($type, $start, $length, $value, $mask ?? '', $wordSize);
 
         for ($child = $node->firstElementChild; $child; $child = $child->nextElementSibling) {
             $match->children[] = $this->parseMagicMatch($child);
         }
 
         return $match;
+    }
+
+    /**
+     * @return array{int, int}
+     */
+    private function parseRange(string $offset): array
+    {
+        $range = explode(':', $offset);
+        $start = (int)$range[0];
+        $length = 1;
+        if (\count($range) === 2) {
+            $end = (int)$range[1];
+            if ($end < $start) {
+                throw new ParseError(sprintf(
+                    'Invalid match offset "%s": end offset must greater than or equal to start offset.',
+                    $offset,
+                ));
+            }
+            $length = (int)$range[1] - $start + 1;
+        }
+
+        return [$start, $length];
     }
 
     private function parseTreeMagicMatch(\DOMElement $node): TreeMatchNode

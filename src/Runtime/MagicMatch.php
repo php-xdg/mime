@@ -7,7 +7,7 @@ use ju1ius\XDGMime\Utils\Bytes;
 /**
  * @internal
  */
-final class MagicMatch
+final class MagicMatch implements MagicRuleInterface
 {
     public readonly string $value;
     public readonly string $mask;
@@ -16,8 +16,8 @@ final class MagicMatch
      * @param self[] $and
      */
     public function __construct(
-        public readonly int $start,
-        public readonly int $end,
+        public readonly int $offset,
+        public readonly int $rangeLength,
         string $value,
         string $mask = '',
         int $swap = 0,
@@ -51,7 +51,7 @@ final class MagicMatch
 
     private function doMatch(string $buffer, int $length): bool
     {
-        for ($offset = $this->start; $offset < $this->end; $offset++) {
+        for ($offset = $this->offset, $l = $offset + $this->rangeLength; $offset < $l; $offset++) {
             $end = $offset + \strlen($this->value);
             if ($length < $end) {
                 return false;

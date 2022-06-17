@@ -251,7 +251,8 @@ final class MimeDatabaseCompiler
     {
         $code
             ->new(MagicMatch::class)->raw('(')
-            ->raw("{$match->start}, {$match->end}, ")
+            ->int($match->rangeStart)->raw(', ')
+            ->int($match->rangeLength)->raw(', ')
             ->string($match->value)->raw(', ')
             ->string($match->mask)->raw(', ')
         ;

@@ -8,8 +8,6 @@ namespace ju1ius\XDGMime\Parser\AST;
  */
 final class MatchNode extends CompositeNode
 {
-    public int $start;
-    public int $end;
     /**
      * @var MatchNode[]
      */
@@ -17,17 +15,12 @@ final class MatchNode extends CompositeNode
 
     public function __construct(
         public string $type,
-        string $offset,
+        public int $rangeStart,
+        public int $rangeLength,
         public string $value,
         public string $mask,
         public int $wordSize,
     ) {
-        $range = explode(':', $offset);
-        $this->start = (int)$range[0];
-        $this->end = $this->start + 1;
-        if (\count($range) > 1) {
-            $this->end = (int)$range[1];
-        }
     }
 
     public function getMaxLength(): int
@@ -35,7 +28,7 @@ final class MatchNode extends CompositeNode
         return array_reduce(
             $this->children,
             fn($length, $match) => max($length, $match->getMaxLength()),
-            $this->end + \strlen($this->value),
+            $this->rangeStart + $this->rangeLength + \strlen($this->value),
         );
     }
 
