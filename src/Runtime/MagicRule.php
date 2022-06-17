@@ -13,6 +13,7 @@ final class MagicRule
     public function __construct(
         public readonly string $type,
         public readonly int $priority,
+        public readonly int $maxLength,
         private readonly array $matchlets,
     ) {
     }

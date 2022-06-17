@@ -15,35 +15,52 @@ final class MagicDatabase
 
     public function match(string $path, ?array $allowedTypes = null): ?string
     {
-        $buffer = @file_get_contents($path, false, null, 0, $this->lookupBufferSize);
+        [$rules, $lookupBufferSize] = $this->filterRules($allowedTypes);
+
+        $buffer = @file_get_contents($path, false, null, 0, $lookupBufferSize);
         if ($buffer === false) {
             return null;
         }
 
-        return $this->matchData($buffer, $allowedTypes);
+        return $this->matchBuffer($buffer, $rules, $lookupBufferSize);
     }
 
     public function matchData(string $data, ?array $allowedTypes = null): ?string
     {
-        if ($allowedTypes) {
-            $rules = array_filter($this->rules, fn($r) => $allowedTypes[$r->type] ?? false);
-        } else {
-            $rules = $this->rules;
-        }
+        [$rules, $lookupBufferSize] = $this->filterRules($allowedTypes);
 
-        $length = min(\strlen($data), $this->lookupBufferSize);
+        return $this->matchBuffer($data, $rules, $lookupBufferSize);
+    }
 
+    private function matchBuffer(string $buffer, array $rules, int $length): ?string
+    {
+        $length = min(\strlen($buffer), $length);
         foreach ($rules as $rule) {
-            if ($rule->matches($data, $length)) {
+            if ($rule->matches($buffer, $length)) {
                 return $rule->type;
             }
         }
-
-        if ($this->looksLikePlainText($data)) {
+        if ($this->looksLikePlainText($buffer)) {
             return 'text/plain';
         }
 
         return null;
+    }
+
+    private function filterRules(?array $allowedTypes = null): array
+    {
+        if (!$allowedTypes) {
+            return [$this->rules, $this->lookupBufferSize];
+        }
+        $rules = [];
+        $lookupBufferSize = 0;
+        foreach ($this->rules as $rule) {
+            if ($allowedTypes[$rule->type] ?? false) {
+                $rules[] = $rule;
+                $lookupBufferSize = max($lookupBufferSize, $rule->maxLength);
+            }
+        }
+        return [$rules, $lookupBufferSize];
     }
 
     private function looksLikePlainText(string $data): bool

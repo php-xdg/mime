@@ -224,6 +224,7 @@ final class MimeDatabaseCompiler
             ->new(MagicRule::class)->raw('(')
             ->string($node->type)->raw(', ')
             ->repr($node->priority)->raw(', ')
+            ->repr($node->getMaxLength())->raw(', ')
             ->raw("[\n")->indent()
         ;
         foreach ($node->children as $match) {
