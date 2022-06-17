@@ -2,12 +2,12 @@
 
 namespace ju1ius\XDGMime\Compiler;
 
-use ju1ius\XDGMime\Parser\Node\GlobNode;
-use ju1ius\XDGMime\Parser\Node\MagicNode;
-use ju1ius\XDGMime\Parser\Node\MagicRegexNode;
-use ju1ius\XDGMime\Parser\Node\MatchNode;
-use ju1ius\XDGMime\Parser\Node\MimeInfoNode;
-use ju1ius\XDGMime\Parser\Node\TreeMatchNode;
+use ju1ius\XDGMime\Parser\AST\GlobNode;
+use ju1ius\XDGMime\Parser\AST\MagicNode;
+use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
+use ju1ius\XDGMime\Parser\AST\MatchNode;
+use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
+use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
 use ju1ius\XDGMime\Runtime\AliasesDatabase;
 use ju1ius\XDGMime\Runtime\Glob;
 use ju1ius\XDGMime\Runtime\GlobLiteral;
@@ -30,12 +30,10 @@ use Symfony\Component\Filesystem\Filesystem;
 final class MimeDatabaseCompiler
 {
     private readonly Filesystem $fs;
-    private readonly MagicRegexCompiler $regexCompiler;
 
     public function __construct()
     {
         $this->fs = new Filesystem();
-        $this->regexCompiler = new MagicRegexCompiler();
     }
 
     public function compileToString(MimeInfoNode $info): string

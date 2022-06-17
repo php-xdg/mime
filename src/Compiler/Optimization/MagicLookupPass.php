@@ -2,8 +2,8 @@
 
 namespace ju1ius\XDGMime\Compiler\Optimization;
 
-use ju1ius\XDGMime\Parser\Node\MagicNode;
-use ju1ius\XDGMime\Parser\Node\MimeInfoNode;
+use ju1ius\XDGMime\Parser\AST\MagicNode;
+use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 
 final class MagicLookupPass implements OptimizationPassInterface
 {

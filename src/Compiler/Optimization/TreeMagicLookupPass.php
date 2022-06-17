@@ -2,8 +2,8 @@
 
 namespace ju1ius\XDGMime\Compiler\Optimization;
 
-use ju1ius\XDGMime\Parser\Node\MimeInfoNode;
-use ju1ius\XDGMime\Parser\Node\TreeMagicNode;
+use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
+use ju1ius\XDGMime\Parser\AST\TreeMagicNode;
 
 final class TreeMagicLookupPass implements OptimizationPassInterface
 {

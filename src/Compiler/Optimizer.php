@@ -8,7 +8,7 @@ use ju1ius\XDGMime\Compiler\Optimization\HierarchyLookupPass;
 use ju1ius\XDGMime\Compiler\Optimization\MagicLookupPass;
 use ju1ius\XDGMime\Compiler\Optimization\OptimizationPassInterface;
 use ju1ius\XDGMime\Compiler\Optimization\TreeMagicLookupPass;
-use ju1ius\XDGMime\Parser\Node\MimeInfoNode;
+use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 
 final class Optimizer
 {
