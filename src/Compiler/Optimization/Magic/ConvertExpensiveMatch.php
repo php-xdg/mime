@@ -6,10 +6,15 @@ use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
 
 /**
- * Matches that have a rangeLength >= 1 will be faster when compiled to a regular expression.
+ * Matches will be faster when compiled to a regular expression when:
+ *   - they have a rangeLength >= 1,
+ *   - or they use a mask (and the mask can be compiled),
  */
-final class ConvertRangedMatch extends MagicRuleOptimization
+final class ConvertExpensiveMatch extends MagicRuleOptimization
 {
+    const EXPENSIVE_RANGE_LENGTH = 2;
+    const EXPENSIVE_MASK_LENGTH = 2;
+
     public function __construct(
         private readonly RegExpManipulator $manipulator,
     ) {
@@ -34,9 +39,9 @@ final class ConvertRangedMatch extends MagicRuleOptimization
 
     private function isEligibleMatch(MagicMatchNode $node): bool
     {
-        return (
-            $this->manipulator->canCompile($node)
-            && $node->rangeLength > 1
+        return $this->manipulator->canCompile($node) && (
+            $node->rangeLength >= self::EXPENSIVE_RANGE_LENGTH
+            || \strlen($node->mask) >= self::EXPENSIVE_MASK_LENGTH
         );
     }
 }

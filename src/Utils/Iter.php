@@ -23,6 +23,37 @@ final class Iter
     }
 
     /**
+     * Breaks an iterable into multiple arrays, based on the evaluation of the given predicate.
+     *
+     * The second argument passed to the predicate may be used to inspect the current chunk.
+     *
+     * @template T
+     * @param iterable<T> $col
+     * @param callable(T, T[]):bool $predicate
+     * @return Traversable<T[]>
+     */
+    public static function chunkWhile(iterable $col, callable $predicate): Traversable
+    {
+        $chunk = [];
+        $first = true;
+        foreach ($col as $item) {
+            if ($first) {
+                $first = false;
+                $chunk[] = $item;
+                continue;
+            }
+            if (!$predicate($item, $chunk)) {
+                yield $chunk;
+                $chunk = [];
+            }
+            $chunk[] = $item;
+        }
+        if ($chunk) {
+            yield $chunk;
+        }
+    }
+
+    /**
      * @template T
      * @param iterable<T> $col
      * @param int $size

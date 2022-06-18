@@ -7,7 +7,7 @@ use ju1ius\XdgMime\Compiler\Optimization\GlobsLookupPass;
 use ju1ius\XdgMime\Compiler\Optimization\HierarchyLookupPass;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
-use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertRangedMatch;
+use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertExpensiveMatch;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\RegExpManipulator;
 use ju1ius\XdgMime\Compiler\Optimization\MagicLookupPass;
 use ju1ius\XdgMime\Compiler\Optimization\MagicRulesOptimizationPass;
@@ -33,7 +33,7 @@ final class Optimizer
                 new MagicLookupPass(),
                 new TreeMagicLookupPass(),
                 new MagicRulesOptimizationPass([
-                    new ConvertRangedMatch($manipulator),
+                    new ConvertExpensiveMatch($manipulator),
                     new CombineOrMatches($manipulator),
                     new CombineAndMatches($manipulator),
                 ]),
