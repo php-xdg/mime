@@ -2,8 +2,6 @@
 
 namespace ju1ius\XDGMime\Parser\AST;
 
-use Traversable;
-
 /**
  * @template ChildType of Node
  * @internal

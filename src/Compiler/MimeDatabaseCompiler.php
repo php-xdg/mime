@@ -3,9 +3,9 @@
 namespace ju1ius\XDGMime\Compiler;
 
 use ju1ius\XDGMime\Parser\AST\GlobNode;
+use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
 use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
 use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
-use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
 use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
 use ju1ius\XDGMime\Runtime\AliasesDatabase;

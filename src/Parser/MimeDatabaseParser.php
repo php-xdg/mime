@@ -3,8 +3,8 @@
 namespace ju1ius\XDGMime\Parser;
 
 use ju1ius\XDGMime\Parser\AST\GlobNode;
-use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
 use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
 use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 use ju1ius\XDGMime\Parser\AST\TreeMagicNode;
 use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
