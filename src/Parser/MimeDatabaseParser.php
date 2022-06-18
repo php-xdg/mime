@@ -3,8 +3,8 @@
 namespace ju1ius\XDGMime\Parser;
 
 use ju1ius\XDGMime\Parser\AST\GlobNode;
-use ju1ius\XDGMime\Parser\AST\MagicNode;
-use ju1ius\XDGMime\Parser\AST\MatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
+use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
 use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 use ju1ius\XDGMime\Parser\AST\TreeMagicNode;
 use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
@@ -83,7 +83,7 @@ final class MimeDatabaseParser
             $type->globs[] = $this->parseGlob($globNode, $name);
         }
         foreach ($xpath->query('./fdo:magic', $node) as $magicNode) {
-            $magic = new MagicNode(
+            $magic = new MagicRuleNode(
                 $name,
                 $this->getIntegerAttribute($magicNode, 'priority', 50),
             );
@@ -114,7 +114,7 @@ final class MimeDatabaseParser
         );
     }
 
-    private function parseMagicMatch(\DOMElement $node): MatchNode
+    private function parseMagicMatch(\DOMElement $node): MagicMatchNode
     {
         $type = $node->getAttribute('type');
         [$start, $length] = $this->parseRange($node->getAttribute('offset'));
@@ -129,7 +129,7 @@ final class MimeDatabaseParser
             $node->getAttribute('mask'),
         );
 
-        $match = new MatchNode($type, $start, $length, $value, $mask ?? '', $wordSize);
+        $match = new MagicMatchNode($type, $start, $length, $value, $mask ?? '', $wordSize);
 
         for ($child = $node->firstElementChild; $child; $child = $child->nextElementSibling) {
             $match->children[] = $this->parseMagicMatch($child);

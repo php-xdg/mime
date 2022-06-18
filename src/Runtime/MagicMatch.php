@@ -7,13 +7,13 @@ use ju1ius\XDGMime\Utils\Bytes;
 /**
  * @internal
  */
-final class MagicMatch implements MagicRuleInterface
+final class MagicMatch implements MagicMatchInterface
 {
     public readonly string $value;
     public readonly string $mask;
 
     /**
-     * @param self[] $and
+     * @param MagicMatchInterface[] $and
      */
     public function __construct(
         public readonly int $offset,

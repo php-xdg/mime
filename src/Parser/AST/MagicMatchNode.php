@@ -3,13 +3,13 @@
 namespace ju1ius\XDGMime\Parser\AST;
 
 /**
- * @extends CompositeNode<MatchNode>
+ * @extends CompositeNode<MagicMatchNode>
  * @internal
  */
-final class MatchNode extends CompositeNode
+class MagicMatchNode extends CompositeNode
 {
     /**
-     * @var MatchNode[]
+     * @var MagicMatchNode[]
      */
     public array $children = [];
 
@@ -29,21 +29,6 @@ final class MatchNode extends CompositeNode
             $this->children,
             fn($length, $match) => max($length, $match->getMaxLength()),
             $this->rangeStart + $this->rangeLength + \strlen($this->value),
-        );
-    }
-
-    /**
-     * Currently unused, but could be useful if we want to test the potential performance gains
-     * of compiling MatchRules into regular expressions.
-     *
-     * @codeCoverageIgnore
-     */
-    public function isSimpleString(): bool
-    {
-        return (
-            $this->type === 'string'
-            && $this->mask === ''
-            && array_reduce($this->children, fn($v, $m) => $v && $m->isSimpleString(), true)
         );
     }
 }

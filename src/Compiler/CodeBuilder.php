@@ -174,6 +174,14 @@ final class CodeBuilder implements Stringable
         return $this;
     }
 
+    public function regex(string $pattern): self
+    {
+        $output = str_replace('\\\\', '\\\\\\\\', $pattern);
+        //$output = strtr($pattern, ['\\\\' => '\\\\\\\\']);
+        $this->body .= sprintf("'%s'", addcslashes($output, "'"));
+        return $this;
+    }
+
     public function int(int $value, int $base = 10): self
     {
         $this->body .= match ($value) {

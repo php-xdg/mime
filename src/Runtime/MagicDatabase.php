@@ -5,7 +5,7 @@ namespace ju1ius\XDGMime\Runtime;
 final class MagicDatabase
 {
     /**
-     * @param MagicRule[] $rules
+     * @param MagicMatchInterface[] $rules
      */
     public function __construct(
         private readonly int $lookupBufferSize,

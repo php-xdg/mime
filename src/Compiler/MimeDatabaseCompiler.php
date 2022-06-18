@@ -3,9 +3,9 @@
 namespace ju1ius\XDGMime\Compiler;
 
 use ju1ius\XDGMime\Parser\AST\GlobNode;
-use ju1ius\XDGMime\Parser\AST\MagicNode;
-use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
-use ju1ius\XDGMime\Parser\AST\MatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRegexMatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
+use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
 use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
 use ju1ius\XDGMime\Runtime\AliasesDatabase;
@@ -208,16 +208,13 @@ final class MimeDatabaseCompiler
 
         $code->writeln('rules: [')->indent();
         foreach ($info->magic as $node) {
-            match ($node::class) {
-                MagicNode::class => $this->compileMagicNode($node, $code),
-                MagicRegexNode::class => $this->compileMagicRegex($node, $code),
-            };
+            $this->compileMagicRule($node, $code);
         }
         $code->dedent()->writeln('],');
         $code->dedent()->write(')');
     }
 
-    private function compileMagicNode(MagicNode $node, CodeBuilder $code): void
+    private function compileMagicRule(MagicRuleNode $node, CodeBuilder $code): void
     {
         $code
             ->write('')
@@ -229,25 +226,21 @@ final class MimeDatabaseCompiler
         ;
         foreach ($node->children as $match) {
             $code->write('');
-            $this->compileMagicMatch($match, $code);
+            $this->compileMagicMatchNode($match, $code);
             $code->raw(",\n");
         }
         $code->dedent()->writeln(']),');
     }
 
-    private function compileMagicRegex(MagicRegexNode $node, CodeBuilder $code): void
+    private function compileMagicMatchNode(MagicMatchNode $node, CodeBuilder $code): void
     {
-        $code
-            ->write('')
-            ->new(MagicRegex::class)->raw('(')
-            ->string($node->type)->raw(', ')
-            ->repr($node->priority)->raw(', ')
-            ->regex($node->pattern)
-            ->raw("),\n")
-        ;
+        match ($node::class) {
+            MagicRegexMatchNode::class => $this->compileMagicRegexMatch($node, $code),
+            default => $this->compileMagicMatch($node, $code),
+        };
     }
 
-    private function compileMagicMatch(MatchNode $match, CodeBuilder $code): void
+    private function compileMagicMatch(MagicMatchNode $match, CodeBuilder $code): void
     {
         $code
             ->new(MagicMatch::class)->raw('(')
@@ -257,14 +250,30 @@ final class MimeDatabaseCompiler
             ->string($match->mask)->raw(', ')
         ;
         if ($match->wordSize > 1) {
-            $code->raw(sprintf('%d|$swap', $match->wordSize));
+            $code->raw(sprintf('$swap|%d', $match->wordSize));
         } else {
             $code->raw('0');
         }
         if ($match->children) {
             $code
                 ->raw(', [')
-                ->join(', ', $match->children, fn($and) => $this->compileMagicMatch($and, $code))
+                ->join(', ', $match->children, fn($and) => $this->compileMagicMatchNode($and, $code))
+                ->raw(']')
+            ;
+        }
+        $code->raw(')');
+    }
+
+    private function compileMagicRegexMatch(MagicRegexMatchNode $node, CodeBuilder $code): void
+    {
+        $code
+            ->new(MagicRegex::class)->raw('(')
+            ->regex($node->compiledPattern)
+        ;
+        if ($node->children) {
+            $code
+                ->raw(', [')
+                ->join(', ', $node->children, fn($and) => $this->compileMagicMatchNode($and, $code))
                 ->raw(']')
             ;
         }

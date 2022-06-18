@@ -2,7 +2,7 @@
 
 namespace ju1ius\XDGMime\Compiler\Optimization;
 
-use ju1ius\XDGMime\Parser\AST\MagicNode;
+use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
 use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
 
 final class MagicLookupPass implements OptimizationPassInterface
@@ -20,7 +20,7 @@ final class MagicLookupPass implements OptimizationPassInterface
         return $info;
     }
 
-    private static function compareNodes(MagicNode $a, MagicNode $b): int
+    private static function compareNodes(MagicRuleNode $a, MagicRuleNode $b): int
     {
         return $b->priority <=> $a->priority ?: $a->type <=> $b->type;
     }

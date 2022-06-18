@@ -2,19 +2,16 @@
 
 namespace ju1ius\XDGMime\Runtime;
 
-/**
- * @internal
- */
-final class MagicRule
+final class MagicRule implements MagicMatchInterface
 {
     /**
-     * @param MagicMatch[] $matchlets
+     * @param MagicMatchInterface[] $matchlets
      */
     public function __construct(
         public readonly string $type,
         public readonly int $priority,
         public readonly int $maxLength,
-        private readonly array $matchlets,
+        public readonly array $matchlets,
     ) {
     }
 
