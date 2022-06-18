@@ -15,14 +15,8 @@ abstract class AbstractSchemaValidator implements MimeInfoValidatorInterface
         $errors = libxml_get_errors();
         libxml_clear_errors();
         libxml_use_internal_errors($useInternalErrors);
-        if ($errors) {
-            $err = $errors[0];
-            throw new ParseError(sprintf(
-                '%s in %s:%d',
-                $err->message,
-                $err->file,
-                $err->line,
-            ));
+        if ($err = $errors[0] ?? null) {
+            throw ParseError::fromLibXml($err);
         }
     }
 
