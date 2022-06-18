@@ -3,6 +3,8 @@
 namespace ju1ius\XdgMime\Compiler\Optimization;
 
 use ju1ius\XdgMime\Compiler\Optimization\Magic\MagicRuleOptimization;
+use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
+use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 
 final class MagicRulesOptimizationPass implements OptimizationPassInterface
@@ -18,50 +20,36 @@ final class MagicRulesOptimizationPass implements OptimizationPassInterface
     public function process(MimeInfoNode $info): MimeInfoNode
     {
         foreach ($info->magic as $i => $rule) {
-            if ($result = $this->processRule($rule)) {
-                $info->magic[$i] = $result;
-            }
+            $info->magic[$i] = $this->processRule($rule);
         }
 
         return $info;
     }
 
-    private function processRule($rule): mixed
+    private function processRule($rule): MagicRuleNode
     {
         foreach ($this->optimizations as $optimization) {
-            if ($result = $optimization->preProcessRule($rule)) {
-                $rule = $result;
-            }
+            $rule = $optimization->preProcessRule($rule);
         }
         foreach ($rule->children as $i => $match) {
-            if ($result = $this->processMatch($match)) {
-                $rule->children[$i] = $result;
-            }
+            $rule->children[$i] = $this->processMatch($match);
         }
         foreach ($this->optimizations as $optimization) {
-            if ($result = $optimization->postProcessRule($rule)) {
-                $rule = $result;
-            }
+            $rule = $optimization->postProcessRule($rule);
         }
         return $rule;
     }
 
-    private function processMatch($match): mixed
+    private function processMatch($match): MagicMatchNode
     {
         foreach ($this->optimizations as $optimization) {
-            if ($result = $optimization->preProcessMatch($match)) {
-                $match = $result;
-            }
+            $match = $optimization->preProcessMatch($match);
         }
         foreach ($match->children as $i => $child) {
-            if ($result = $this->processMatch($child)) {
-                $match->children[$i] = $result;
-            }
+            $match->children[$i] = $this->processMatch($child);
         }
         foreach ($this->optimizations as $optimization) {
-            if ($result = $optimization->postProcessMatch($match)) {
-                $match = $result;
-            }
+            $match = $optimization->postProcessMatch($match);
         }
 
         return $match;

@@ -17,18 +17,18 @@ final class CombineOrMatches extends MagicRuleOptimization
     ) {
     }
 
-    public function postProcessRule(MagicRuleNode $rule): ?MagicRuleNode
+    public function postProcessRule(MagicRuleNode $rule): MagicRuleNode
     {
         if (!$this->willPostProcessRule($rule)) {
-            return null;
+            return $rule;
         }
         return $this->processNode($rule);
     }
 
-    public function postProcessMatch(MagicMatchNode $match): ?MagicMatchNode
+    public function postProcessMatch(MagicMatchNode $match): MagicMatchNode
     {
         if (!$this->willPostProcessMatch($match)) {
-            return null;
+            return $match;
         }
         return $this->processNode($match);
     }

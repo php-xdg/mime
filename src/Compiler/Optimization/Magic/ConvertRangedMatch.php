@@ -15,10 +15,10 @@ final class ConvertRangedMatch extends MagicRuleOptimization
     ) {
     }
 
-    public function preProcessMatch(MagicMatchNode $match): ?MagicMatchNode
+    public function preProcessMatch(MagicMatchNode $match): MagicMatchNode
     {
         if (!$this->isEligibleMatch($match)) {
-            return null;
+            return $match;
         }
 
         $pattern = $this->manipulator->patternFor($match);

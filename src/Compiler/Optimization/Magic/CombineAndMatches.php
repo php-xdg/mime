@@ -13,10 +13,10 @@ final class CombineAndMatches extends MagicRuleOptimization
     ) {
     }
 
-    public function postProcessMatch(MagicMatchNode $match): ?MagicMatchNode
+    public function postProcessMatch(MagicMatchNode $match): MagicMatchNode
     {
         if (!$this->isEligibleNode($match)) {
-            return null;
+            return $match;
         }
         $ifPattern = $this->manipulator->patternFor($match);
         $thenPatterns = [];

@@ -7,23 +7,23 @@ use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 
 abstract class MagicRuleOptimization
 {
-    public function preProcessRule(MagicRuleNode $rule): ?MagicRuleNode
+    public function preProcessRule(MagicRuleNode $rule): MagicRuleNode
     {
-        return null;
+        return $rule;
     }
 
-    public function postProcessRule(MagicRuleNode $rule): ?MagicRuleNode
+    public function postProcessRule(MagicRuleNode $rule): MagicRuleNode
     {
-        return null;
+        return $rule;
     }
 
-    public function preProcessMatch(MagicMatchNode $match): ?MagicMatchNode
+    public function preProcessMatch(MagicMatchNode $match): MagicMatchNode
     {
-        return null;
+        return $match;
     }
 
-    public function postProcessMatch(MagicMatchNode $match): ?MagicMatchNode
+    public function postProcessMatch(MagicMatchNode $match): MagicMatchNode
     {
-        return null;
+        return $match;
     }
 }
