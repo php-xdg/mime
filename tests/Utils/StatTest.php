@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\Utils;
+namespace ju1ius\XdgMime\Test\Utils;
 
-use ju1ius\XDGMime\Exception\IOError;
-use ju1ius\XDGMime\Utils\Stat;
+use ju1ius\XdgMime\Exception\IOError;
+use ju1ius\XdgMime\Utils\Stat;
 use PHPUnit\Framework\TestCase;
 
 final class StatTest extends TestCase

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XDGMime\Runtime\AliasesDatabase;
+use ju1ius\XdgMime\Runtime\AliasesDatabase;
 
 return new AliasesDatabase([
     'application/x-mobi8-ebook' => 'application/vnd.amazon.mobi8-ebook',

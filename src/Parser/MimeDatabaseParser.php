@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Parser;
+namespace ju1ius\XdgMime\Parser;
 
-use ju1ius\XDGMime\Parser\AST\GlobNode;
-use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
-use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
-use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
-use ju1ius\XDGMime\Parser\AST\TreeMagicNode;
-use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
-use ju1ius\XDGMime\Parser\Exception\ParseError;
-use ju1ius\XDGMime\Parser\Validator\MimeInfoRngValidator;
-use ju1ius\XDGMime\Runtime\TreeMatchFlags;
+use ju1ius\XdgMime\Parser\AST\GlobNode;
+use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
+use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
+use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
+use ju1ius\XdgMime\Parser\AST\TreeMagicNode;
+use ju1ius\XdgMime\Parser\AST\TreeMatchNode;
+use ju1ius\XdgMime\Parser\Exception\ParseError;
+use ju1ius\XdgMime\Parser\Validator\MimeInfoRngValidator;
+use ju1ius\XdgMime\Runtime\TreeMatchFlags;
 
 /**
  * @internal

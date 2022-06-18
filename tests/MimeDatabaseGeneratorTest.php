@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test;
+namespace ju1ius\XdgMime\Test;
 
-use ju1ius\XDGMime\MimeDatabaseGenerator;
-use ju1ius\XDGMime\Runtime\AliasesDatabase;
-use ju1ius\XDGMime\Runtime\GlobsDatabase;
-use ju1ius\XDGMime\Runtime\MagicDatabase;
-use ju1ius\XDGMime\Runtime\SubclassesDatabase;
+use ju1ius\XdgMime\MimeDatabaseGenerator;
+use ju1ius\XdgMime\Runtime\AliasesDatabase;
+use ju1ius\XdgMime\Runtime\GlobsDatabase;
+use ju1ius\XdgMime\Runtime\MagicDatabase;
+use ju1ius\XdgMime\Runtime\SubclassesDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;

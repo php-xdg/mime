@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\SharedMimeInfo;
+namespace ju1ius\XdgMime\Test\SharedMimeInfo;
 
-use ju1ius\XDGMime\Test\ResourceHelper;
+use ju1ius\XdgMime\Test\ResourceHelper;
 use Symfony\Component\Filesystem\Path;
 
 final class TreeMagicTestDTO

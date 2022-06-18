@@ -1,19 +1,19 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Compiler;
+namespace ju1ius\XdgMime\Compiler;
 
-use ju1ius\XDGMime\Compiler\Optimization\AliasLookupPass;
-use ju1ius\XDGMime\Compiler\Optimization\GlobsLookupPass;
-use ju1ius\XDGMime\Compiler\Optimization\HierarchyLookupPass;
-use ju1ius\XDGMime\Compiler\Optimization\Magic\CombineAndMatches;
-use ju1ius\XDGMime\Compiler\Optimization\Magic\CombineOrMatches;
-use ju1ius\XDGMime\Compiler\Optimization\Magic\ConvertRangedMatch;
-use ju1ius\XDGMime\Compiler\Optimization\Magic\RegExpManipulator;
-use ju1ius\XDGMime\Compiler\Optimization\MagicLookupPass;
-use ju1ius\XDGMime\Compiler\Optimization\MagicRulesOptimizationPass;
-use ju1ius\XDGMime\Compiler\Optimization\OptimizationPassInterface;
-use ju1ius\XDGMime\Compiler\Optimization\TreeMagicLookupPass;
-use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
+use ju1ius\XdgMime\Compiler\Optimization\AliasLookupPass;
+use ju1ius\XdgMime\Compiler\Optimization\GlobsLookupPass;
+use ju1ius\XdgMime\Compiler\Optimization\HierarchyLookupPass;
+use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
+use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
+use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertRangedMatch;
+use ju1ius\XdgMime\Compiler\Optimization\Magic\RegExpManipulator;
+use ju1ius\XdgMime\Compiler\Optimization\MagicLookupPass;
+use ju1ius\XdgMime\Compiler\Optimization\MagicRulesOptimizationPass;
+use ju1ius\XdgMime\Compiler\Optimization\OptimizationPassInterface;
+use ju1ius\XdgMime\Compiler\Optimization\TreeMagicLookupPass;
+use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 
 final class Optimizer
 {

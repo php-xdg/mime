@@ -7,15 +7,15 @@
       "email": "jules.bernable@gmail.com"
     }
   ],
-  "keywords": ["mime", "mime-type", "xdg", "freedesktop"],
+  "keywords": ["mime", "mime-type", "xdg", "freedesktop", "guesser"],
   "autoload": {
     "psr-4": {
-      "ju1ius\\XDGMime\\": "src/"
+      "ju1ius\\XdgMime\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "ju1ius\\XDGMime\\Test\\": "tests/"
+      "ju1ius\\XdgMime\\Test\\": "tests/"
     }
   },
   "require": {

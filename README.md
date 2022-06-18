@@ -36,7 +36,7 @@ For convenience, this package ships with a pre-compiled database, built from the
 [latest shared-mime-info database](https://gitlab.freedesktop.org/xdg/shared-mime-info/-/blob/master/data/freedesktop.org.xml.in).
 
 ```php
-use ju1ius\XDGMime\XdgMimeDatabase;
+use ju1ius\XdgMime\XdgMimeDatabase;
 
 $db = new XdgMimeDatabase();
 // guess mime-type using the XDG specification algorithm
@@ -55,8 +55,8 @@ $type = $db->guessTypeByData('<?php echo "Hello World!";');
 If you want to modify/add mime-type information to the database, you'll have to generate a custom database.
 
 ```php
-use ju1ius\XDGMime\MimeDatabaseGenerator;
-use ju1ius\XDGMime\XdgMimeDatabase;
+use ju1ius\XdgMime\MimeDatabaseGenerator;
+use ju1ius\XdgMime\XdgMimeDatabase;
 
 $outputDirectory = '/path/to/output-directory';
 $generator = new MimeDatabaseGenerator();
@@ -80,7 +80,7 @@ The mime-info files are installed by default on most Linux desktops
 You can override these paths by passing custom paths to the generator.
 
 ```php
-use ju1ius\XDGMime\MimeDatabaseGenerator;
+use ju1ius\XdgMime\MimeDatabaseGenerator;
 
 $generator = new MimeDatabaseGenerator();
 // omit or set to true to keep the standard XDG directories.

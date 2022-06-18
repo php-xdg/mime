@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Compiler\Optimization\Magic;
+namespace ju1ius\XdgMime\Compiler\Optimization\Magic;
 
-use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
-use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
+use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
+use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 
 abstract class MagicRuleOptimization
 {

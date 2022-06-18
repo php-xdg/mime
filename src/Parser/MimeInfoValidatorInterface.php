@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Parser;
+namespace ju1ius\XdgMime\Parser;
 
-use ju1ius\XDGMime\Parser\Exception\ParseError;
+use ju1ius\XdgMime\Parser\Exception\ParseError;
 
 interface MimeInfoValidatorInterface
 {

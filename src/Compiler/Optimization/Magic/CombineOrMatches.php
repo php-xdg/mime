@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Compiler\Optimization\Magic;
+namespace ju1ius\XdgMime\Compiler\Optimization\Magic;
 
-use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
-use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
-use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
-use ju1ius\XDGMime\Utils\Iter;
+use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
+use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
+use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
+use ju1ius\XdgMime\Utils\Iter;
 
 /**
  * Merge consecutive children of a match to a single regular expression.

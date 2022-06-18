@@ -1,16 +1,16 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\Compiler;
+namespace ju1ius\XdgMime\Test\Compiler;
 
-use ju1ius\XDGMime\Compiler\MimeDatabaseCompiler;
-use ju1ius\XDGMime\Parser\MimeDatabaseParser;
-use ju1ius\XDGMime\Runtime\AliasesDatabase;
-use ju1ius\XDGMime\Runtime\GlobsDatabase;
-use ju1ius\XDGMime\Runtime\MagicDatabase;
-use ju1ius\XDGMime\Runtime\MimeDatabase;
-use ju1ius\XDGMime\Runtime\SubclassesDatabase;
-use ju1ius\XDGMime\Test\ResourceHelper;
-use ju1ius\XDGMime\Test\TestDatabaseFactory;
+use ju1ius\XdgMime\Compiler\MimeDatabaseCompiler;
+use ju1ius\XdgMime\Parser\MimeDatabaseParser;
+use ju1ius\XdgMime\Runtime\AliasesDatabase;
+use ju1ius\XdgMime\Runtime\GlobsDatabase;
+use ju1ius\XdgMime\Runtime\MagicDatabase;
+use ju1ius\XdgMime\Runtime\MimeDatabase;
+use ju1ius\XdgMime\Runtime\SubclassesDatabase;
+use ju1ius\XdgMime\Test\ResourceHelper;
+use ju1ius\XdgMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 

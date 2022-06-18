@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\SharedMimeInfo;
+namespace ju1ius\XdgMime\Test\SharedMimeInfo;
 
-use ju1ius\XDGMime\MimeDatabaseInterface;
-use ju1ius\XDGMime\MimeType;
-use ju1ius\XDGMime\Test\ResourceHelper;
-use ju1ius\XDGMime\XdgMimeDatabase;
+use ju1ius\XdgMime\MimeDatabaseInterface;
+use ju1ius\XdgMime\MimeType;
+use ju1ius\XdgMime\Test\ResourceHelper;
+use ju1ius\XdgMime\XdgMimeDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 

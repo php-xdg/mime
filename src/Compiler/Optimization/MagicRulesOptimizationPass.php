@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Compiler\Optimization;
+namespace ju1ius\XdgMime\Compiler\Optimization;
 
-use ju1ius\XDGMime\Compiler\Optimization\Magic\MagicRuleOptimization;
-use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
+use ju1ius\XdgMime\Compiler\Optimization\Magic\MagicRuleOptimization;
+use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 
 final class MagicRulesOptimizationPass implements OptimizationPassInterface
 {

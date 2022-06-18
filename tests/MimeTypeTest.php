@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test;
+namespace ju1ius\XdgMime\Test;
 
-use ju1ius\XDGMime\Exception\InvalidMimeType;
-use ju1ius\XDGMime\MimeType;
+use ju1ius\XdgMime\Exception\InvalidMimeType;
+use ju1ius\XdgMime\MimeType;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 

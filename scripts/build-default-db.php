@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XDGMime\MimeDatabaseGenerator;
+use ju1ius\XdgMime\MimeDatabaseGenerator;
 
 require __DIR__ . '/../vendor/autoload.php';
 

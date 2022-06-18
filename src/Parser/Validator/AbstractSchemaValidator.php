@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Parser\Validator;
+namespace ju1ius\XdgMime\Parser\Validator;
 
-use ju1ius\XDGMime\Parser\Exception\ParseError;
-use ju1ius\XDGMime\Parser\MimeInfoValidatorInterface;
+use ju1ius\XdgMime\Parser\Exception\ParseError;
+use ju1ius\XdgMime\Parser\MimeInfoValidatorInterface;
 
 abstract class AbstractSchemaValidator implements MimeInfoValidatorInterface
 {

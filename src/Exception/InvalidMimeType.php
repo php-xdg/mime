@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Exception;
+namespace ju1ius\XdgMime\Exception;
 
 final class InvalidMimeType extends \RuntimeException
 {

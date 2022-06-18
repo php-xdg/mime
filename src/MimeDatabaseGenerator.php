@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime;
+namespace ju1ius\XdgMime;
 
-use ju1ius\XDGMime\Compiler\MimeDatabaseCompiler;
-use ju1ius\XDGMime\Parser\MimeDatabaseParser;
-use ju1ius\XDGMime\Utils\XdgDataDirIterator;
+use ju1ius\XdgMime\Compiler\MimeDatabaseCompiler;
+use ju1ius\XdgMime\Parser\MimeDatabaseParser;
+use ju1ius\XdgMime\Utils\XdgDataDirIterator;
 
 final class MimeDatabaseGenerator
 {

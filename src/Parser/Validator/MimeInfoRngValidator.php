@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Parser\Validator;
+namespace ju1ius\XdgMime\Parser\Validator;
 
 final class MimeInfoRngValidator extends AbstractSchemaValidator
 {

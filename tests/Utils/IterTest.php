@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\Utils;
+namespace ju1ius\XdgMime\Test\Utils;
 
-use ju1ius\XDGMime\Utils\Iter;
+use ju1ius\XdgMime\Utils\Iter;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 

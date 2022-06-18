@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Runtime;
+namespace ju1ius\XdgMime\Runtime;
 
-use ju1ius\XDGMime\MimeType;
-use ju1ius\XDGMime\Utils\Stat;
+use ju1ius\XdgMime\MimeType;
+use ju1ius\XdgMime\Utils\Stat;
 use Symfony\Component\Filesystem\Path;
 
 /**

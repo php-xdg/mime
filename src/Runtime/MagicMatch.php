@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Runtime;
+namespace ju1ius\XdgMime\Runtime;
 
-use ju1ius\XDGMime\Utils\Bytes;
+use ju1ius\XdgMime\Utils\Bytes;
 
 /**
  * @internal

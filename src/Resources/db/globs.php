@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XDGMime\Runtime\Glob;
-use ju1ius\XDGMime\Runtime\GlobLiteral;
-use ju1ius\XDGMime\Runtime\GlobsDatabase;
+use ju1ius\XdgMime\Runtime\Glob;
+use ju1ius\XdgMime\Runtime\GlobLiteral;
+use ju1ius\XdgMime\Runtime\GlobsDatabase;
 
 return new GlobsDatabase(
     extensions: [

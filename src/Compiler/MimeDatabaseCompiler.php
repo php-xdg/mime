@@ -1,27 +1,27 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Compiler;
+namespace ju1ius\XdgMime\Compiler;
 
-use ju1ius\XDGMime\Parser\AST\GlobNode;
-use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
-use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
-use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
-use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
-use ju1ius\XDGMime\Parser\AST\TreeMatchNode;
-use ju1ius\XDGMime\Runtime\AliasesDatabase;
-use ju1ius\XDGMime\Runtime\Glob;
-use ju1ius\XDGMime\Runtime\GlobLiteral;
-use ju1ius\XDGMime\Runtime\GlobsDatabase;
-use ju1ius\XDGMime\Runtime\MagicDatabase;
-use ju1ius\XDGMime\Runtime\MagicMatch;
-use ju1ius\XDGMime\Runtime\MagicRegex;
-use ju1ius\XDGMime\Runtime\MagicRule;
-use ju1ius\XDGMime\Runtime\MimeDatabase;
-use ju1ius\XDGMime\Runtime\SubclassesDatabase;
-use ju1ius\XDGMime\Runtime\TreeMagicDatabase;
-use ju1ius\XDGMime\Runtime\TreeMagicMatch;
-use ju1ius\XDGMime\Runtime\TreeMagicRule;
-use ju1ius\XDGMime\Utils\Bytes;
+use ju1ius\XdgMime\Parser\AST\GlobNode;
+use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
+use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
+use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
+use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
+use ju1ius\XdgMime\Parser\AST\TreeMatchNode;
+use ju1ius\XdgMime\Runtime\AliasesDatabase;
+use ju1ius\XdgMime\Runtime\Glob;
+use ju1ius\XdgMime\Runtime\GlobLiteral;
+use ju1ius\XdgMime\Runtime\GlobsDatabase;
+use ju1ius\XdgMime\Runtime\MagicDatabase;
+use ju1ius\XdgMime\Runtime\MagicMatch;
+use ju1ius\XdgMime\Runtime\MagicRegex;
+use ju1ius\XdgMime\Runtime\MagicRule;
+use ju1ius\XdgMime\Runtime\MimeDatabase;
+use ju1ius\XdgMime\Runtime\SubclassesDatabase;
+use ju1ius\XdgMime\Runtime\TreeMagicDatabase;
+use ju1ius\XdgMime\Runtime\TreeMagicMatch;
+use ju1ius\XdgMime\Runtime\TreeMagicRule;
+use ju1ius\XdgMime\Utils\Bytes;
 use Symfony\Component\Filesystem\Filesystem;
 
 /**

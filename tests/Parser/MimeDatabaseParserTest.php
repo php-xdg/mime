@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\Parser;
+namespace ju1ius\XdgMime\Test\Parser;
 
-use ju1ius\XDGMime\Parser\Exception\ParseError;
-use ju1ius\XDGMime\Parser\MimeDatabaseParser;
+use ju1ius\XdgMime\Parser\Exception\ParseError;
+use ju1ius\XdgMime\Parser\MimeDatabaseParser;
 use PHPUnit\Framework\TestCase;
 
 final class MimeDatabaseParserTest extends TestCase

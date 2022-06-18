@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Runtime;
+namespace ju1ius\XdgMime\Runtime;
 
-use ju1ius\XDGMime\MimeType;
+use ju1ius\XdgMime\MimeType;
 
 /**
  * A mapping from MIME types to types they inherit from.

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Test\MimeDatabase;
+namespace ju1ius\XdgMime\Test\MimeDatabase;
 
-use ju1ius\XDGMime\MimeDatabaseInterface;
-use ju1ius\XDGMime\Test\MimeTypeAssert;
-use ju1ius\XDGMime\Test\ResourceHelper;
-use ju1ius\XDGMime\Test\TestDatabaseFactory;
+use ju1ius\XdgMime\MimeDatabaseInterface;
+use ju1ius\XdgMime\Test\MimeTypeAssert;
+use ju1ius\XdgMime\Test\ResourceHelper;
+use ju1ius\XdgMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 

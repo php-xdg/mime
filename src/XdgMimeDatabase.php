@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime;
+namespace ju1ius\XdgMime;
 
-use ju1ius\XDGMime\Runtime\MimeDatabaseTrait;
+use ju1ius\XdgMime\Runtime\MimeDatabaseTrait;
 
 final class XdgMimeDatabase implements MimeDatabaseInterface
 {

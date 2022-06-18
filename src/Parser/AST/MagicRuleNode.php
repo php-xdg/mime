@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XDGMime\Parser\AST;
+namespace ju1ius\XdgMime\Parser\AST;
 
 /**
  * @extends CompositeNode<MagicMatchNode>
