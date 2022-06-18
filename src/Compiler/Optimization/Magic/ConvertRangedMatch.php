@@ -3,7 +3,7 @@
 namespace ju1ius\XDGMime\Compiler\Optimization\Magic;
 
 use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
-use ju1ius\XDGMime\Parser\AST\MagicRegexMatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
 
 /**
  * Matches that have a rangeLength >= 1 will be faster when compiled to a regular expression.
@@ -22,7 +22,7 @@ final class ConvertRangedMatch extends MagicRuleOptimization
         }
 
         $pattern = $this->manipulator->patternFor($match);
-        $node = new MagicRegexMatchNode(
+        $node = new MagicRegexNode(
             $pattern,
             $this->manipulator->finalize($pattern),
             $match->getMaxLength(),

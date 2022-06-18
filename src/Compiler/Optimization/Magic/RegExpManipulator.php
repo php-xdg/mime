@@ -3,7 +3,7 @@
 namespace ju1ius\XDGMime\Compiler\Optimization\Magic;
 
 use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
-use ju1ius\XDGMime\Parser\AST\MagicRegexMatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
 use ju1ius\XDGMime\Parser\AST\Node;
 use ju1ius\XDGMime\Utils\Regex;
 
@@ -42,7 +42,7 @@ final class RegExpManipulator
     public function patternFor(Node $node): string
     {
         return match ($node::class) {
-            MagicRegexMatchNode::class => $node->pattern,
+            MagicRegexNode::class => $node->pattern,
             MagicMatchNode::class => $this->patternForMagicMatch($node),
         };
     }

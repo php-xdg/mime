@@ -8,15 +8,10 @@ use Traversable;
  * @template ChildType of Node
  * @internal
  */
-abstract class CompositeNode extends Node implements \IteratorAggregate
+abstract class CompositeNode extends Node
 {
     /**
      * @var ChildType[]
      */
     public array $children = [];
-
-    public function getIterator(): Traversable
-    {
-        return new \ArrayIterator($this->children);
-    }
 }

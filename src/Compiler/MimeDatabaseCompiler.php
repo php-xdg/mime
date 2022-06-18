@@ -3,7 +3,7 @@
 namespace ju1ius\XDGMime\Compiler;
 
 use ju1ius\XDGMime\Parser\AST\GlobNode;
-use ju1ius\XDGMime\Parser\AST\MagicRegexMatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
 use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
 use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
 use ju1ius\XDGMime\Parser\AST\MimeInfoNode;
@@ -235,7 +235,7 @@ final class MimeDatabaseCompiler
     private function compileMagicMatchNode(MagicMatchNode $node, CodeBuilder $code): void
     {
         match ($node::class) {
-            MagicRegexMatchNode::class => $this->compileMagicRegexMatch($node, $code),
+            MagicRegexNode::class => $this->compileMagicRegexMatch($node, $code),
             default => $this->compileMagicMatch($node, $code),
         };
     }
@@ -264,7 +264,7 @@ final class MimeDatabaseCompiler
         $code->raw(')');
     }
 
-    private function compileMagicRegexMatch(MagicRegexMatchNode $node, CodeBuilder $code): void
+    private function compileMagicRegexMatch(MagicRegexNode $node, CodeBuilder $code): void
     {
         $code
             ->new(MagicRegex::class)->raw('(')

@@ -3,7 +3,7 @@
 namespace ju1ius\XDGMime\Compiler\Optimization\Magic;
 
 use ju1ius\XDGMime\Parser\AST\MagicMatchNode;
-use ju1ius\XDGMime\Parser\AST\MagicRegexMatchNode;
+use ju1ius\XDGMime\Parser\AST\MagicRegexNode;
 use ju1ius\XDGMime\Parser\AST\MagicRuleNode;
 use ju1ius\XDGMime\Utils\Iter;
 
@@ -89,6 +89,6 @@ final class CombineOrMatches extends MagicRuleOptimization
         }
         $pattern = $this->manipulator->or(...$patterns);
 
-        return new MagicRegexMatchNode($pattern, $this->manipulator->finalize($pattern), $maxLength);
+        return new MagicRegexNode($pattern, $this->manipulator->finalize($pattern), $maxLength);
     }
 }

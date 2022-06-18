@@ -2,12 +2,21 @@
 
 namespace ju1ius\XDGMime\Parser\AST;
 
-final class MagicRegexNode
+/**
+ * @internal
+ */
+final class MagicRegexNode extends MagicMatchNode
 {
     public function __construct(
-        public readonly string $type,
-        public readonly int $priority,
-        public readonly string $pattern,
+        public string $pattern,
+        public string $compiledPattern,
+        public int $maxLength,
     ) {
+        parent::__construct('regexp', 0, 0, '', '', 1);
+    }
+
+    public function getMaxLength(): int
+    {
+        return $this->maxLength;
     }
 }
