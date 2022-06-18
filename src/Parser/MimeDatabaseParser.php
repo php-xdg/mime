@@ -231,7 +231,7 @@ final class MimeDatabaseParser
         // mask is validated by the schema and is an hexadecimal string in the form 0xFF00
         $parsedMask = pack('H*', substr($mask, 2));
         if (\strlen($parsedMask) !== \strlen($parsedValue)) {
-            throw new \ParseError(sprintf(
+            throw new ParseError(sprintf(
                 'Mask "%s" parsed length (%d) must equal value "%s" parsed length (%d)',
                 $mask,
                 \strlen($parsedMask),
