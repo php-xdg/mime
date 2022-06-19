@@ -9,6 +9,36 @@ use PHPUnit\Framework\TestCase;
 final class IterTest extends TestCase
 {
     /**
+     * @dataProvider chunkWhileProvider
+     */
+    public function testChunkWhile(iterable $col, callable $predicate, array $expected): void
+    {
+        $result = iterator_to_array(Iter::chunkWhile($col, $predicate), false);
+        Assert::assertSame($expected, $result);
+    }
+
+    public function chunkWhileProvider(): iterable
+    {
+        yield 'empty collection' => [
+            [], fn() => true, [],
+        ];
+        yield 'unary collection' => [
+            [1], fn() => true, [[1]],
+        ];
+        yield 'yields a single chunk if predicate is always true' => [
+            [1, 2, 3], fn() => true, [[1, 2, 3]],
+        ];
+        yield 'yields unary chunks if predicate is always false' => [
+            [1, 2, 3], fn() => false, [[1], [2], [3]],
+        ];
+        yield 'correctly chunks consecutive numbers' => [
+            [1, 2, 3, 7, 8, 9, 4, 5, 6],
+            fn(int $n, array $chunk) => end($chunk) === $n - 1,
+            [[1, 2, 3], [7, 8, 9], [4, 5, 6]],
+        ];
+    }
+
+    /**
      * @dataProvider consecutiveProvider
      */
     public function testConsecutive(iterable $col, int $size, array $expected): void
