@@ -90,25 +90,24 @@ final class RegExpManipulator
                 "\xFF" => $this->quote($value[$i]),
                 // $char & 0x00 is always equal to 0x00, so we must match any value.
                 "\x00" => '.',
-                default => $this->characterClassForMask($value[$i], $mask[$i]),
+                default => $this->characterClassForMask(\ord($value[$i]), \ord($mask[$i])),
             };
         }
         return $pattern;
     }
 
-    private function characterClassForMask(string $char, string $mask): string
+    private function characterClassForMask(int $char, int $mask): string
     {
-        // find all possible 8-bit characters matching ($char & $mask)
-        $maskedValue = $char & $mask;
-        $chars = [];
-        foreach (range(0x00, 0xFF) as $o) {
-            $maskedChar = \chr($o) & $mask;
-            if ($maskedChar === $maskedValue) {
-                $chars[] = $o;
-            }
-        }
-        // group found characters in contiguous ranges
-        $ranges = Iter::chunkWhile($chars, fn(int $v, array $range) => end($range) === $v - 1);
+        // find all possible octets matching ($char & $mask)
+        $bytes = array_filter(
+            range(0x00, 0xFF),
+            fn(int $byte) => ($byte & $mask) === ($char & $mask),
+        );
+        // group found octets in contiguous ranges
+        $ranges = Iter::chunkWhile(
+            $bytes,
+            fn(int $byte, array $range) => end($range) === $byte - 1,
+        );
         // convert to a PCRE character class
         $pattern = '[';
         foreach ($ranges as $range) {
