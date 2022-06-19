@@ -2,6 +2,9 @@
 
 namespace ju1ius\XdgMime\Runtime;
 
+/**
+ * @internal
+ */
 final class MagicDatabase
 {
     /**

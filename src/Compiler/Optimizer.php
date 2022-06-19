@@ -15,6 +15,9 @@ use ju1ius\XdgMime\Compiler\Optimization\OptimizationPassInterface;
 use ju1ius\XdgMime\Compiler\Optimization\TreeMagicLookupPass;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 
+/**
+ * @internal
+ */
 final class Optimizer
 {
     /**

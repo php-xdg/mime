@@ -5,6 +5,9 @@ namespace ju1ius\XdgMime\Parser\Validator;
 use ju1ius\XdgMime\Parser\Exception\ParseError;
 use ju1ius\XdgMime\Parser\MimeInfoValidatorInterface;
 
+/**
+ * @internal
+ */
 abstract class AbstractSchemaValidator implements MimeInfoValidatorInterface
 {
     final public function validate(\DOMDocument $document): void

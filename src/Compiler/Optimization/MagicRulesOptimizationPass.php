@@ -7,6 +7,9 @@ use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 
+/**
+ * @internal
+ */
 final class MagicRulesOptimizationPass implements OptimizationPassInterface
 {
     /**

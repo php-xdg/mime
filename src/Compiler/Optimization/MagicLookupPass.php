@@ -5,6 +5,9 @@ namespace ju1ius\XdgMime\Compiler\Optimization;
 use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 
+/**
+ * @internal
+ */
 final class MagicLookupPass implements OptimizationPassInterface
 {
     public function process(MimeInfoNode $info): MimeInfoNode

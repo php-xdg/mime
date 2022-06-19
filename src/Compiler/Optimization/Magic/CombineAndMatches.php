@@ -6,6 +6,9 @@ use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
 use ju1ius\XdgMime\Utils\Iter;
 
+/**
+ * @internal
+ */
 final class CombineAndMatches extends MagicRuleOptimization
 {
     public function __construct(

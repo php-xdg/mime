@@ -4,6 +4,9 @@ namespace ju1ius\XdgMime\Parser;
 
 use ju1ius\XdgMime\Parser\Exception\ParseError;
 
+/**
+ * @internal
+ */
 interface MimeInfoValidatorInterface
 {
     /**

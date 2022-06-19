@@ -2,6 +2,9 @@
 
 namespace ju1ius\XdgMime\Parser\Validator;
 
+/**
+ * @internal
+ */
 final class MimeInfoRngValidator extends AbstractSchemaValidator
 {
     private const SCHEMA = __DIR__ . '/../../Resources/schemas/shared-mime-info.rng';

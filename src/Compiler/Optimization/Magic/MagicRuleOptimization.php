@@ -5,6 +5,9 @@ namespace ju1ius\XdgMime\Compiler\Optimization\Magic;
 use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 
+/**
+ * @internal
+ */
 abstract class MagicRuleOptimization
 {
     public function preProcessRule(MagicRuleNode $rule): MagicRuleNode

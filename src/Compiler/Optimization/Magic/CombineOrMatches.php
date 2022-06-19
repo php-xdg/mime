@@ -9,6 +9,7 @@ use ju1ius\XdgMime\Utils\Iter;
 
 /**
  * Merge consecutive children of a match to a single regular expression.
+ * @internal
  */
 final class CombineOrMatches extends MagicRuleOptimization
 {

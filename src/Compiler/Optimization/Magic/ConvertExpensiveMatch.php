@@ -9,6 +9,7 @@ use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
  * Matches will be faster when compiled to a regular expression when:
  *   - they have a rangeLength >= 1,
  *   - or they use a mask (and the mask can be compiled),
+ * @internal
  */
 final class ConvertExpensiveMatch extends MagicRuleOptimization
 {
