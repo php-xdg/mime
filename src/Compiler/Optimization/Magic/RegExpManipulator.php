@@ -8,6 +8,9 @@ use ju1ius\XdgMime\Parser\AST\Node;
 use ju1ius\XdgMime\Utils\Iter;
 use ju1ius\XdgMime\Utils\Regex;
 
+/**
+ * @internal
+ */
 final class RegExpManipulator
 {
     public function __construct(

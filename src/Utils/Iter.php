@@ -4,6 +4,9 @@ namespace ju1ius\XdgMime\Utils;
 
 use Traversable;
 
+/**
+ * @internal
+ */
 final class Iter
 {
     /**

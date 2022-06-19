@@ -2,6 +2,9 @@
 
 namespace ju1ius\XdgMime\Utils;
 
+/**
+ * @internal
+ */
 final class Regex
 {
     /**
