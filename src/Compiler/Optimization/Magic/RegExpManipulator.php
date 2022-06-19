@@ -42,8 +42,11 @@ final class RegExpManipulator
 
     public function or(string ...$patterns): string
     {
-        $pattern = implode('|', $patterns);
-        return sprintf('(%s)', $pattern);
+        if (\count($patterns) === 1) {
+            return $patterns[0];
+        }
+
+        return sprintf('(%s)', implode('|', $patterns));
     }
 
     public function and(string $if, string $then): string
