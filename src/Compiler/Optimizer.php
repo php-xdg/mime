@@ -24,7 +24,7 @@ final class Optimizer
 
     public static function create(): self
     {
-        $manipulator = new RegExpManipulator();
+        $manipulator = new RegExpManipulator('~');
         return (new self())
             ->add(
                 new AliasLookupPass(),
