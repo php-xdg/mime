@@ -66,7 +66,7 @@ final class RegExpManipulator
             '' => $this->quote($node->value),
             default => $this->patternForMask($node->value, $node->mask),
         };
-        return sprintf('(%s%s)', $rangePattern, $matchPattern);
+        return sprintf('%s%s', $rangePattern, $matchPattern);
     }
 
     private function patternForRange(MagicMatchNode $node): string
