@@ -23,7 +23,7 @@
         <optional>
           <element name="icon">
             <attribute name="name">
-              <data type="NCName"/>
+              <ref name="iconName"/>
             </attribute>
             <a:documentation>
               Specifies the icon to be used for this particular mime-type, given by the name attribute.
@@ -37,7 +37,7 @@
         <optional>
           <element name="generic-icon">
             <attribute name="name">
-              <data type="NCName"/>
+              <ref name="iconName"/>
             </attribute>
             <a:documentation>
               Specifies the icon to use as a generic icon for this particular mime-type, given by the name attribute.
@@ -345,6 +345,18 @@
   <define name="mimeType">
     <data type="string">
       <param name="pattern">[A-Za-z][A-Za-z\-]*/[\dA-Za-z][\dA-Za-z_.+\-]*</param>
+    </data>
+  </define>
+
+  <define name="iconName">
+    <a:documentation>
+      Icon names may only contain lowercase letters, numbers, underscore, dash, or period characters.
+      Spaces, colons, slashes, and backslashes are not allowed.
+      Also, icon names must be spelled as they are in the en_US dictionary.
+      See https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html
+    </a:documentation>
+    <data type="string">
+      <param name="pattern">[\da-z_.\-]+</param>
     </data>
   </define>
 

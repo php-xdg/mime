@@ -73,6 +73,12 @@ final class MimeDatabaseParser
         if ($xpath->query('boolean(./fdo:magic-deleteall)', $node)) {
             $type->magic = [];
         }
+        if ($icon = $xpath->evaluate('string(./fdo:icon/@name)', $node)) {
+            $type->icon = $icon;
+        }
+        if ($genericIcon = $xpath->evaluate('string(./fdo:generic-icon/@name)', $node)) {
+            $type->genericIcon = $genericIcon;
+        }
         foreach ($xpath->query('./fdo:alias', $node) as $aliasNode) {
             $type->aliases[] = $aliasNode->getAttribute('type');
         }
