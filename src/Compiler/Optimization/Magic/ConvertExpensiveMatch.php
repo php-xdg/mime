@@ -25,16 +25,16 @@ final class ConvertExpensiveMatch extends AbstractNodeVisitor
 
     public function enterNode(Node $node): Node
     {
-        if (!$node instanceof MagicMatchNode || !$this->isEligibleMatch($node)) {
-            return $node;
+        if ($node instanceof MagicMatchNode && $this->isEligibleMatch($node)) {
+            return new MagicRegexNode(
+                $pattern = $this->manipulator->patternFor($node),
+                $this->manipulator->finalize($pattern),
+                $node->getMaxLength(),
+                $node->children,
+            );
         }
 
-        return new MagicRegexNode(
-            $pattern = $this->manipulator->patternFor($node),
-            $this->manipulator->finalize($pattern),
-            $node->getMaxLength(),
-            $node->children,
-        );
+        return $node;
     }
 
     private function isEligibleMatch(MagicMatchNode $node): bool

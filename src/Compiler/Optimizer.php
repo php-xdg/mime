@@ -12,7 +12,6 @@ use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertExpensiveMatch;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\RegExpManipulator;
-use ju1ius\XdgMime\Compiler\Optimization\MagicRulesOptimizationPass;
 use ju1ius\XdgMime\Compiler\Optimization\OptimizationPassInterface;
 use ju1ius\XdgMime\Compiler\Optimization\RecursivePass;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
