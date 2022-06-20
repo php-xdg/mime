@@ -67,10 +67,10 @@ final class MimeDatabaseParser
     {
         $name = $node->getAttribute('type');
         $type = $root->createType($name);
-        if ($xpath->query('./fdo:glob-deleteall', $node)) {
+        if ($xpath->evaluate('boolean(./fdo:glob-deleteall)', $node)) {
             $type->globs = [];
         }
-        if ($xpath->query('./fdo:magic-deleteall', $node)) {
+        if ($xpath->query('boolean(./fdo:magic-deleteall)', $node)) {
             $type->magic = [];
         }
         foreach ($xpath->query('./fdo:alias', $node) as $aliasNode) {
