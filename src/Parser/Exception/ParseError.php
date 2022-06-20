@@ -6,12 +6,14 @@ final class ParseError extends \RuntimeException
 {
     public static function fromLibXml(\LibXMLError $error): self
     {
-        $message = sprintf(
-            '%s in %s:%d',
-            trim($error->message),
-            $error->file ?: '<string>',
-            $error->line,
-        );
+        $message = trim($error->message);
+        if ($file = $error->file) {
+            $message .= sprintf(' in %s', $file);
+        }
+        if ($line = $error->line) {
+            $message .= sprintf('on line %d', $line);
+        }
+
         return new self($message, $error->code);
     }
 }
