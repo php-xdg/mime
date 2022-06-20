@@ -9,10 +9,8 @@ namespace ju1ius\XdgMime\Parser\AST;
 class MagicMatchNode extends CompositeNode
 {
     /**
-     * @var MagicMatchNode[]
+     * @param MagicMatchNode[] $children
      */
-    public array $children = [];
-
     public function __construct(
         public string $type,
         public int $rangeStart,
@@ -20,6 +18,7 @@ class MagicMatchNode extends CompositeNode
         public string $value,
         public string $mask,
         public int $wordSize,
+        public array $children = [],
     ) {
     }
 

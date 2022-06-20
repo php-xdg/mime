@@ -11,8 +11,9 @@ final class MagicRegexNode extends MagicMatchNode
         public string $pattern,
         public string $compiledPattern,
         public int $maxLength,
+        array $children = [],
     ) {
-        parent::__construct('regexp', 0, 0, '', '', 1);
+        parent::__construct('regexp', 0, 0, '', '', 1, $children);
     }
 
     public function getMaxLength(): int

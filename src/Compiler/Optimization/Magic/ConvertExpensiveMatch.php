@@ -2,8 +2,10 @@
 
 namespace ju1ius\XdgMime\Compiler\Optimization\Magic;
 
+use ju1ius\XdgMime\Compiler\Optimization\AbstractNodeVisitor;
 use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
+use ju1ius\XdgMime\Parser\AST\Node;
 
 /**
  * Matches will be faster when compiled to a regular expression when:
@@ -11,7 +13,7 @@ use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
  *   - or they use a mask (and the mask can be compiled),
  * @internal
  */
-final class ConvertExpensiveMatch extends MagicRuleOptimization
+final class ConvertExpensiveMatch extends AbstractNodeVisitor
 {
     const EXPENSIVE_RANGE_LENGTH = 2;
     const EXPENSIVE_MASK_LENGTH = 2;
@@ -21,21 +23,18 @@ final class ConvertExpensiveMatch extends MagicRuleOptimization
     ) {
     }
 
-    public function preProcessMatch(MagicMatchNode $match): MagicMatchNode
+    public function enterNode(Node $node): Node
     {
-        if (!$this->isEligibleMatch($match)) {
-            return $match;
+        if (!$node instanceof MagicMatchNode || !$this->isEligibleMatch($node)) {
+            return $node;
         }
 
-        $pattern = $this->manipulator->patternFor($match);
-        $node = new MagicRegexNode(
-            $pattern,
+        return new MagicRegexNode(
+            $pattern = $this->manipulator->patternFor($node),
             $this->manipulator->finalize($pattern),
-            $match->getMaxLength(),
+            $node->getMaxLength(),
+            $node->children,
         );
-        $node->children = $match->children;
-
-        return $node;
     }
 
     private function isEligibleMatch(MagicMatchNode $node): bool

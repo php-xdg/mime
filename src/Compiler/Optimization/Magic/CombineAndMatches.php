@@ -2,21 +2,32 @@
 
 namespace ju1ius\XdgMime\Compiler\Optimization\Magic;
 
+use ju1ius\XdgMime\Compiler\Optimization\AbstractNodeVisitor;
 use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
+use ju1ius\XdgMime\Parser\AST\Node;
 use ju1ius\XdgMime\Utils\Iter;
 
 /**
  * @internal
  */
-final class CombineAndMatches extends MagicRuleOptimization
+final class CombineAndMatches extends AbstractNodeVisitor
 {
     public function __construct(
         private readonly RegExpManipulator $manipulator,
     ) {
     }
 
-    public function postProcessMatch(MagicMatchNode $match): MagicMatchNode
+    public function leaveNode(Node $node): Node
+    {
+        if ($node instanceof MagicMatchNode && $this->isEligibleNode($node)) {
+            return $this->processMatch($node);
+        }
+
+        return $node;
+    }
+
+    public function processMatch(MagicMatchNode $match): MagicMatchNode
     {
         if (!$this->isEligibleNode($match)) {
             return $match;

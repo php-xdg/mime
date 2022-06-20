@@ -5,7 +5,7 @@ namespace ju1ius\XdgMime\Parser\AST;
 /**
  * @internal
  */
-final class TypeNode
+final class TypeNode extends Node
 {
     /**
      * @var string[]

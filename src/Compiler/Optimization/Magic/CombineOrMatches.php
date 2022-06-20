@@ -2,44 +2,42 @@
 
 namespace ju1ius\XdgMime\Compiler\Optimization\Magic;
 
+use ju1ius\XdgMime\Compiler\Optimization\AbstractNodeVisitor;
 use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
 use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
+use ju1ius\XdgMime\Parser\AST\Node;
 use ju1ius\XdgMime\Utils\Iter;
 
 /**
  * Merge consecutive children of a match to a single regular expression.
  * @internal
  */
-final class CombineOrMatches extends MagicRuleOptimization
+final class CombineOrMatches extends AbstractNodeVisitor
 {
     public function __construct(
         private readonly RegExpManipulator $manipulator,
     ) {
     }
 
-    public function postProcessRule(MagicRuleNode $rule): MagicRuleNode
+    public function leaveNode(Node $node): Node
     {
-        if (!$this->willPostProcessRule($rule)) {
-            return $rule;
+        if ($node instanceof MagicRuleNode && $this->isEligibleRule($node)) {
+            return $this->processNode($node);
         }
-        return $this->processNode($rule);
+        if ($node instanceof MagicMatchNode && $this->isEligibleMatch($node)) {
+            return $this->processNode($node);
+        }
+
+        return $node;
     }
 
-    public function postProcessMatch(MagicMatchNode $match): MagicMatchNode
-    {
-        if (!$this->willPostProcessMatch($match)) {
-            return $match;
-        }
-        return $this->processNode($match);
-    }
-
-    private function willPostProcessRule(MagicRuleNode $rule): bool
+    private function isEligibleRule(MagicRuleNode $rule): bool
     {
         return Iter::someConsecutive($rule->children, 2, $this->isEligibleChild(...));
     }
 
-    private function willPostProcessMatch(MagicMatchNode $match): bool
+    private function isEligibleMatch(MagicMatchNode $match): bool
     {
         return $match->children
             && Iter::someConsecutive($match->children, 2, $this->isEligibleChild(...))
