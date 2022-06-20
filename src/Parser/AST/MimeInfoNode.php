@@ -19,6 +19,16 @@ final class MimeInfoNode extends CompositeNode
     public array $aliasLookup = [];
 
     /**
+     * @var array<string, string>
+     */
+    public array $iconLookup = [];
+
+    /**
+     * @var array<string, string>
+     */
+    public array $genericIconLookup = [];
+
+    /**
      * @var MagicRuleNode[]
      */
     public array $magic = [];

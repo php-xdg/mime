@@ -16,9 +16,9 @@ This package is a pure PHP implementation of the
   * [x] magic rules
   * [x] treemagic rules
   * [ ] XML namespaces
-* [ ] MIME type icons
-  * [ ] icons 
-  * [ ] generic icons 
+* [x] MIME type icons
+  * [x] icons 
+  * [x] generic icons 
 
 
 ## Installation

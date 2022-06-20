@@ -12,6 +12,7 @@ use ju1ius\XdgMime\Runtime\AliasesDatabase;
 use ju1ius\XdgMime\Runtime\Glob;
 use ju1ius\XdgMime\Runtime\GlobLiteral;
 use ju1ius\XdgMime\Runtime\GlobsDatabase;
+use ju1ius\XdgMime\Runtime\IconsDatabase;
 use ju1ius\XdgMime\Runtime\MagicDatabase;
 use ju1ius\XdgMime\Runtime\MagicMatch;
 use ju1ius\XdgMime\Runtime\MagicRegex;
@@ -67,6 +68,10 @@ final class MimeDatabaseCompiler
         $this->compileTreeMagicRules($info, $code);
         $code->raw(",\n");
 
+        $code->write('');
+        $this->compileIcons($info, $code);
+        $code->raw(",\n");
+
         $code->dedent()->writeln(');');
 
         return (string)$code;
@@ -83,34 +88,40 @@ final class MimeDatabaseCompiler
     public function compileToDirectory(MimeInfoNode $info, string $path): void
     {
         $info = Optimizer::create()->process($info);
-
+        // aliases
         $code = CodeBuilder::forFile()->write('return ');
         $this->compileAliases($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/aliases.php", $code);
-
+        // subclasses
         $code = CodeBuilder::forFile()->write('return ');
         $this->compileSubClasses($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/subclasses.php", $code);
-
+        // globs
         $code = CodeBuilder::forFile()->write('return ');
         $this->compileGlobs($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/globs.php", $code);
-
+        // magic
         $code = CodeBuilder::forFile();
         $this->compileEndiannessCheck($code);
         $code->write('return ');
         $this->compileMagicRules($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/magic.php", $code);
-
+        // tree magic
         $code = CodeBuilder::forFile();
         $code->write('return ');
         $this->compileTreeMagicRules($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/treemagic.php", $code);
+        // icons
+        $code = CodeBuilder::forFile();
+        $code->write('return ');
+        $this->compileIcons($info, $code);
+        $code->raw(";\n");
+        $this->fs->dumpFile("{$path}/icons.php", $code);
     }
 
     private function compileSubClasses(MimeInfoNode $info, CodeBuilder $code): void
@@ -132,6 +143,23 @@ final class MimeDatabaseCompiler
             ->each($info->aliasLookup, fn($v, $k, $code) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n"))
             ->dedent()
             ->write('])')
+        ;
+    }
+
+    private function compileIcons(MimeInfoNode $info, CodeBuilder $code): void
+    {
+        $writeEntry = fn($v, $k) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n");
+        $code
+            ->new(IconsDatabase::class)->raw("(\n")
+            ->indent()
+            ->writeln('icons: [')->indent()
+            ->each($info->iconLookup, $writeEntry)
+            ->dedent()->writeln('],')
+            ->writeln('genericIcons: [')->indent()
+            ->each($info->genericIconLookup, $writeEntry)
+            ->dedent()->writeln('],')
+            ->dedent()
+            ->write(')')
         ;
     }
 

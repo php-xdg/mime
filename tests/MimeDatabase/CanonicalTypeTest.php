@@ -6,14 +6,11 @@ use ju1ius\XdgMime\MimeDatabaseInterface;
 use ju1ius\XdgMime\MimeType;
 use ju1ius\XdgMime\Test\MimeTypeAssert;
 use ju1ius\XdgMime\Test\TestDatabaseFactory;
-use ju1ius\XdgMime\XdgMimeDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 final class CanonicalTypeTest extends TestCase
 {
-    private static ?MimeDatabaseInterface $db = null;
-
     public function testGetCanonicalType(): void
     {
         $xml = <<<'XML'
@@ -48,6 +45,6 @@ final class CanonicalTypeTest extends TestCase
 
     private static function getDatabase(): MimeDatabaseInterface
     {
-        return self::$db ??= new XdgMimeDatabase();
+        return TestDatabaseFactory::default();
     }
 }

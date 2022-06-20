@@ -5,14 +5,12 @@ namespace ju1ius\XdgMime\Test\SharedMimeInfo;
 use ju1ius\XdgMime\MimeDatabaseInterface;
 use ju1ius\XdgMime\MimeType;
 use ju1ius\XdgMime\Test\ResourceHelper;
-use ju1ius\XdgMime\XdgMimeDatabase;
+use ju1ius\XdgMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 final class TreeMagicDetectionTest extends TestCase
 {
-    private static ?MimeDatabaseInterface $db = null;
-
     /**
      * @fixme The tests seem to imply that the algorithm should return several MIME types.
      *
@@ -44,6 +42,6 @@ final class TreeMagicDetectionTest extends TestCase
 
     private static function getDatabase(): MimeDatabaseInterface
     {
-        return self::$db ??= new XdgMimeDatabase();
+        return TestDatabaseFactory::default();
     }
 }

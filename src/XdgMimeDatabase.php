@@ -9,6 +9,8 @@ final class XdgMimeDatabase implements MimeDatabaseInterface
     use MimeDatabaseTrait {
         getCanonicalType as private doGetCanonicalType;
         getAncestors as private doGetAncestors;
+        getIcon as private doGetIcon;
+        getGenericIcon as private doGetGenericIcon;
         guessType as private doGuessType;
         guessTypeByFileName as private doGuessTypeByFileName;
         guessTypeByData as private doGuessTypeByData;
@@ -32,6 +34,18 @@ final class XdgMimeDatabase implements MimeDatabaseInterface
         $this->aliases ??= require $this->directory . '/aliases.php';
         $this->subclasses ??= require $this->directory . '/subclasses.php';
         return $this->doGetAncestors($type);
+    }
+
+    public function getIcon(MimeType $type): string
+    {
+        $this->icons ??= require $this->directory . '/icons.php';
+        return $this->doGetIcon($type);
+    }
+
+    public function getGenericIcon(MimeType $type): string
+    {
+        $this->icons ??= require $this->directory . '/icons.php';
+        return $this->doGetGenericIcon($type);
     }
 
     public function guessType(string $path, bool $followLinks = true): MimeType

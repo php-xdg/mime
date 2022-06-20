@@ -13,6 +13,7 @@ trait MimeDatabaseTrait
 {
     private AliasesDatabase $aliases;
     private SubclassesDatabase $subclasses;
+    private IconsDatabase $icons;
     private GlobsDatabase $globs;
     private MagicDatabase $magic;
     private TreeMagicDatabase $treeMagic;
@@ -30,6 +31,16 @@ trait MimeDatabaseTrait
             $ancestors[] = MimeType::of($ancestor);
         }
         return array_unique($ancestors, \SORT_REGULAR);
+    }
+
+    public function getIcon(MimeType $type): string
+    {
+        return $this->icons->get((string)$type);
+    }
+
+    public function getGenericIcon(MimeType $type): string
+    {
+        return $this->icons->generic((string) $type, $type->media);
     }
 
     public function guessTypeByFileName(string $path): MimeType

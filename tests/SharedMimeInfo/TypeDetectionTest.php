@@ -5,7 +5,7 @@ namespace ju1ius\XdgMime\Test\SharedMimeInfo;
 use ju1ius\XdgMime\MimeDatabaseInterface;
 use ju1ius\XdgMime\Test\MimeTypeAssert;
 use ju1ius\XdgMime\Test\ResourceHelper;
-use ju1ius\XdgMime\XdgMimeDatabase;
+use ju1ius\XdgMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\TestCase;
 
 final class TypeDetectionTest extends TestCase
@@ -15,8 +15,6 @@ final class TypeDetectionTest extends TestCase
      * Remember to update this when the default database is recompiled.
      */
     private const LOOKUP_BUFFER_LENGTH = 18729;
-
-    private static ?MimeDatabaseInterface $db = null;
 
     /**
      * @dataProvider guessTypeByFilenameProvider
@@ -87,6 +85,6 @@ final class TypeDetectionTest extends TestCase
 
     private static function getDatabase(): MimeDatabaseInterface
     {
-        return self::$db ??= new XdgMimeDatabase();
+        return TestDatabaseFactory::default();
     }
 }

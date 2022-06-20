@@ -5,6 +5,7 @@ namespace ju1ius\XdgMime\Compiler;
 use ju1ius\XdgMime\Compiler\Optimization\AliasLookupPass;
 use ju1ius\XdgMime\Compiler\Optimization\GlobsLookupPass;
 use ju1ius\XdgMime\Compiler\Optimization\HierarchyLookupPass;
+use ju1ius\XdgMime\Compiler\Optimization\IconLookupPass;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertExpensiveMatch;
@@ -35,6 +36,7 @@ final class Optimizer
                 new GlobsLookupPass(),
                 new MagicLookupPass(),
                 new TreeMagicLookupPass(),
+                new IconLookupPass(),
                 new MagicRulesOptimizationPass([
                     new ConvertExpensiveMatch($manipulator),
                     new CombineOrMatches($manipulator),

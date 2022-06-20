@@ -5,9 +5,17 @@ namespace ju1ius\XdgMime\Test;
 use ju1ius\XdgMime\Compiler\MimeDatabaseCompiler;
 use ju1ius\XdgMime\Parser\MimeDatabaseParser;
 use ju1ius\XdgMime\Runtime\MimeDatabase;
+use ju1ius\XdgMime\XdgMimeDatabase;
 
 final class TestDatabaseFactory
 {
+    private static ?XdgMimeDatabase $defaultDb = null;
+
+    public static function default(): XdgMimeDatabase
+    {
+        return self::$defaultDb ??= new XdgMimeDatabase();
+    }
+
     public static function createFromString(string ...$documents): MimeDatabase
     {
         $parser = new MimeDatabaseParser();

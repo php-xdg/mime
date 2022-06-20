@@ -5,14 +5,11 @@ namespace ju1ius\XdgMime\Test\MimeDatabase;
 use ju1ius\XdgMime\MimeDatabaseInterface;
 use ju1ius\XdgMime\MimeType;
 use ju1ius\XdgMime\Test\TestDatabaseFactory;
-use ju1ius\XdgMime\XdgMimeDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
 final class TypeHierarchyTest extends TestCase
 {
-    private static ?MimeDatabaseInterface $db = null;
-
     /**
      * @dataProvider getAncestorsProvider
      */
@@ -85,6 +82,6 @@ final class TypeHierarchyTest extends TestCase
 
     private static function getDatabase(): MimeDatabaseInterface
     {
-        return self::$db ??= new XdgMimeDatabase();
+        return TestDatabaseFactory::default();
     }
 }
