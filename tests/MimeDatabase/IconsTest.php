@@ -15,18 +15,18 @@ final class IconsTest extends TestCase
     public function testDefaultDatabase(): void
     {
         $db = TestDatabaseFactory::default();
-        Assert::assertSame('application-x-php', $db->getIcon(MimeType::of('application/x-php')));
-        Assert::assertSame('text-x-script', $db->getGenericIcon(MimeType::of('application/x-php')));
+        Assert::assertSame('application-x-php', $db->getIconName(MimeType::of('application/x-php')));
+        Assert::assertSame('text-x-script', $db->getGenericIconName(MimeType::of('application/x-php')));
     }
 
     public function testGetIcon(): void
     {
-        Assert::assertSame('application-foo-bar', self::getDatabase()->getIcon(MimeType::of('foo/bar')));
+        Assert::assertSame('application-foo-bar', self::getDatabase()->getIconName(MimeType::of('foo/bar')));
     }
 
     public function testGetGenericIcon(): void
     {
-        Assert::assertSame('text-x-generic', self::getDatabase()->getGenericIcon(MimeType::of('foo/bar')));
+        Assert::assertSame('text-x-generic', self::getDatabase()->getGenericIconName(MimeType::of('foo/bar')));
     }
 
     /**
@@ -34,7 +34,7 @@ final class IconsTest extends TestCase
      */
     public function testNotFoundIcons(string $type, string $expected): void
     {
-        Assert::assertSame($expected, self::getDatabase()->getIcon(MimeType::of($type)));
+        Assert::assertSame($expected, self::getDatabase()->getIconName(MimeType::of($type)));
     }
 
     public function notFoundIconsProvider(): iterable
@@ -48,7 +48,7 @@ final class IconsTest extends TestCase
      */
     public function testNotFoundGenericIcons(string $type, string $expected): void
     {
-        Assert::assertSame($expected, self::getDatabase()->getGenericIcon(MimeType::of($type)));
+        Assert::assertSame($expected, self::getDatabase()->getGenericIconName(MimeType::of($type)));
     }
 
     public function notFoundGenericIconsProvider(): iterable

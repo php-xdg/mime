@@ -16,9 +16,9 @@ interface MimeDatabaseInterface
      */
     public function getAncestors(MimeType $type): array;
 
-    public function getIcon(MimeType $type): string;
+    public function getIconName(MimeType $type): string;
 
-    public function getGenericIcon(MimeType $type): string;
+    public function getGenericIconName(MimeType $type): string;
 
     /**
      * Finds a file's MIME type using the XDG recommended checking order.

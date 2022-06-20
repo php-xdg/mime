@@ -33,12 +33,12 @@ trait MimeDatabaseTrait
         return array_unique($ancestors, \SORT_REGULAR);
     }
 
-    public function getIcon(MimeType $type): string
+    public function getIconName(MimeType $type): string
     {
         return $this->icons->get((string)$type);
     }
 
-    public function getGenericIcon(MimeType $type): string
+    public function getGenericIconName(MimeType $type): string
     {
         return $this->icons->generic((string) $type, $type->media);
     }
