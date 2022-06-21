@@ -18,6 +18,7 @@ final class MimeDatabase implements MimeDatabaseInterface
         private MagicDatabase $magic,
         private TreeMagicDatabase $treeMagic,
         private IconsDatabase $icons,
+        private XmlNamespacesDatabase $xmlNamespaces,
     ) {
     }
 }

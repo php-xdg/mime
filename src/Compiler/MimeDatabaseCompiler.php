@@ -22,6 +22,7 @@ use ju1ius\XdgMime\Runtime\SubclassesDatabase;
 use ju1ius\XdgMime\Runtime\TreeMagicDatabase;
 use ju1ius\XdgMime\Runtime\TreeMagicMatch;
 use ju1ius\XdgMime\Runtime\TreeMagicRule;
+use ju1ius\XdgMime\Runtime\XmlNamespacesDatabase;
 use ju1ius\XdgMime\Utils\Bytes;
 use Symfony\Component\Filesystem\Filesystem;
 
@@ -70,6 +71,10 @@ final class MimeDatabaseCompiler
 
         $code->write('');
         $this->compileIcons($info, $code);
+        $code->raw(",\n");
+
+        $code->write('');
+        $this->compileXmlNamespaces($info, $code);
         $code->raw(",\n");
 
         $code->dedent()->writeln(');');
@@ -122,6 +127,12 @@ final class MimeDatabaseCompiler
         $this->compileIcons($info, $code);
         $code->raw(";\n");
         $this->fs->dumpFile("{$path}/icons.php", $code);
+        // xml namespaces
+        $code = CodeBuilder::forFile();
+        $code->write('return ');
+        $this->compileXmlNamespaces($info, $code);
+        $code->raw(";\n");
+        $this->fs->dumpFile("{$path}/namespaces.php", $code);
     }
 
     private function compileSubClasses(MimeInfoNode $info, CodeBuilder $code): void
@@ -353,5 +364,17 @@ final class MimeDatabaseCompiler
             $code->raw(']');
         }
         $code->raw(')');
+    }
+
+    private function compileXmlNamespaces(MimeInfoNode $info, CodeBuilder $code): void
+    {
+        $writeEntry = fn($v, $k) => $code->write('')->repr($k)->raw(' => ')->repr($v)->raw(",\n");
+        $code
+            ->new(XmlNamespacesDatabase::class)->raw("([\n")
+            ->indent()
+            ->each($info->xmlNamespaceLookup, $writeEntry)
+            ->dedent()
+            ->write('])')
+        ;
     }
 }

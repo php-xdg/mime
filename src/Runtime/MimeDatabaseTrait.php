@@ -17,6 +17,7 @@ trait MimeDatabaseTrait
     private GlobsDatabase $globs;
     private MagicDatabase $magic;
     private TreeMagicDatabase $treeMagic;
+    private XmlNamespacesDatabase $xmlNamespaces;
 
     public function getCanonicalType(MimeType $type): MimeType
     {
