@@ -30,6 +30,10 @@ final class XmlNamespaceTest extends TestCase
 
     public function guessTypeProvider(): iterable
     {
+        yield 'failure' => [
+            '<unknown />',
+            'application/xml',
+        ];
         yield 'atom feed' => [
             '<feed xmlns="http://www.w3.org/2005/Atom" />',
             'application/atom+xml',
