@@ -63,6 +63,11 @@ final class MimeInfoNode extends CompositeNode
      */
     public array $caseSensitiveLiteralGlobs = [];
 
+    /**
+     * @var array<string, array<string, string>>
+     */
+    public array $xmlNamespaceLookup = [];
+
     public function createType(string $name): TypeNode
     {
         return $this->children[$name] ??= new TypeNode($name);

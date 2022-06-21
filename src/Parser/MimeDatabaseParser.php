@@ -6,6 +6,7 @@ use ju1ius\XdgMime\Parser\AST\GlobNode;
 use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
+use ju1ius\XdgMime\Parser\AST\RootXmlNode;
 use ju1ius\XdgMime\Parser\AST\TreeMagicNode;
 use ju1ius\XdgMime\Parser\AST\TreeMatchNode;
 use ju1ius\XdgMime\Parser\Exception\ParseError;
@@ -107,6 +108,13 @@ final class MimeDatabaseParser
                 $treeMagic->children[] = $this->parseTreeMagicMatch($matchNode);
             }
             $type->treeMagic[] = $treeMagic;
+        }
+        foreach ($xpath->query('./fdo:root-XML', $node) as $rootXmlNode) {
+            $type->rootXmlNodes[] = new RootXmlNode(
+                $type->name,
+                $rootXmlNode->getAttribute('namespaceURI'),
+                $rootXmlNode->getAttribute('localName'),
+            );
         }
     }
 

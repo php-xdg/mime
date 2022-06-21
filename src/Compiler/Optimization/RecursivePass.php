@@ -55,6 +55,9 @@ final class RecursivePass implements OptimizationPassInterface
         foreach ($node->treeMagic as $i => $child) {
             $node->treeMagic[$i] = $this->traverseNode($child);
         }
+        foreach ($node->rootXmlNodes as $i => $child) {
+            $node->rootXmlNodes[$i] = $this->traverseNode($child);
+        }
 
         foreach ($this->visitors as $visitor) {
             $node = $visitor->leaveNode($node);

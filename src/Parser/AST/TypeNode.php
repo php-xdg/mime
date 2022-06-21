@@ -36,6 +36,11 @@ final class TypeNode extends Node
      */
     public array $treeMagic = [];
 
+    /**
+     * @var RootXmlNode[]
+     */
+    public array $rootXmlNodes = [];
+
     public function __construct(public readonly string $name)
     {
     }

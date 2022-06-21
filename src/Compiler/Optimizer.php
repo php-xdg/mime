@@ -7,6 +7,7 @@ use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateGlobLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateHierarchyLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateIconLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateMagicLookup;
+use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateXmlNamespaceLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateTreeMagicLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
@@ -42,6 +43,7 @@ final class Optimizer
                     new PopulateMagicLookup(),
                     new PopulateTreeMagicLookup(),
                     new PopulateIconLookup(),
+                    new PopulateXmlNamespaceLookup(),
                 ),
             )
         ;
