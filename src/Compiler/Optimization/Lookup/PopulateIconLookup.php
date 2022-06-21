@@ -10,7 +10,7 @@ use ju1ius\XdgMime\Parser\AST\TypeNode;
 /**
  * @internal
  */
-final class IconLookupVisitor extends AbstractNodeVisitor
+final class PopulateIconLookup extends AbstractNodeVisitor
 {
     private readonly MimeInfoNode $info;
 

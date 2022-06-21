@@ -10,7 +10,7 @@ use ju1ius\XdgMime\Parser\AST\Node;
 /**
  * @internal
  */
-final class GlobLookupVisitor extends AbstractNodeVisitor
+final class PopulateGlobLookup extends AbstractNodeVisitor
 {
     private readonly MimeInfoNode $info;
 

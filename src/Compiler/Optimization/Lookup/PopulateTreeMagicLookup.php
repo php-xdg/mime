@@ -3,14 +3,14 @@
 namespace ju1ius\XdgMime\Compiler\Optimization\Lookup;
 
 use ju1ius\XdgMime\Compiler\Optimization\AbstractNodeVisitor;
-use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 use ju1ius\XdgMime\Parser\AST\Node;
+use ju1ius\XdgMime\Parser\AST\TreeMagicNode;
 
 /**
  * @internal
  */
-final class MagicLookupVisitor extends AbstractNodeVisitor
+final class PopulateTreeMagicLookup extends AbstractNodeVisitor
 {
     private readonly MimeInfoNode $info;
 
@@ -21,8 +21,8 @@ final class MagicLookupVisitor extends AbstractNodeVisitor
 
     public function leaveNode(Node $node): Node
     {
-        if ($node instanceof MagicRuleNode) {
-            $this->info->magic[] = $node;
+        if ($node instanceof TreeMagicNode) {
+            $this->info->treeMagic[] = $node;
         }
 
         return $node;
@@ -30,11 +30,11 @@ final class MagicLookupVisitor extends AbstractNodeVisitor
 
     public function afterTraverse(MimeInfoNode $node): MimeInfoNode
     {
-        usort($node->magic, self::compareNodes(...));
+        usort($node->treeMagic, self::compareNodes(...));
         return $node;
     }
 
-    private static function compareNodes(MagicRuleNode $a, MagicRuleNode $b): int
+    private static function compareNodes(TreeMagicNode $a, TreeMagicNode $b): int
     {
         return $b->priority <=> $a->priority ?: $a->type <=> $b->type;
     }

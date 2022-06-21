@@ -2,12 +2,12 @@
 
 namespace ju1ius\XdgMime\Compiler;
 
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\AliasLookupVisitor;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\GlobLookupVisitor;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\HierarchyLookupVisitor;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\IconLookupVisitor;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\MagicLookupVisitor;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\TreeMagicLookupVisitor;
+use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateAliasLookup;
+use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateGlobLookup;
+use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateHierarchyLookup;
+use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateIconLookup;
+use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateMagicLookup;
+use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateTreeMagicLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertExpensiveMatch;
@@ -36,12 +36,12 @@ final class Optimizer
                     new CombineOrMatches($manipulator),
                     new CombineAndMatches($manipulator),
                     //
-                    new AliasLookupVisitor(),
-                    new HierarchyLookupVisitor(),
-                    new GlobLookupVisitor(),
-                    new MagicLookupVisitor(),
-                    new TreeMagicLookupVisitor(),
-                    new IconLookupVisitor(),
+                    new PopulateAliasLookup(),
+                    new PopulateHierarchyLookup(),
+                    new PopulateGlobLookup(),
+                    new PopulateMagicLookup(),
+                    new PopulateTreeMagicLookup(),
+                    new PopulateIconLookup(),
                 ),
             )
         ;

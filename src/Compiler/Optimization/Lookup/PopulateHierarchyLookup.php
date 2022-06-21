@@ -10,7 +10,7 @@ use ju1ius\XdgMime\Parser\AST\TypeNode;
 /**
  * @internal
  */
-final class AliasLookupVisitor extends AbstractNodeVisitor
+final class PopulateHierarchyLookup extends AbstractNodeVisitor
 {
     private readonly MimeInfoNode $info;
 
@@ -21,12 +21,9 @@ final class AliasLookupVisitor extends AbstractNodeVisitor
 
     public function leaveNode(Node $node): Node
     {
-        if ($node instanceof TypeNode) {
-            foreach ($node->aliases as $alias) {
-                $this->info->aliasLookup[$alias] = $node->name;
-            }
+        if ($node instanceof TypeNode && $node->subclassOf) {
+            $this->info->hierarchyLookup[$node->name] = $node->subclassOf;
         }
-
         return $node;
     }
 }
