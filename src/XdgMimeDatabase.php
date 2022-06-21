@@ -16,6 +16,8 @@ final class XdgMimeDatabase implements MimeDatabaseInterface
         guessTypeByData as private doGuessTypeByData;
         guessTypeByContents as private doGuessTypeByContents;
         guessTypeForTree as private doGuessTypeForTree;
+        guessTypeForDomDocument as private doGuessTypeForDomDocument;
+        guessTypeForXml as private doGuessTypeForXml;
     }
 
     public function __construct(
@@ -78,5 +80,17 @@ final class XdgMimeDatabase implements MimeDatabaseInterface
     {
         $this->treeMagic ??= require $this->directory . '/treemagic.php';
         return $this->doGuessTypeForTree($rootPath);
+    }
+
+    public function guessTypeForDomDocument(\DOMDocument $document): MimeType
+    {
+        $this->xmlNamespaces ??= require $this->directory . '/namespaces.php';
+        return $this->doGuessTypeForDomDocument($document);
+    }
+
+    public function guessTypeForXml(string $xml): MimeType
+    {
+        $this->xmlNamespaces ??= require $this->directory . '/namespaces.php';
+        return $this->doGuessTypeForXml($xml);
     }
 }

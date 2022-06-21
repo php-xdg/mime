@@ -15,7 +15,7 @@ This package is a pure PHP implementation of the
   * [x] globs
   * [x] magic rules
   * [x] treemagic rules
-  * [ ] XML namespaces
+  * [x] XML namespaces
 * [x] MIME type icons
   * [x] icons 
   * [x] generic icons 

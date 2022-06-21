@@ -2,6 +2,7 @@
 
 namespace ju1ius\XdgMime\Test\SharedMimeInfo;
 
+use ju1ius\XdgMime\Test\ResourceHelper;
 use Symfony\Component\Filesystem\Path;
 
 /**
@@ -16,6 +17,11 @@ use Symfony\Component\Filesystem\Path;
  */
 final class TypeDetectionTestListParser
 {
+    public function __construct(
+        private readonly string $resourcePath,
+    ) {
+    }
+
     /**
      * @return iterable<TypeDetectionTestDTO>
      */
@@ -28,7 +34,7 @@ final class TypeDetectionTestListParser
             $parts = preg_split('/\s+/', $line, 3, PREG_SPLIT_NO_EMPTY);
             [$filename, $expected] = $parts;
             if (Path::isRelative($filename)) {
-                $filename = Path::makeAbsolute($filename, \dirname($path));
+                $filename = Path::makeAbsolute($filename, $this->resourcePath);
             }
             $flags = $this->parseFlags($parts[2] ?? '');
             yield new TypeDetectionTestDTO($filename, $expected, ...$flags);

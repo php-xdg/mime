@@ -193,6 +193,22 @@ trait MimeDatabaseTrait
         return MimeType::directory();
     }
 
+    public function guessTypeForDomDocument(\DOMDocument $document): MimeType
+    {
+        if ($type = $this->xmlNamespaces->matchDomDocument($document)) {
+            return MimeType::of($type);
+        }
+        return MimeType::of('application/xml');
+    }
+
+    public function guessTypeForXml(string $xml): MimeType
+    {
+        if ($type = $this->xmlNamespaces->matchData($xml)) {
+            return MimeType::of($type);
+        }
+        return MimeType::of('application/xml');
+    }
+
     private function guessTypeByStat(Stat $stat): MimeType
     {
         return match ($stat->getType()) {

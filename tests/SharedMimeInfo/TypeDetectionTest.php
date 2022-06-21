@@ -27,7 +27,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeByFilenameProvider(): iterable
     {
-        $parser = new TypeDetectionTestListParser();
+        $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->filenameLookupXFail) {
                 continue;
@@ -49,7 +49,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeByContentsProvider(): iterable
     {
-        $parser = new TypeDetectionTestListParser();
+        $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->magicLookupXFail) {
                 continue;
@@ -69,7 +69,7 @@ final class TypeDetectionTest extends TestCase
 
     public function guessTypeProvider(): iterable
     {
-        $parser = new TypeDetectionTestListParser();
+        $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
         foreach ($parser->parse(self::getTestList()) as $dto) {
             if ($dto->fullLookupXFail) {
                 continue;

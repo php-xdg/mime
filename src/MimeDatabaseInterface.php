@@ -53,4 +53,8 @@ interface MimeDatabaseInterface
      * This can detect if the directory is something like a DVD, BluRay, executable CD-ROM, etc...
      */
     public function guessTypeForTree(string $rootPath): MimeType;
+
+    public function guessTypeForDomDocument(\DOMDocument $document): MimeType;
+
+    public function guessTypeForXml(string $xml): MimeType;
 }
