@@ -16,8 +16,16 @@ interface MimeDatabaseInterface
      */
     public function getAncestors(MimeType $type): array;
 
+    /**
+     * Returns the icon name for a MIME type, according to the
+     * {@link https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html XDG Icon Naming Specification}
+     */
     public function getIconName(MimeType $type): string;
 
+    /**
+     * Returns the generic icon name for a MIME type, according to the
+     * {@link https://specifications.freedesktop.org/icon-naming-spec/icon-naming-spec-latest.html XDG Icon Naming Specification}
+     */
     public function getGenericIconName(MimeType $type): string;
 
     /**
@@ -54,7 +62,18 @@ interface MimeDatabaseInterface
      */
     public function guessTypeForTree(string $rootPath): MimeType;
 
+    /**
+     * Guesses the MIME type of a DOMDocument object by looking at the
+     * namespaceURI and localName of the documentElement.
+     */
     public function guessTypeForDomDocument(\DOMDocument $document): MimeType;
 
+    /**
+     * Guesses the MIME type of an XML string by looking at the
+     * namespaceURI and localName of the first found start tag.
+     *
+     * Note that the provided string needs not be a full document:
+     * type detection will work as long as the string includes at least the start tag of the root tag.
+     */
     public function guessTypeForXml(string $xml): MimeType;
 }
