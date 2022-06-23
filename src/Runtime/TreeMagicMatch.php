@@ -39,7 +39,7 @@ final class TreeMagicMatch
     private function doMatch(string $rootPath, MimeDatabaseInterface $db): bool
     {
         foreach ($this->matchingPaths($rootPath) as $file) {
-            if (!match ($this->flags & TreeMatchFlags::TYPE_MASK) {
+            if (! match ($this->flags & TreeMatchFlags::TYPE_MASK) {
                 TreeMatchFlags::TYPE_DIR => $file->isDir(),
                 TreeMatchFlags::TYPE_LINK => $file->isLink(),
                 TreeMatchFlags::TYPE_FILE => $file->isFile(),

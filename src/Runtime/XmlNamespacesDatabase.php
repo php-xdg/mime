@@ -54,7 +54,7 @@ final class XmlNamespacesDatabase
 
         $result = null;
         $noop = static fn() => null;
-        $handler = static function (\XMLParser $parser, string $localName, array $attributes) use(&$result, $noop) {
+        $handler = static function(\XMLParser $parser, string $localName, array $attributes) use (&$result, $noop) {
             if ($ns = $attributes['xmlns'] ?? null) {
                 $result = [$ns, $localName];
             }

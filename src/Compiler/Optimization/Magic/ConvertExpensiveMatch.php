@@ -15,8 +15,8 @@ use ju1ius\XdgMime\Parser\AST\Node;
  */
 final class ConvertExpensiveMatch extends AbstractNodeVisitor
 {
-    const EXPENSIVE_RANGE_LENGTH = 2;
-    const EXPENSIVE_MASK_LENGTH = 2;
+    private const EXPENSIVE_RANGE_LENGTH = 2;
+    private const EXPENSIVE_MASK_LENGTH = 2;
 
     public function __construct(
         private readonly RegExpManipulator $manipulator,

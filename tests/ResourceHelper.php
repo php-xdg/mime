@@ -6,7 +6,7 @@ final class ResourceHelper
 {
     public static function getSharedMimeInfoPath(string $path): string
     {
-        return dirname(__DIR__) . '/resources/shared-mime-info/' . $path;
+        return \dirname(__DIR__) . '/resources/shared-mime-info/' . $path;
     }
 
     public static function getPath(string $path): string
