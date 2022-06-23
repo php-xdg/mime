@@ -2,6 +2,7 @@
 
 namespace ju1ius\XdgMime\Compiler;
 
+use ju1ius\XdgMime\Compiler\Optimization\Glob\CombineExpensiveGlobs;
 use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateAliasLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateGlobLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateHierarchyLookup;
@@ -40,6 +41,7 @@ final class Optimizer
                     new PopulateAliasLookup(),
                     new PopulateHierarchyLookup(),
                     new PopulateGlobLookup(),
+                    new CombineExpensiveGlobs(),
                     new PopulateMagicLookup(),
                     new PopulateTreeMagicLookup(),
                     new PopulateIconLookup(),

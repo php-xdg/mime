@@ -12,7 +12,7 @@ final class GlobsDatabase
      * @param array<string, GlobLiteral[]> $caseSensitiveExtensions
      * @param array<string, GlobLiteral> $literals
      * @param array<string, GlobLiteral> $caseSensitiveLiterals
-     * @param Glob[] $globs
+     * @param array<GlobRegExp|Glob> $globs
      */
     public function __construct(
         private readonly array $extensions,
@@ -65,7 +65,9 @@ final class GlobsDatabase
         }
         // Other globs
         foreach ($this->globs as $glob) {
-            if ($glob->matches($name)) {
+            if ($glob instanceof GlobRegExp) {
+                array_push($matches, ...$glob->matches($name));
+            } elseif ($glob->matches($name)) {
                 $matches[] = $glob;
             }
         }

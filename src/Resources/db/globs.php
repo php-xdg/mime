@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XdgMime\Runtime\Glob;
 use ju1ius\XdgMime\Runtime\GlobLiteral;
+use ju1ius\XdgMime\Runtime\GlobRegExp;
 use ju1ius\XdgMime\Runtime\GlobsDatabase;
 
 return new GlobsDatabase(
@@ -1073,15 +1073,17 @@ return new GlobsDatabase(
         'core' => new GlobLiteral('application/x-core', 50, 4),
     ],
     globs: [
-        new Glob('application/x-sharedlib', 60, '*.so.[0-9]*', false),
-        new Glob('video/mpeg', 50, '[0-9][0-9][0-9].vdr', false),
-        new Glob('text/x-scons', 50, 'SConscript.*', false),
-        new Glob('video/x-anim', 50, '*.anim[1-9j]', false),
-        new Glob('application/x-troff-man', 50, '*.[1-9]', false),
-        new Glob('text/plain', 50, '*,v', false),
-        new Glob('application/x-trash', 50, '*~', false),
-        new Glob('application/x-trash', 50, '*%', false),
-        new Glob('text/x-makefile', 10, 'Makefile.*', false),
-        new Glob('text/x-readme', 10, 'README*', false),
+        new GlobRegExp('~(?n)\A((*:0).*\.so\.[0-9].*|(*:1)[0-9][0-9][0-9]\.vdr|(*:2)SConscript\..*|(*:3).*\.anim[1-9j]|(*:4).*\.[1-9]|(*:5).*,v|(*:6).*\~|(*:7).*%|(*:8)Makefile\..*|(*:9)README.*)\z~Si', [
+            new GlobLiteral('application/x-sharedlib', 60, 11),
+            new GlobLiteral('video/mpeg', 50, 19),
+            new GlobLiteral('text/x-scons', 50, 12),
+            new GlobLiteral('video/x-anim', 50, 12),
+            new GlobLiteral('application/x-troff-man', 50, 7),
+            new GlobLiteral('text/plain', 50, 3),
+            new GlobLiteral('application/x-trash', 50, 2),
+            new GlobLiteral('application/x-trash', 50, 2),
+            new GlobLiteral('text/x-makefile', 10, 10),
+            new GlobLiteral('text/x-readme', 10, 7),
+        ]),
     ],
 );

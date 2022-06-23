@@ -3,6 +3,7 @@
 namespace ju1ius\XdgMime\Compiler;
 
 use ju1ius\XdgMime\Parser\AST\GlobNode;
+use ju1ius\XdgMime\Parser\AST\GlobRegExpNode;
 use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
 use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
@@ -11,6 +12,7 @@ use ju1ius\XdgMime\Parser\AST\TreeMatchNode;
 use ju1ius\XdgMime\Runtime\AliasesDatabase;
 use ju1ius\XdgMime\Runtime\Glob;
 use ju1ius\XdgMime\Runtime\GlobLiteral;
+use ju1ius\XdgMime\Runtime\GlobRegExp;
 use ju1ius\XdgMime\Runtime\GlobsDatabase;
 use ju1ius\XdgMime\Runtime\IconsDatabase;
 use ju1ius\XdgMime\Runtime\MagicDatabase;
@@ -211,13 +213,12 @@ final class MimeDatabaseCompiler
         $code->writeln('globs: [')->indent();
         /** @var GlobNode $glob */
         foreach ($info->globs as $glob) {
-            $code->write('')->new(Glob::class)->raw('(')
-                ->string($glob->type)->raw(', ')
-                ->repr($glob->weight)->raw(', ')
-                ->string($glob->pattern)->raw(', ')
-                ->repr($glob->caseSensitive)
-                ->raw("),\n")
-            ;
+            $code->write('');
+            match ($glob::class) {
+                GlobNode::class => $this->compileGlob($glob, $code),
+                GlobRegExpNode::class => $this->compileGlobRegExp($glob, $code),
+            };
+            $code->raw(",\n");
         }
         $code->dedent()->writeln('],')->dedent()->write(')');
     }
@@ -230,6 +231,31 @@ final class MimeDatabaseCompiler
             ->int(\strlen($glob->pattern))
             ->raw(')')
         ;
+    }
+
+    private function compileGlob(GlobNode $glob, CodeBuilder $code): void
+    {
+        $code->new(Glob::class)->raw('(')
+            ->string($glob->type)->raw(', ')
+            ->repr($glob->weight)->raw(', ')
+            ->string($glob->pattern)->raw(', ')
+            ->repr($glob->caseSensitive)
+            ->raw(')')
+        ;
+    }
+
+    private function compileGlobRegExp(GlobRegExpNode $glob, CodeBuilder $code): void
+    {
+        $code->new(GlobRegExp::class)->raw('(')
+            ->regex($glob->pattern)->raw(", [\n")
+            ->indent()
+        ;
+        foreach ($glob->children as $child) {
+            $code->write('');
+            $this->compileGlobLiteral($child, $code);
+            $code->raw(",\n");
+        }
+        $code->dedent()->write('])');
     }
 
     private function compileMagicRules(MimeInfoNode $info, CodeBuilder $code): void
