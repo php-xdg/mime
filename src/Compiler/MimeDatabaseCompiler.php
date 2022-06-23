@@ -36,6 +36,7 @@ final class MimeDatabaseCompiler
     private readonly Filesystem $fs;
 
     public function __construct(
+        private readonly bool $platformDependent = false,
         private readonly bool $enableOptimizations = true,
     ) {
         $this->fs = new Filesystem();
@@ -43,11 +44,13 @@ final class MimeDatabaseCompiler
 
     public function compileToString(MimeInfoNode $info): string
     {
-        $info = Optimizer::create($this->enableOptimizations)->process($info);
+        $info = Optimizer::create($this->enableOptimizations, $this->platformDependent)->process($info);
 
         $code = new CodeBuilder();
 
-        $this->compileEndiannessCheck($code);
+        if (!$this->platformDependent) {
+            $this->compileEndiannessCheck($code);
+        }
 
         $code->write('return ')->new(MimeDatabase::class)->raw("(\n");
         $code->indent();
@@ -95,7 +98,7 @@ final class MimeDatabaseCompiler
 
     public function compileToDirectory(MimeInfoNode $info, string $path): void
     {
-        $info = Optimizer::create($this->enableOptimizations)->process($info);
+        $info = Optimizer::create($this->enableOptimizations, $this->platformDependent)->process($info);
         // aliases
         $code = CodeBuilder::forFile()->write('return ');
         $this->compileAliases($info, $code);
@@ -113,7 +116,9 @@ final class MimeDatabaseCompiler
         $this->fs->dumpFile("{$path}/globs.php", $code);
         // magic
         $code = CodeBuilder::forFile();
-        $this->compileEndiannessCheck($code);
+        if (!$this->platformDependent) {
+            $this->compileEndiannessCheck($code);
+        }
         $code->write('return ');
         $this->compileMagicRules($info, $code);
         $code->raw(";\n");

@@ -13,10 +13,12 @@ use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateXmlNamespaceLookup;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertExpensiveMatch;
+use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertToMachineByteOrder;
 use ju1ius\XdgMime\Compiler\Optimization\Magic\RegExpManipulator;
 use ju1ius\XdgMime\Compiler\Optimization\OptimizationPassInterface;
 use ju1ius\XdgMime\Compiler\Optimization\RecursivePass;
 use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
+use ju1ius\XdgMime\Utils\Bytes;
 
 /**
  * @internal
@@ -28,26 +30,9 @@ final class Optimizer
      */
     private array $passes = [];
 
-    public static function create(bool $optimize = true): self
+    public static function create(bool $optimize = true, bool $platformDependent = false): self
     {
-        if (!$optimize) {
-            return (new self())->add(new RecursivePass(
-                new PopulateAliasLookup(),
-                new PopulateHierarchyLookup(),
-                new PopulateGlobLookup(),
-                new PopulateMagicLookup(),
-                new PopulateTreeMagicLookup(),
-                new PopulateIconLookup(),
-                new PopulateXmlNamespaceLookup(),
-            ));
-        }
-
-        $manipulator = new RegExpManipulator('~');
-        return (new self())->add(new RecursivePass(
-            new ConvertExpensiveMatch($manipulator),
-            new CombineOrMatches($manipulator),
-            new CombineAndMatches($manipulator),
-            //
+        $optimizations = [
             new PopulateAliasLookup(),
             new PopulateHierarchyLookup(),
             new PopulateGlobLookup(),
@@ -55,9 +40,29 @@ final class Optimizer
             new PopulateTreeMagicLookup(),
             new PopulateIconLookup(),
             new PopulateXmlNamespaceLookup(),
-            //
+        ];
+
+        if (!$optimize) {
+            return (new self())->add(new RecursivePass(...$optimizations));
+        }
+
+        $manipulator = new RegExpManipulator('~');
+        $optimizations = [
+            new ConvertExpensiveMatch($manipulator),
+            new CombineOrMatches($manipulator),
+            new CombineAndMatches($manipulator),
+            ...$optimizations,
             new CombineExpensiveGlobs(),
-        ));
+        ];
+
+        if ($platformDependent) {
+            $optimizations = [
+                new ConvertToMachineByteOrder(Bytes::isLittleEndianPlatform()),
+                ...$optimizations,
+            ];
+        }
+
+        return (new self())->add(new RecursivePass(...$optimizations));
     }
 
     public function add(OptimizationPassInterface ...$passes): self

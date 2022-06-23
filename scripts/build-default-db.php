@@ -7,8 +7,8 @@ require __DIR__ . '/../vendor/autoload.php';
 $xmlFile = __DIR__ . '/../resources/shared-mime-info/data/freedesktop.org.xml.in';
 $outputDir = __DIR__ . '/../src/Resources/db';
 
-$generator = (new MimeDatabaseGenerator())
+MimeDatabaseGenerator::new()
     ->useXdgDirectories(false)
     ->addCustomPaths($xmlFile)
+    ->generate($outputDir)
 ;
-$generator->generate($outputDir);

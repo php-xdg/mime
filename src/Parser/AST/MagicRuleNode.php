@@ -11,6 +11,7 @@ class MagicRuleNode extends CompositeNode
     public function __construct(
         public readonly string $type,
         public readonly int $priority,
+        public array $children = [],
     ) {
     }
 

@@ -7,12 +7,19 @@ use ju1ius\XdgMime\Runtime\AliasesDatabase;
 use ju1ius\XdgMime\Runtime\GlobsDatabase;
 use ju1ius\XdgMime\Runtime\MagicDatabase;
 use ju1ius\XdgMime\Runtime\SubclassesDatabase;
+use ju1ius\XdgMime\Runtime\TreeMagicDatabase;
+use ju1ius\XdgMime\Runtime\XmlNamespacesDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 
 final class MimeDatabaseGeneratorTest extends TestCase
 {
+    public function testNew(): void
+    {
+        Assert::assertInstanceOf(MimeDatabaseGenerator::class, MimeDatabaseGenerator::new());
+    }
+
     public function testGeneratesThrowsIfNoFilesWereFound(): void
     {
         $this->expectException(\LengthException::class);
@@ -27,6 +34,8 @@ final class MimeDatabaseGeneratorTest extends TestCase
         SubclassesDatabase::class => 'subclasses',
         GlobsDatabase::class => 'globs',
         MagicDatabase::class => 'magic',
+        TreeMagicDatabase::class => 'treemagic',
+        XmlNamespacesDatabase::class => 'namespaces',
     ];
 
     /**
@@ -45,7 +54,9 @@ final class MimeDatabaseGeneratorTest extends TestCase
         $fs->remove($outputDir);
         Assert::assertDirectoryDoesNotExist($outputDir);
         // generate database
-        $generator->generate($outputDir);
+        $generator
+            ->enablePlatformDependentOptimizations()
+            ->generate($outputDir);
         Assert::assertDirectoryExists($outputDir);
         foreach (self::FILES_MAP as $class => $file) {
             Assert::assertInstanceOf($class, include "{$outputDir}/{$file}.php");
@@ -55,13 +66,13 @@ final class MimeDatabaseGeneratorTest extends TestCase
     public function generateProvider(): \Traversable
     {
         yield 'custom paths' => [
-            (new MimeDatabaseGenerator())
+            MimeDatabaseGenerator::new()
                 ->useXdgDirectories(false)
                 ->addCustomPaths(ResourceHelper::getFilePath('empty-mime-info.xml')),
         ];
         $dataDir = ResourceHelper::getFilePath('empty-data-dir');
         yield 'xdg data dir' => [
-            (new MimeDatabaseGenerator())
+            MimeDatabaseGenerator::new()
                 ->useXdgDirectories()
                 ->addCustomPaths($dataDir),
             ['XDG_DATA_HOME' => $dataDir, 'XDG_DATA_DIRS' => $dataDir],

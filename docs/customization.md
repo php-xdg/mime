@@ -22,9 +22,7 @@ use ju1ius\XdgMime\XdgMimeDatabase;
 
 // the directory to compile your database into
 $outputDirectory = '/path/to/output-directory';
-
-$generator = new MimeDatabaseGenerator();
-$generator->generate($outputDirectory);
+MimeDatabaseGenerator::new()->generate($outputDirectory);
 // use your compiled database
 $db = new XdgMimeDatabase($outputDirectory);
 ```
@@ -52,13 +50,14 @@ use ju1ius\XdgMime\MimeDatabaseGenerator;
 
 // the directory to compile your database into
 $outputDirectory = '/path/to/output-directory';
-$generator = new MimeDatabaseGenerator();
-// omit or set to true to keep the standard XDG directories.
-$generator->useXdgDirectories(false);
-// add custom package directories or mime-info XML files
-// when passing a directory, all files with a .xml extension will be parsed
-$generator->addCustomPaths('/path/to/custom/packages', '/path/to/custom/mime-info.xml');
-$generator->generate($outputDirectory);
+MimeDatabaseGenerator::new()
+    // omit or set to true to keep the standard XDG directories.
+    ->useXdgDirectories(false)
+    // add custom package directories or mime-info XML files
+    // when passing a directory, all files with a .xml extension will be parsed
+    ->addCustomPaths('/path/to/custom/packages', '/path/to/custom/mime-info.xml')
+    ->generate($outputDirectory)
+;
 // use your compiled database
 $db = new XdgMimeDatabase($outputDirectory);
 ```

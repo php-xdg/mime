@@ -11,6 +11,15 @@ final class MimeDatabaseGenerator
     private bool $useXdgDirs = true;
     private array $customPaths = [];
     private bool $enableOptimizations = true;
+    private bool $isPlatformDependent = false;
+
+    /**
+     * Static constructor for method chaining.
+     */
+    public static function new(): self
+    {
+        return new self();
+    }
 
     public function useXdgDirectories(bool $use = true): self
     {
@@ -35,6 +44,18 @@ final class MimeDatabaseGenerator
         return $this;
     }
 
+    /**
+     * Use this if you're compiling on your runtime environment.
+     *
+     * @return $this
+     */
+    public function enablePlatformDependentOptimizations(): self
+    {
+        $this->enableOptimizations = true;
+        $this->isPlatformDependent = true;
+        return $this;
+    }
+
     public function generate(string $outputDirectory): void
     {
         $files = array_unique($this->loadFiles());
@@ -46,7 +67,7 @@ final class MimeDatabaseGenerator
             );
         }
         $parser = new MimeDatabaseParser();
-        $compiler = new MimeDatabaseCompiler($this->enableOptimizations);
+        $compiler = new MimeDatabaseCompiler($this->isPlatformDependent, $this->enableOptimizations);
         $compiler->compileToDirectory($parser->parse(...$files), $outputDirectory);
     }
 
