@@ -5,7 +5,7 @@ namespace ju1ius\XdgMime\Utils;
 /**
  * @internal
  */
-final class Regex
+final class RegExp
 {
     /**
      * Same as `preg_quote()`, but converts control characters to hexadecimal representation.

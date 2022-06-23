@@ -6,7 +6,7 @@ use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
 use ju1ius\XdgMime\Parser\AST\Node;
 use ju1ius\XdgMime\Utils\Iter;
-use ju1ius\XdgMime\Utils\Regex;
+use ju1ius\XdgMime\Utils\RegExp;
 
 /**
  * @internal
@@ -37,7 +37,7 @@ final class RegExpManipulator
 
     public function quote(string $value): string
     {
-        return Regex::quote($value, $this->delimiter);
+        return RegExp::quote($value, $this->delimiter);
     }
 
     public function or(string ...$patterns): string
