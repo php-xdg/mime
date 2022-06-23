@@ -10,6 +10,7 @@ final class MimeDatabaseGenerator
 {
     private bool $useXdgDirs = true;
     private array $customPaths = [];
+    private bool $enableOptimizations = true;
 
     public function useXdgDirectories(bool $use = true): self
     {
@@ -20,6 +21,17 @@ final class MimeDatabaseGenerator
     public function addCustomPaths(string ...$paths): self
     {
         array_push($this->customPaths, ...$paths);
+        return $this;
+    }
+
+    /**
+     * Disables compiler optimizations (useful only for debugging, don't use this in production).
+     *
+     * @return $this
+     */
+    public function disableOptimizations(): self
+    {
+        $this->enableOptimizations = false;
         return $this;
     }
 
@@ -34,7 +46,7 @@ final class MimeDatabaseGenerator
             );
         }
         $parser = new MimeDatabaseParser();
-        $compiler = new MimeDatabaseCompiler();
+        $compiler = new MimeDatabaseCompiler($this->enableOptimizations);
         $compiler->compileToDirectory($parser->parse(...$files), $outputDirectory);
     }
 

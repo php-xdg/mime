@@ -25,6 +25,15 @@ final class TypeDetectionTest extends TestCase
         MimeTypeAssert::equals($dto->expectedType, $type);
     }
 
+    /**
+     * @dataProvider guessTypeByFilenameProvider
+     */
+    public function testGuessTypeByFilenameUnoptimized(TypeDetectionTestDTO $dto): void
+    {
+        $type = self::getDatabase(false)->guessTypeByFileName($dto->filename);
+        MimeTypeAssert::equals($dto->expectedType, $type);
+    }
+
     public function guessTypeByFilenameProvider(): iterable
     {
         $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
@@ -42,6 +51,17 @@ final class TypeDetectionTest extends TestCase
     public function testGuessTypeByContents(TypeDetectionTestDTO $dto): void
     {
         $db = self::getDatabase();
+        MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByContents($dto->filename));
+        $buffer = file_get_contents($dto->filename, false, null, 0, self::LOOKUP_BUFFER_LENGTH);
+        MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByData($buffer));
+    }
+
+    /**
+     * @dataProvider guessTypeByContentsProvider
+     */
+    public function testGuessTypeByContentsUnoptimized(TypeDetectionTestDTO $dto): void
+    {
+        $db = self::getDatabase(false);
         MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByContents($dto->filename));
         $buffer = file_get_contents($dto->filename, false, null, 0, self::LOOKUP_BUFFER_LENGTH);
         MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByData($buffer));
@@ -67,6 +87,15 @@ final class TypeDetectionTest extends TestCase
         MimeTypeAssert::equals($dto->expectedType, $type);
     }
 
+    /**
+     * @dataProvider guessTypeProvider
+     */
+    public function testGuessTypeUnoptimized(TypeDetectionTestDTO $dto): void
+    {
+        $type = self::getDatabase(false)->guessType($dto->filename);
+        MimeTypeAssert::equals($dto->expectedType, $type);
+    }
+
     public function guessTypeProvider(): iterable
     {
         $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
@@ -83,8 +112,8 @@ final class TypeDetectionTest extends TestCase
         return ResourceHelper::getSharedMimeInfoPath('tests/mime-detection/list');
     }
 
-    private static function getDatabase(): MimeDatabaseInterface
+    private static function getDatabase(bool $optimized = true): MimeDatabaseInterface
     {
-        return TestDatabaseFactory::default();
+        return TestDatabaseFactory::default($optimized);
     }
 }

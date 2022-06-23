@@ -28,27 +28,36 @@ final class Optimizer
      */
     private array $passes = [];
 
-    public static function create(): self
+    public static function create(bool $optimize = true): self
     {
+        if (!$optimize) {
+            return (new self())->add(new RecursivePass(
+                new PopulateAliasLookup(),
+                new PopulateHierarchyLookup(),
+                new PopulateGlobLookup(),
+                new PopulateMagicLookup(),
+                new PopulateTreeMagicLookup(),
+                new PopulateIconLookup(),
+                new PopulateXmlNamespaceLookup(),
+            ));
+        }
+
         $manipulator = new RegExpManipulator('~');
-        return (new self())
-            ->add(
-                new RecursivePass(
-                    new ConvertExpensiveMatch($manipulator),
-                    new CombineOrMatches($manipulator),
-                    new CombineAndMatches($manipulator),
-                    //
-                    new PopulateAliasLookup(),
-                    new PopulateHierarchyLookup(),
-                    new PopulateGlobLookup(),
-                    new CombineExpensiveGlobs(),
-                    new PopulateMagicLookup(),
-                    new PopulateTreeMagicLookup(),
-                    new PopulateIconLookup(),
-                    new PopulateXmlNamespaceLookup(),
-                ),
-            )
-        ;
+        return (new self())->add(new RecursivePass(
+            new ConvertExpensiveMatch($manipulator),
+            new CombineOrMatches($manipulator),
+            new CombineAndMatches($manipulator),
+            //
+            new PopulateAliasLookup(),
+            new PopulateHierarchyLookup(),
+            new PopulateGlobLookup(),
+            new PopulateMagicLookup(),
+            new PopulateTreeMagicLookup(),
+            new PopulateIconLookup(),
+            new PopulateXmlNamespaceLookup(),
+            //
+            new CombineExpensiveGlobs(),
+        ));
     }
 
     public function add(OptimizationPassInterface ...$passes): self

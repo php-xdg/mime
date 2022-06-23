@@ -35,14 +35,15 @@ final class MimeDatabaseCompiler
 {
     private readonly Filesystem $fs;
 
-    public function __construct()
-    {
+    public function __construct(
+        private readonly bool $enableOptimizations = true,
+    ) {
         $this->fs = new Filesystem();
     }
 
     public function compileToString(MimeInfoNode $info): string
     {
-        $info = Optimizer::create()->process($info);
+        $info = Optimizer::create($this->enableOptimizations)->process($info);
 
         $code = new CodeBuilder();
 
@@ -94,7 +95,7 @@ final class MimeDatabaseCompiler
 
     public function compileToDirectory(MimeInfoNode $info, string $path): void
     {
-        $info = Optimizer::create()->process($info);
+        $info = Optimizer::create($this->enableOptimizations)->process($info);
         // aliases
         $code = CodeBuilder::forFile()->write('return ');
         $this->compileAliases($info, $code);
