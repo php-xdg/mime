@@ -29,9 +29,6 @@ final class CombineAndMatches extends AbstractNodeVisitor
 
     public function processMatch(MagicMatchNode $match): MagicMatchNode
     {
-        if (!$this->isEligibleNode($match)) {
-            return $match;
-        }
         $ifPattern = $this->manipulator->patternFor($match);
         $thenPatterns = [];
         $maxLength = $match->getMaxLength();
