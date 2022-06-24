@@ -29,4 +29,17 @@ final class Bytes
             4 => pack('V*', ...unpack('N*', $bytes)),
         };
     }
+
+    /**
+     * Implements the plain-text sniffing algorithm recommended by the spec.
+     *
+     * Checking the first 32 bytes of the file for ASCII control characters
+     * is a good way to guess whether a file is binary or text,
+     * but note that files with high-bit-set characters should still be treated as text
+     * since these can appear in UTF-8 text, unlike control characters.
+     */
+    public static function looksLikePlainText(string $buffer): bool
+    {
+        return (bool)preg_match('/\A[^\x00-\x08\x0E-\x1F\x7F]+\z/Sx', substr($buffer, 0, 32));
+    }
 }

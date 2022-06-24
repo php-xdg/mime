@@ -2,6 +2,8 @@
 
 namespace ju1ius\XdgMime\Runtime;
 
+use ju1ius\XdgMime\Utils\Bytes;
+
 /**
  * @internal
  */
@@ -43,7 +45,7 @@ final class MagicDatabase
                 return $rule->type;
             }
         }
-        if ($this->looksLikePlainText($buffer)) {
+        if (Bytes::looksLikePlainText($buffer)) {
             return 'text/plain';
         }
 
@@ -64,10 +66,5 @@ final class MagicDatabase
             }
         }
         return [$rules, $lookupBufferSize];
-    }
-
-    private function looksLikePlainText(string $data): bool
-    {
-        return (bool)preg_match('/\A[^\x00-\x08\x0E-\x1F\x7F]+\z/Sx', substr($data, 0, 32));
     }
 }
