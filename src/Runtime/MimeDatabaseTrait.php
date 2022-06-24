@@ -91,45 +91,34 @@ trait MimeDatabaseTrait
         /**
          * Otherwise, start by doing a glob match of the filename.
          *
-         * NOTE: while mentioned by the specs, the following steps are not implemented
-         * by the xdg-mime reference library, and cause the shared-mime-info tests to fail.
+         * NOTE: while mentioned by the specs, the two following steps are not implemented
+         * by the xdg-mime reference library, and cause the shared-mime-info tests to fail:
+         *   - Keep only globs with the biggest weight.
+         *   - If the patterns are different, keep only globs with the longest pattern.
          *
-         * Keep only globs with the biggest weight.
-         * If the patterns are different, keep only globs with the longest pattern.
          * If after this, there is one or more matching glob, and all the matching globs result in the same mimetype
          * use that mimetype as the result.
          */
         $globs = $this->globs->match($path);
-        $hasConflictingGlobs = false;
-        $possible = null;
-
+        $allowedTypes = null;
         if ($globs) {
             if (\count($globs) === 1) {
                 return MimeType::of($globs[0]->type);
             }
-            // glob results are sorted by weight DESC, patternLength DESC
-            $biggestWeight = $globs[0]->weight;
-            $longestPattern = $globs[0]->length;
-            for ($i = 1; $i < \count($globs); $i++) {
-                $glob = $globs[$i];
-                //if ($glob->weight < $biggestWeight) {
-                //    break;
-                //}
-                //if ($glob->length < $longestPattern) {
-                //    break;
-                //}
-                if ($glob->type !== $globs[0]->type) {
+            $hasConflictingGlobs = false;
+            for ($i = 1, $l = \count($globs); $i < $l; $i++) {
+                if ($globs[$i]->type !== $globs[0]->type) {
                     $hasConflictingGlobs = true;
+                    break;
                 }
             }
             if (!$hasConflictingGlobs) {
                 return MimeType::of($globs[0]->type);
             }
-            //$globs = array_slice($globs, 0, $i);
-            $possible = [];
+            $allowedTypes = [];
             foreach ($globs as $glob) {
                 foreach ($this->subclasses->ancestorsOf($glob->type, true) as $type) {
-                    $possible[$type] = true;
+                    $allowedTypes[$type] = true;
                 }
             }
         }
@@ -145,7 +134,7 @@ trait MimeDatabaseTrait
          * but note that files with high-bit-set characters should still be treated as text
          * since these can appear in UTF-8 text, unlike control characters.
          */
-        $sniffedType = $this->magic->match($path, $possible);
+        $sniffedType = $this->magic->match($path, $allowedTypes);
         if (!$sniffedType) {
             if ($stat->isExecutable()) {
                 $sniffedType = 'application/x-executable';

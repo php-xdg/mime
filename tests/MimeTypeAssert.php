@@ -9,7 +9,6 @@ final class MimeTypeAssert
 {
     public static function equals(MimeType|string $expected, MimeType|string $actual): void
     {
-        //Assert::assertSame(MimeType::of($expected), MimeType::of($actual));
         Assert::assertEqualsIgnoringCase((string)$expected, (string)$actual);
     }
 }
