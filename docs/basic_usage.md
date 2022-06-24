@@ -92,8 +92,8 @@ MIME-types have a (multiple inheritance) type hierarchy.
 
 For example the hierarchy for `text/javascript` is:
 ```
-text/javascript ─▶ application/ecmascript ┬─▶ text/plain ──────────────┬─▶ application/octet-stream
-                                          └─▶ application/x-executable ┘
+text/javascript ─▷ application/ecmascript ┬─▷ text/plain ──────────────┬─▷ application/octet-stream
+                                          └─▷ application/x-executable ┘
 ```
 
 The list of ancestors for a given MIME-type can be retrieved using `XdgMimeDatabase::getAncestors()`.
