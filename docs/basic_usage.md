@@ -27,7 +27,15 @@ assert(MimeType::of('text/plain')->is('text/plain'));
 
 ### MIME-type guessing
 
-The method you'll be using 99% of the time is `XdgMimeDatabase::guessType()`.
+Here's what you'll be using most of the time:
+
+```php
+use ju1ius\XdgMime\XdgMimeDatabase;
+
+$db = new XdgMimeDatabase();
+// guess mime-type using the XDG specification algorithm
+$type = $db->guessType('/path/to/file');
+```
 
 It accepts a file path and runs the XDG specification algorithm to guess it's MIME-type.
 The algorithm first tries to detect the MIME-type by checking glob patterns against the file name.
@@ -45,13 +53,6 @@ The algorithm also returns the following MIME-types for special filesystem objec
 * `inode/chardevice` for character devices (e.g. `/dev/null`, `/dev/tty`, etc)
 * `inode/blockdevice` for block devices (e.g. `/dev/sda`, `/dev/cdrom`, etc)
 
-```php
-use ju1ius\XdgMime\XdgMimeDatabase;
-
-$db = new XdgMimeDatabase();
-// guess mime-type using the XDG specification algorithm
-$type = $db->guessType('/path/to/file');
-```
 
 The following type-guessing methods are also available, but will most likely return less accurate results
 since they only implement parts of the guessing algorithm:
