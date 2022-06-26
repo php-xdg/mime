@@ -801,7 +801,7 @@ return new MagicDatabase(
             new MagicMatch(256, 1, 'SEGA PICO', '', 0),
         ]),
         new MagicRule('application/x-sharedlib', 50, 25, [
-            new MagicRegex('~(?n)\A(?(?=\x83\x01).{22}.[\x20-\x2F\x60-\x6F\xA0-\xAF\xE0-\xEF]|(*FAIL))~Ss'),
+            new MagicRegex('~(?n)\A(?(?=\x83\x01).{22}.[\x20-\x2F\x60-o\xA0-\xAF\xE0-\xEF]|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/x-shellscript', 50, 36, [
             new MagicRegex('~(?n)\A(.{10}\# This is a shell archive|.{2}.{0,14}/bin/bash|.{2}.{0,14}/bin/nawk|.{2}.{0,14}/bin/zsh|.{2}.{0,14}/bin/sh|.{2}.{0,14}/bin/ksh|.{2}.{0,14}/bin/dash|.{2}.{0,14}/bin/env sh|.{2}.{0,14}/bin/env bash|.{2}.{0,14}/bin/env zsh|.{2}.{0,14}/bin/env ksh)~Ss'),

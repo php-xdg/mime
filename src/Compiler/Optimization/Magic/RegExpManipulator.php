@@ -109,23 +109,7 @@ final class RegExpManipulator
             range(0x00, 0xFF),
             fn(int $byte) => ($byte & $mask) === ($char & $mask),
         );
-        // group found octets in contiguous ranges
-        $ranges = Iter::chunkWhile(
-            $bytes,
-            fn(int $byte, array $range) => end($range) === $byte - 1,
-        );
         // convert to a PCRE character class
-        $pattern = '[';
-        foreach ($ranges as $range) {
-            $start = $range[0];
-            $end = end($range);
-            $pattern .= match ($start === $end) {
-                true => sprintf('\x%02X', $start),
-                false => sprintf('\x%02X-\x%02X', $start, $end),
-            };
-        }
-        $pattern .= ']';
-
-        return $pattern;
+        return sprintf('[%s]', RegExp::byteSetToCharacterClass(...$bytes));
     }
 }

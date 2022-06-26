@@ -36,4 +36,29 @@ final class RegExp
         }
         return $output;
     }
+
+    public static function byteSetToCharacterClass(int ...$bytes): string
+    {
+        // ensure bytes are unique and sorted
+        sort($bytes);
+        $bytes = array_unique($bytes);
+        // group bytes in contiguous ranges
+        $ranges = Iter::chunkWhile(
+            $bytes,
+            fn(int $byte, array $range) => end($range) === $byte - 1,
+        );
+        // convert to a PCRE character class
+        $pattern = '';
+        $format = fn(string $c) => ctype_alnum($c) ? $c : sprintf('\x%02X', \ord($c));
+        foreach ($ranges as $range) {
+            $start = \chr($range[0]);
+            $end = \chr(end($range));
+            $pattern .= match ($start === $end) {
+                true => $format($start),
+                false => sprintf('%s-%s', $format($start), $format($end)),
+            };
+        }
+
+        return $pattern;
+    }
 }
