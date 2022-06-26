@@ -1,6 +1,7 @@
 {
   "name": "ju1ius/xdg-mime",
   "description": "PHP implementation of the Freedesktop Shared MIME-info Database standard.",
+  "license": "MIT",
   "authors": [
     {
       "name": "ju1ius",
