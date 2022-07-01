@@ -6,7 +6,7 @@ use ju1ius\XdgMime\Compiler\MimeDatabaseCompiler;
 use ju1ius\XdgMime\Parser\MimeDatabaseParser;
 use ju1ius\XdgMime\Utils\XdgDataDirIterator;
 
-final class MimeDatabaseGenerator
+final class MimeDatabaseGenerator implements MimeDatabaseGeneratorInterface
 {
     private bool $useXdgDirs = true;
     private array $customPaths = [];
