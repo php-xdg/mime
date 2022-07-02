@@ -6,17 +6,6 @@ use ju1ius\XdgMime\MimeType;
 use ju1ius\XdgMime\Utils\Stat;
 use Symfony\Component\Filesystem\Path;
 
-// Help opcache.preload discover always-needed symbols.
-// @codeCoverageIgnoreStart
-class_exists(AliasesDatabase::class);
-class_exists(GlobsDatabase::class);
-class_exists(IconsDatabase::class);
-class_exists(MagicDatabase::class);
-class_exists(SubclassesDatabase::class);
-class_exists(TreeMagicDatabase::class);
-class_exists(XmlNamespacesDatabase::class);
-// @codeCoverageIgnoreEnd
-
 /**
  * @internal
  */
