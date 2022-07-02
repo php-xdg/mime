@@ -5,7 +5,7 @@ use Symfony\Component\Filesystem\Filesystem;
 
 $root = \dirname(__DIR__);
 $mimeInfoSrc = $root . '/resources/shared-mime-info/data/freedesktop.org.xml.in';
-$mimeInfoDest = $root . '/src/Resources/freedesktop.org.xml';
+$mimeInfoDest = $root . '/src/Resources/mime-info/freedesktop.org.xml';
 $outputDir = $root . '/src/Resources/db';
 
 require $root . '/vendor/autoload.php';
@@ -15,6 +15,6 @@ $fs->copy($mimeInfoSrc, $mimeInfoDest);
 
 MimeDatabaseGenerator::new()
     ->useXdgDirectories(false)
-    ->addCustomPaths($mimeInfoDest)
+    ->addCustomPaths($root . '/src/Resources/mime-info')
     ->generate($outputDir)
 ;
