@@ -24,7 +24,8 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-xml": "*",
-    "symfony/filesystem": "^5.4||^6.1"
+    "symfony/filesystem": "^5.4||^6.1",
+    "xdg/base-directory": "^0.1"
   },
   "require-dev": {
     "ext-fileinfo": "*",

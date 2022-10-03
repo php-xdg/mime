@@ -46,7 +46,7 @@ final class MimeDatabaseGeneratorTest extends TestCase
     {
         // populates ENV
         foreach ($env as $key => $value) {
-            $_ENV[$key] = $value;
+            $_SERVER[$key] = $_ENV[$key] = $value;
         }
         // clean output directory
         $outputDir = ResourceHelper::getPath('tmp/db');
