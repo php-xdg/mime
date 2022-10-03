@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Runtime;
+namespace Xdg\Mime\Tests\Runtime;
 
-use ju1ius\XdgMime\Runtime\MagicMatch;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Runtime\MagicMatch;
 
 final class MagicMatchTest extends TestCase
 {

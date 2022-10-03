@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Utils;
+namespace Xdg\Mime\Tests\Utils;
 
-use ju1ius\XdgMime\Utils\Iter;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Utils\Iter;
 
 final class IterTest extends TestCase
 {

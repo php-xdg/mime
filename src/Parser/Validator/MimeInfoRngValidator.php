@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Parser\Validator;
+namespace Xdg\Mime\Parser\Validator;
 
 /**
  * @internal

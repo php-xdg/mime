@@ -1,14 +1,14 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Compiler\Optimization;
+namespace Xdg\Mime\Tests\Compiler\Optimization;
 
-use ju1ius\XdgMime\Compiler\Optimization\Glob\CombineExpensiveGlobs;
-use ju1ius\XdgMime\Compiler\Optimization\RecursivePass;
-use ju1ius\XdgMime\Parser\AST\GlobNode;
-use ju1ius\XdgMime\Parser\AST\GlobRegExpNode;
-use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Compiler\Optimization\Glob\CombineExpensiveGlobs;
+use Xdg\Mime\Compiler\Optimization\RecursivePass;
+use Xdg\Mime\Parser\AST\GlobNode;
+use Xdg\Mime\Parser\AST\GlobRegExpNode;
+use Xdg\Mime\Parser\AST\MimeInfoNode;
 
 final class CombineExpensiveGlobsTest extends TestCase
 {

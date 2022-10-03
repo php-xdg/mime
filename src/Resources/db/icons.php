@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XdgMime\Runtime\IconsDatabase;
+use Xdg\Mime\Runtime\IconsDatabase;
 
 return new IconsDatabase(
     icons: [

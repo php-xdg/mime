@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Parser;
+namespace Xdg\Mime\Parser;
 
-use ju1ius\XdgMime\Parser\AST\GlobNode;
-use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
-use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
-use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
-use ju1ius\XdgMime\Parser\AST\RootXmlNode;
-use ju1ius\XdgMime\Parser\AST\TreeMagicNode;
-use ju1ius\XdgMime\Parser\AST\TreeMatchNode;
-use ju1ius\XdgMime\Parser\Exception\ParseError;
-use ju1ius\XdgMime\Parser\Validator\MimeInfoRngValidator;
-use ju1ius\XdgMime\Runtime\TreeMatchFlags;
+use Xdg\Mime\Parser\AST\GlobNode;
+use Xdg\Mime\Parser\AST\MagicMatchNode;
+use Xdg\Mime\Parser\AST\MagicRuleNode;
+use Xdg\Mime\Parser\AST\MimeInfoNode;
+use Xdg\Mime\Parser\AST\RootXmlNode;
+use Xdg\Mime\Parser\AST\TreeMagicNode;
+use Xdg\Mime\Parser\AST\TreeMatchNode;
+use Xdg\Mime\Parser\Exception\ParseError;
+use Xdg\Mime\Parser\Validator\MimeInfoRngValidator;
+use Xdg\Mime\Runtime\TreeMatchFlags;
 
 /**
  * @internal

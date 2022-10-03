@@ -1,17 +1,17 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test;
+namespace Xdg\Mime\Tests;
 
-use ju1ius\XdgMime\MimeDatabaseGenerator;
-use ju1ius\XdgMime\Runtime\AliasesDatabase;
-use ju1ius\XdgMime\Runtime\GlobsDatabase;
-use ju1ius\XdgMime\Runtime\MagicDatabase;
-use ju1ius\XdgMime\Runtime\SubclassesDatabase;
-use ju1ius\XdgMime\Runtime\TreeMagicDatabase;
-use ju1ius\XdgMime\Runtime\XmlNamespacesDatabase;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Xdg\Mime\MimeDatabaseGenerator;
+use Xdg\Mime\Runtime\AliasesDatabase;
+use Xdg\Mime\Runtime\GlobsDatabase;
+use Xdg\Mime\Runtime\MagicDatabase;
+use Xdg\Mime\Runtime\SubclassesDatabase;
+use Xdg\Mime\Runtime\TreeMagicDatabase;
+use Xdg\Mime\Runtime\XmlNamespacesDatabase;
 
 final class MimeDatabaseGeneratorTest extends TestCase
 {

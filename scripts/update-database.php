@@ -1,7 +1,7 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XdgMime\MimeDatabaseGenerator;
 use Symfony\Component\Filesystem\Filesystem;
+use Xdg\Mime\MimeDatabaseGenerator;
 
 $root = \dirname(__DIR__);
 $mimeInfoSrc = $root . '/resources/shared-mime-info/data/freedesktop.org.xml.in';

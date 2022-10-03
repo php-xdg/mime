@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test;
+namespace Xdg\Mime\Tests;
 
-use ju1ius\XdgMime\MimeType;
 use PHPUnit\Framework\Assert;
+use Xdg\Mime\MimeType;
 
 final class MimeTypeAssert
 {

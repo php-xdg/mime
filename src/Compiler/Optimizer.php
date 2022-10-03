@@ -1,24 +1,24 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Compiler;
+namespace Xdg\Mime\Compiler;
 
-use ju1ius\XdgMime\Compiler\Optimization\Glob\CombineExpensiveGlobs;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateAliasLookup;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateGlobLookup;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateHierarchyLookup;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateIconLookup;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateMagicLookup;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateTreeMagicLookup;
-use ju1ius\XdgMime\Compiler\Optimization\Lookup\PopulateXmlNamespaceLookup;
-use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineAndMatches;
-use ju1ius\XdgMime\Compiler\Optimization\Magic\CombineOrMatches;
-use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertExpensiveMatch;
-use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertToMachineByteOrder;
-use ju1ius\XdgMime\Compiler\Optimization\Magic\RegExpManipulator;
-use ju1ius\XdgMime\Compiler\Optimization\OptimizationPassInterface;
-use ju1ius\XdgMime\Compiler\Optimization\RecursivePass;
-use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
-use ju1ius\XdgMime\Utils\Bytes;
+use Xdg\Mime\Compiler\Optimization\Glob\CombineExpensiveGlobs;
+use Xdg\Mime\Compiler\Optimization\Lookup\PopulateAliasLookup;
+use Xdg\Mime\Compiler\Optimization\Lookup\PopulateGlobLookup;
+use Xdg\Mime\Compiler\Optimization\Lookup\PopulateHierarchyLookup;
+use Xdg\Mime\Compiler\Optimization\Lookup\PopulateIconLookup;
+use Xdg\Mime\Compiler\Optimization\Lookup\PopulateMagicLookup;
+use Xdg\Mime\Compiler\Optimization\Lookup\PopulateTreeMagicLookup;
+use Xdg\Mime\Compiler\Optimization\Lookup\PopulateXmlNamespaceLookup;
+use Xdg\Mime\Compiler\Optimization\Magic\CombineAndMatches;
+use Xdg\Mime\Compiler\Optimization\Magic\CombineOrMatches;
+use Xdg\Mime\Compiler\Optimization\Magic\ConvertExpensiveMatch;
+use Xdg\Mime\Compiler\Optimization\Magic\ConvertToMachineByteOrder;
+use Xdg\Mime\Compiler\Optimization\Magic\RegExpManipulator;
+use Xdg\Mime\Compiler\Optimization\OptimizationPassInterface;
+use Xdg\Mime\Compiler\Optimization\RecursivePass;
+use Xdg\Mime\Parser\AST\MimeInfoNode;
+use Xdg\Mime\Utils\Bytes;
 
 /**
  * @internal

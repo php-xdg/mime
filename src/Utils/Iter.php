@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Utils;
+namespace Xdg\Mime\Utils;
 
 use Traversable;
 

@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Compiler\Optimization\Glob;
+namespace Xdg\Mime\Compiler\Optimization\Glob;
 
-use ju1ius\XdgMime\Compiler\Optimization\AbstractNodeVisitor;
-use ju1ius\XdgMime\Parser\AST\GlobNode;
-use ju1ius\XdgMime\Parser\AST\GlobRegExpNode;
-use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
+use Xdg\Mime\Compiler\Optimization\AbstractNodeVisitor;
+use Xdg\Mime\Parser\AST\GlobNode;
+use Xdg\Mime\Parser\AST\GlobRegExpNode;
+use Xdg\Mime\Parser\AST\MimeInfoNode;
 
 /**
  * @internal

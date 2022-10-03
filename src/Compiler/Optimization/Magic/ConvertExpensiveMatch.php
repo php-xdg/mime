@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Compiler\Optimization\Magic;
+namespace Xdg\Mime\Compiler\Optimization\Magic;
 
-use ju1ius\XdgMime\Compiler\Optimization\AbstractNodeVisitor;
-use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
-use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
-use ju1ius\XdgMime\Parser\AST\Node;
+use Xdg\Mime\Compiler\Optimization\AbstractNodeVisitor;
+use Xdg\Mime\Parser\AST\MagicMatchNode;
+use Xdg\Mime\Parser\AST\MagicRegexNode;
+use Xdg\Mime\Parser\AST\Node;
 
 /**
  * Matches will be faster when compiled to a regular expression when:

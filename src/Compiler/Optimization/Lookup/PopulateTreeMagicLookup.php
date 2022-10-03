@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Compiler\Optimization\Lookup;
+namespace Xdg\Mime\Compiler\Optimization\Lookup;
 
-use ju1ius\XdgMime\Compiler\Optimization\AbstractNodeVisitor;
-use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
-use ju1ius\XdgMime\Parser\AST\Node;
-use ju1ius\XdgMime\Parser\AST\TreeMagicNode;
+use Xdg\Mime\Compiler\Optimization\AbstractNodeVisitor;
+use Xdg\Mime\Parser\AST\MimeInfoNode;
+use Xdg\Mime\Parser\AST\Node;
+use Xdg\Mime\Parser\AST\TreeMagicNode;
 
 /**
  * @internal

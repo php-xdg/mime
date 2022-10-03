@@ -1,6 +1,6 @@
-# ju1ius/xdg-mime
+# xdg/mime
 
-[![codecov](https://codecov.io/gh/ju1ius/xdg-mime/branch/main/graph/badge.svg?token=EO5QT1GNKW)](https://codecov.io/gh/ju1ius/xdg-mime)
+[![codecov](https://codecov.io/gh/php-xdg/mime/branch/main/graph/badge.svg?token=EGZUjcIpuE)](https://codecov.io/gh/php-xdg/mime)
 
 This package is a pure PHP implementation of the
 [XDG Shared MIME-Info Database](http://standards.freedesktop.org/shared-mime-info-spec/) specification.
@@ -11,7 +11,7 @@ It is primarily aimed at MIME-type detection.
 ## Installation
 
 ```sh
-$ composer require ju1ius/xdg-mime
+$ composer require xdg/mime
 ```
 
 

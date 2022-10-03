@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Parser;
+namespace Xdg\Mime\Tests\Parser;
 
-use ju1ius\XdgMime\Parser\Exception\ParseError;
-use ju1ius\XdgMime\Parser\Validator\MimeInfoRngValidator;
-use ju1ius\XdgMime\Parser\Validator\MimeInfoXsdValidator;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Parser\Exception\ParseError;
+use Xdg\Mime\Parser\Validator\MimeInfoRngValidator;
+use Xdg\Mime\Parser\Validator\MimeInfoXsdValidator;
 
 final class ValidatorTest extends TestCase
 {

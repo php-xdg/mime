@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Parser\Validator;
+namespace Xdg\Mime\Parser\Validator;
 
 /**
  * @deprecated: libxml2 does not support XML Schema 1.1,

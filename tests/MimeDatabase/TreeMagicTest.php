@@ -1,13 +1,13 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\MimeDatabase;
+namespace Xdg\Mime\Tests\MimeDatabase;
 
-use ju1ius\XdgMime\MimeDatabaseInterface;
-use ju1ius\XdgMime\Test\MimeTypeAssert;
-use ju1ius\XdgMime\Test\ResourceHelper;
-use ju1ius\XdgMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
+use Xdg\Mime\MimeDatabaseInterface;
+use Xdg\Mime\Tests\MimeTypeAssert;
+use Xdg\Mime\Tests\ResourceHelper;
+use Xdg\Mime\Tests\TestDatabaseFactory;
 
 final class TreeMagicTest extends TestCase
 {

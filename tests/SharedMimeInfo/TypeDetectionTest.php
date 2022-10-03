@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\SharedMimeInfo;
+namespace Xdg\Mime\Tests\SharedMimeInfo;
 
-use ju1ius\XdgMime\MimeDatabaseInterface;
-use ju1ius\XdgMime\Test\MimeTypeAssert;
-use ju1ius\XdgMime\Test\ResourceHelper;
-use ju1ius\XdgMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\MimeDatabaseInterface;
+use Xdg\Mime\Tests\MimeTypeAssert;
+use Xdg\Mime\Tests\ResourceHelper;
+use Xdg\Mime\Tests\TestDatabaseFactory;
 
 final class TypeDetectionTest extends TestCase
 {

@@ -1,5 +1,5 @@
 {
-  "name": "ju1ius/xdg-mime",
+  "name": "xdg/mime",
   "description": "PHP implementation of the Freedesktop Shared MIME-info Database standard.",
   "license": "MIT",
   "authors": [
@@ -11,12 +11,12 @@
   "keywords": ["mime", "mime-type", "xdg", "freedesktop", "guesser"],
   "autoload": {
     "psr-4": {
-      "ju1ius\\XdgMime\\": "src/"
+      "Xdg\\Mime\\": "src/"
     }
   },
   "autoload-dev": {
     "psr-4": {
-      "ju1ius\\XdgMime\\Test\\": "tests/"
+      "Xdg\\Mime\\Tests\\": "tests/"
     }
   },
   "require": {
@@ -24,7 +24,7 @@
     "ext-dom": "*",
     "ext-libxml": "*",
     "ext-xml": "*",
-    "symfony/filesystem": "^6.1"
+    "symfony/filesystem": "^5.4||^6.1"
   },
   "require-dev": {
     "ext-fileinfo": "*",

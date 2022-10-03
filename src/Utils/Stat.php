@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Utils;
+namespace Xdg\Mime\Utils;
 
-use ju1ius\XdgMime\Exception\IOError;
+use Xdg\Mime\Exception\IOError;
 
 /**
  * Object-oriented interface for `stat()` and `lstat()`.

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime;
+namespace Xdg\Mime;
 
-use ju1ius\XdgMime\Exception\InvalidMimeType;
+use Xdg\Mime\Exception\InvalidMimeType;
 
 final class MimeType implements \Stringable
 {

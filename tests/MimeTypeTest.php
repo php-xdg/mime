@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test;
+namespace Xdg\Mime\Tests;
 
-use ju1ius\XdgMime\Exception\InvalidMimeType;
-use ju1ius\XdgMime\MimeType;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Exception\InvalidMimeType;
+use Xdg\Mime\MimeType;
 
 class MimeTypeTest extends TestCase
 {

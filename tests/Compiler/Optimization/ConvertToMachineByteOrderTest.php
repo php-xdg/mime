@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Compiler\Optimization;
+namespace Xdg\Mime\Tests\Compiler\Optimization;
 
-use ju1ius\XdgMime\Compiler\Optimization\Magic\ConvertToMachineByteOrder;
-use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Compiler\Optimization\Magic\ConvertToMachineByteOrder;
+use Xdg\Mime\Parser\AST\MagicMatchNode;
 
 final class ConvertToMachineByteOrderTest extends TestCase
 {

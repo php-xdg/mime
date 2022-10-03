@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Utils;
+namespace Xdg\Mime\Tests\Utils;
 
-use ju1ius\XdgMime\Test\ResourceHelper;
-use ju1ius\XdgMime\Utils\Bytes;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Tests\ResourceHelper;
+use Xdg\Mime\Utils\Bytes;
 
 final class BytesTest extends TestCase
 {

@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Parser\Validator;
+namespace Xdg\Mime\Parser\Validator;
 
-use ju1ius\XdgMime\Parser\Exception\ParseError;
-use ju1ius\XdgMime\Parser\MimeInfoValidatorInterface;
+use Xdg\Mime\Parser\Exception\ParseError;
+use Xdg\Mime\Parser\MimeInfoValidatorInterface;
 
 /**
  * @internal

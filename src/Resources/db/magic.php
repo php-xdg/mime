@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XdgMime\Runtime\MagicDatabase;
-use ju1ius\XdgMime\Runtime\MagicMatch;
-use ju1ius\XdgMime\Runtime\MagicRegex;
-use ju1ius\XdgMime\Runtime\MagicRule;
-use ju1ius\XdgMime\Utils\Bytes;
+use Xdg\Mime\Runtime\MagicDatabase;
+use Xdg\Mime\Runtime\MagicMatch;
+use Xdg\Mime\Runtime\MagicRegex;
+use Xdg\Mime\Runtime\MagicRule;
+use Xdg\Mime\Utils\Bytes;
 
 $swap = Bytes::isLittleEndianPlatform() ? 1 : 0;
 

@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XdgMime\Runtime\TreeMagicDatabase;
-use ju1ius\XdgMime\Runtime\TreeMagicMatch;
-use ju1ius\XdgMime\Runtime\TreeMagicRule;
+use Xdg\Mime\Runtime\TreeMagicDatabase;
+use Xdg\Mime\Runtime\TreeMagicMatch;
+use Xdg\Mime\Runtime\TreeMagicRule;
 
 return new TreeMagicDatabase([
     new TreeMagicRule('x-content/audio-dvd', 50, [

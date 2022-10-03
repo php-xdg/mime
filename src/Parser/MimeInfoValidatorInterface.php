@@ -1,8 +1,8 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Parser;
+namespace Xdg\Mime\Parser;
 
-use ju1ius\XdgMime\Parser\Exception\ParseError;
+use Xdg\Mime\Parser\Exception\ParseError;
 
 /**
  * @internal

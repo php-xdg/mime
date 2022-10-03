@@ -14,7 +14,7 @@ Alternatively, you can use the `MimeType->is()` instance method to compare MIME-
 Per the specification, MIME-types are case-insensitive, so they are always internally normalized to lowercase form.
 
 ```php
-use \ju1ius\XdgMime\MimeType;
+use Xdg\Mime\MimeType;
 
 // Note that all comparison operations are case-insensitive
 assert(MimeType::of('text/plain') === MimeType::of('text/plain'));
@@ -30,7 +30,7 @@ assert(MimeType::of('text/plain')->is('text/plain'));
 Here's what you'll be using most of the time:
 
 ```php
-use ju1ius\XdgMime\XdgMimeDatabase;
+use Xdg\Mime\XdgMimeDatabase;
 
 $db = new XdgMimeDatabase();
 // guess mime-type using the XDG specification algorithm
@@ -58,7 +58,7 @@ The following type-guessing methods are also available, but will most likely ret
 since they only implement parts of the guessing algorithm:
 
 ```php
-use ju1ius\XdgMime\XdgMimeDatabase;
+use Xdg\Mime\XdgMimeDatabase;
 
 $db = new XdgMimeDatabase();
 // guess mime-type using the filename only (no I/O performed)
@@ -79,8 +79,8 @@ Some MIME-types have common aliases, which can be resolved using `XdgMimeDatabas
 Note that the database methods always return canonical types.
 
 ```php
-use ju1ius\XdgMime\MimeType;
-use ju1ius\XdgMime\XdgMimeDatabase;
+use Xdg\Mime\MimeType;
+use Xdg\Mime\XdgMimeDatabase;
 
 $db = new XdgMimeDatabase();
 $type = $db->getCanonicalType(MimeType::of('application/javascript'));
@@ -100,8 +100,8 @@ text/javascript ─▷ application/ecmascript ┬─▷ text/plain ────�
 The list of ancestors for a given MIME-type can be retrieved using `XdgMimeDatabase::getAncestors()`.
 
 ```php
-use ju1ius\XdgMime\MimeType;
-use ju1ius\XdgMime\XdgMimeDatabase;
+use Xdg\Mime\MimeType;
+use Xdg\Mime\XdgMimeDatabase;
 
 $db = new XdgMimeDatabase();
 $ancestors = $db->getAncestors(MimeType::of('text/javascript'));

@@ -1,12 +1,12 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test;
+namespace Xdg\Mime\Tests;
 
-use ju1ius\XdgMime\Compiler\MimeDatabaseCompiler;
-use ju1ius\XdgMime\MimeDatabaseGenerator;
-use ju1ius\XdgMime\Parser\MimeDatabaseParser;
-use ju1ius\XdgMime\Runtime\MimeDatabase;
-use ju1ius\XdgMime\XdgMimeDatabase;
+use Xdg\Mime\Compiler\MimeDatabaseCompiler;
+use Xdg\Mime\MimeDatabaseGenerator;
+use Xdg\Mime\Parser\MimeDatabaseParser;
+use Xdg\Mime\Runtime\MimeDatabase;
+use Xdg\Mime\XdgMimeDatabase;
 
 final class TestDatabaseFactory
 {

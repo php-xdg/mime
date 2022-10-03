@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Utils;
+namespace Xdg\Mime\Tests\Utils;
 
-use ju1ius\XdgMime\Utils\RegExp;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Utils\RegExp;
 
 final class RegExpTest extends TestCase
 {

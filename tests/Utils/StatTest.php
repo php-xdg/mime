@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Utils;
+namespace Xdg\Mime\Tests\Utils;
 
-use ju1ius\XdgMime\Exception\IOError;
-use ju1ius\XdgMime\Utils\Stat;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Exception\IOError;
+use Xdg\Mime\Utils\Stat;
 
 final class StatTest extends TestCase
 {

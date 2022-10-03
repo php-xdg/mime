@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Runtime;
+namespace Xdg\Mime\Runtime;
 
-use ju1ius\XdgMime\MimeType;
-use ju1ius\XdgMime\Utils\Stat;
 use Symfony\Component\Filesystem\Path;
+use Xdg\Mime\MimeType;
+use Xdg\Mime\Utils\Stat;
 
 /**
  * @internal

@@ -17,8 +17,8 @@ in particular the relevant chapters:
 ## Generating a database from system directories
 
 ```php
-use ju1ius\XdgMime\MimeDatabaseGenerator;
-use ju1ius\XdgMime\XdgMimeDatabase;
+use Xdg\Mime\MimeDatabaseGenerator;
+use Xdg\Mime\XdgMimeDatabase;
 
 // the directory to compile your database into
 $outputDirectory = '/path/to/output-directory';
@@ -46,7 +46,7 @@ You can override these paths by passing custom paths to the generator.
 ## Generating a database from custom files / directories
 
 ```php
-use ju1ius\XdgMime\MimeDatabaseGenerator;
+use Xdg\Mime\MimeDatabaseGenerator;
 
 // the directory to compile your database into
 $outputDirectory = '/path/to/output-directory';

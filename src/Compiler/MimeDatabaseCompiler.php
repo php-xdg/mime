@@ -1,32 +1,32 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Compiler;
+namespace Xdg\Mime\Compiler;
 
-use ju1ius\XdgMime\Parser\AST\GlobNode;
-use ju1ius\XdgMime\Parser\AST\GlobRegExpNode;
-use ju1ius\XdgMime\Parser\AST\MagicMatchNode;
-use ju1ius\XdgMime\Parser\AST\MagicRegexNode;
-use ju1ius\XdgMime\Parser\AST\MagicRuleNode;
-use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
-use ju1ius\XdgMime\Parser\AST\TreeMatchNode;
-use ju1ius\XdgMime\Runtime\AliasesDatabase;
-use ju1ius\XdgMime\Runtime\Glob;
-use ju1ius\XdgMime\Runtime\GlobLiteral;
-use ju1ius\XdgMime\Runtime\GlobRegExp;
-use ju1ius\XdgMime\Runtime\GlobsDatabase;
-use ju1ius\XdgMime\Runtime\IconsDatabase;
-use ju1ius\XdgMime\Runtime\MagicDatabase;
-use ju1ius\XdgMime\Runtime\MagicMatch;
-use ju1ius\XdgMime\Runtime\MagicRegex;
-use ju1ius\XdgMime\Runtime\MagicRule;
-use ju1ius\XdgMime\Runtime\MimeDatabase;
-use ju1ius\XdgMime\Runtime\SubclassesDatabase;
-use ju1ius\XdgMime\Runtime\TreeMagicDatabase;
-use ju1ius\XdgMime\Runtime\TreeMagicMatch;
-use ju1ius\XdgMime\Runtime\TreeMagicRule;
-use ju1ius\XdgMime\Runtime\XmlNamespacesDatabase;
-use ju1ius\XdgMime\Utils\Bytes;
 use Symfony\Component\Filesystem\Filesystem;
+use Xdg\Mime\Parser\AST\GlobNode;
+use Xdg\Mime\Parser\AST\GlobRegExpNode;
+use Xdg\Mime\Parser\AST\MagicMatchNode;
+use Xdg\Mime\Parser\AST\MagicRegexNode;
+use Xdg\Mime\Parser\AST\MagicRuleNode;
+use Xdg\Mime\Parser\AST\MimeInfoNode;
+use Xdg\Mime\Parser\AST\TreeMatchNode;
+use Xdg\Mime\Runtime\AliasesDatabase;
+use Xdg\Mime\Runtime\Glob;
+use Xdg\Mime\Runtime\GlobLiteral;
+use Xdg\Mime\Runtime\GlobRegExp;
+use Xdg\Mime\Runtime\GlobsDatabase;
+use Xdg\Mime\Runtime\IconsDatabase;
+use Xdg\Mime\Runtime\MagicDatabase;
+use Xdg\Mime\Runtime\MagicMatch;
+use Xdg\Mime\Runtime\MagicRegex;
+use Xdg\Mime\Runtime\MagicRule;
+use Xdg\Mime\Runtime\MimeDatabase;
+use Xdg\Mime\Runtime\SubclassesDatabase;
+use Xdg\Mime\Runtime\TreeMagicDatabase;
+use Xdg\Mime\Runtime\TreeMagicMatch;
+use Xdg\Mime\Runtime\TreeMagicRule;
+use Xdg\Mime\Runtime\XmlNamespacesDatabase;
+use Xdg\Mime\Utils\Bytes;
 
 /**
  * @internal

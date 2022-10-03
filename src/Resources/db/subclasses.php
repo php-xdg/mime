@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XdgMime\Runtime\SubclassesDatabase;
+use Xdg\Mime\Runtime\SubclassesDatabase;
 
 return new SubclassesDatabase([
     'application/epub+zip' => ['application/zip'],

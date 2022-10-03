@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Compiler\Optimization\Glob;
+namespace Xdg\Mime\Compiler\Optimization\Glob;
 
 /**
  * Translates a glob to a PCRE pattern (without delimiter).

@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\SharedMimeInfo;
+namespace Xdg\Mime\Tests\SharedMimeInfo;
 
 use Symfony\Component\Filesystem\Path;
 

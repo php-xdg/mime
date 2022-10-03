@@ -1,11 +1,11 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Compiler\Optimization;
+namespace Xdg\Mime\Tests\Compiler\Optimization;
 
-use ju1ius\XdgMime\Compiler\Optimization\Glob\GlobToRegExpTranslator;
-use ju1ius\XdgMime\Compiler\Optimization\Glob\GlobTranslationError;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Compiler\Optimization\Glob\GlobToRegExpTranslator;
+use Xdg\Mime\Compiler\Optimization\Glob\GlobTranslationError;
 
 final class GlobToRegExpTranslatorTest extends TestCase
 {

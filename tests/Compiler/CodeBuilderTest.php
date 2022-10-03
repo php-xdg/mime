@@ -1,10 +1,10 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Compiler;
+namespace Xdg\Mime\Tests\Compiler;
 
-use ju1ius\XdgMime\Compiler\CodeBuilder;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Compiler\CodeBuilder;
 
 final class CodeBuilderTest extends TestCase
 {

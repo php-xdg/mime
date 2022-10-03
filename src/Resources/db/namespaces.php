@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-use ju1ius\XdgMime\Runtime\XmlNamespacesDatabase;
+use Xdg\Mime\Runtime\XmlNamespacesDatabase;
 
 return new XmlNamespacesDatabase([
     'http://www.w3.org/1998/Math/MathML' => ['math' => 'application/mathml+xml'],

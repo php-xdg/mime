@@ -1,18 +1,18 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Test\Compiler;
+namespace Xdg\Mime\Tests\Compiler;
 
-use ju1ius\XdgMime\Compiler\MimeDatabaseCompiler;
-use ju1ius\XdgMime\Parser\MimeDatabaseParser;
-use ju1ius\XdgMime\Runtime\AliasesDatabase;
-use ju1ius\XdgMime\Runtime\GlobsDatabase;
-use ju1ius\XdgMime\Runtime\MagicDatabase;
-use ju1ius\XdgMime\Runtime\MimeDatabase;
-use ju1ius\XdgMime\Runtime\SubclassesDatabase;
-use ju1ius\XdgMime\Test\ResourceHelper;
-use ju1ius\XdgMime\Test\TestDatabaseFactory;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
+use Xdg\Mime\Compiler\MimeDatabaseCompiler;
+use Xdg\Mime\Parser\MimeDatabaseParser;
+use Xdg\Mime\Runtime\AliasesDatabase;
+use Xdg\Mime\Runtime\GlobsDatabase;
+use Xdg\Mime\Runtime\MagicDatabase;
+use Xdg\Mime\Runtime\MimeDatabase;
+use Xdg\Mime\Runtime\SubclassesDatabase;
+use Xdg\Mime\Tests\ResourceHelper;
+use Xdg\Mime\Tests\TestDatabaseFactory;
 
 final class MimeDatabaseCompilerTest extends TestCase
 {

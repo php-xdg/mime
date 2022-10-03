@@ -1,9 +1,9 @@
 <?php declare(strict_types=1);
 
-namespace ju1ius\XdgMime\Compiler\Optimization;
+namespace Xdg\Mime\Compiler\Optimization;
 
-use ju1ius\XdgMime\Parser\AST\MimeInfoNode;
-use ju1ius\XdgMime\Parser\AST\Node;
+use Xdg\Mime\Parser\AST\MimeInfoNode;
+use Xdg\Mime\Parser\AST\Node;
 
 /**
  * @internal
