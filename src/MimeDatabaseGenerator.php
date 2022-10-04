@@ -5,7 +5,6 @@ namespace Xdg\Mime;
 use Xdg\BaseDirectory\XdgBaseDirectory;
 use Xdg\Mime\Compiler\MimeDatabaseCompiler;
 use Xdg\Mime\Parser\MimeDatabaseParser;
-use Xdg\Mime\Utils\XdgDataDirIterator;
 
 final class MimeDatabaseGenerator implements MimeDatabaseGeneratorInterface
 {
@@ -109,19 +108,8 @@ final class MimeDatabaseGenerator implements MimeDatabaseGeneratorInterface
 
     private function loadXdgDataPaths(): array
     {
-        $baseDirs = XdgBaseDirectory::fromEnvironment();
-        $dataDirs = [
-            $baseDirs->getDataHome(),
-            ...$baseDirs->getDataDirectories(),
-        ];
-
-        $dataPaths = [];
-        foreach ($dataDirs as $dataDir) {
-            if (is_dir($path = "{$dataDir}/mime/packages")) {
-                $dataPaths[$path] = true;
-            }
-        }
-
-        return array_reverse(array_keys($dataPaths));
+        return XdgBaseDirectory::fromEnvironment()
+            ->collectDataPaths('mime/packages', is_dir(...))
+        ;
     }
 }
