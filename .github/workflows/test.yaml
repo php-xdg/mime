@@ -7,6 +7,8 @@ on:
   pull_request:
     branches:
       - main
+  schedule:
+    - cron: '0 0 * * MON'
 
 jobs:
   test:
@@ -17,6 +19,7 @@ jobs:
       matrix:
         php-version:
           - '8.1'
+          - '8.2'
         dependencies:
           - highest
     steps:
