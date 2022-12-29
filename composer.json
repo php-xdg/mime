@@ -9,6 +9,10 @@
     }
   ],
   "keywords": ["mime", "mime-type", "xdg", "freedesktop", "guesser"],
+  "scripts": {
+    "test": "XDEBUG_MODE=off tools/phpunit.phar",
+    "coverage:html": "XDEBUG_MODE=coverage tools/phpunit.phar --coverage-html=tmp/coverage"
+  },
   "autoload": {
     "psr-4": {
       "Xdg\\Mime\\": "src/"
@@ -25,7 +29,7 @@
     "ext-libxml": "*",
     "ext-xml": "*",
     "symfony/filesystem": "^5.4||^6.1",
-    "xdg/base-directory": "^0.2"
+    "xdg/base-directory": "^0.3"
   },
   "require-dev": {
     "ext-fileinfo": "*",
