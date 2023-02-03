@@ -10,6 +10,8 @@
   ],
   "keywords": ["mime", "mime-type", "xdg", "freedesktop", "guesser"],
   "scripts": {
+    "compile-db": "XDEBUG_MODE=off php ./scripts/compile-database.php",
+    "update-db": "XDEBUG_MODE=off php ./scripts/update-database.php",
     "test": "XDEBUG_MODE=off tools/phpunit.phar",
     "coverage": "XDEBUG_MODE=coverage tools/phpunit.phar --coverage-html=tmp/coverage"
   },
@@ -29,7 +31,7 @@
     "ext-libxml": "*",
     "ext-xml": "*",
     "symfony/filesystem": "^5.4||^6.1",
-    "xdg/base-directory": "^0.3"
+    "xdg/base-directory": "^1.0"
   },
   "require-dev": {
     "ext-fileinfo": "*",

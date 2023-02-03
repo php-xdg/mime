@@ -1,20 +1,15 @@
 <?php declare(strict_types=1);
 
-use Symfony\Component\Filesystem\Filesystem;
-use Xdg\Mime\MimeDatabaseGenerator;
+const UPSTREAM_URL = 'https://gitlab.freedesktop.org/xdg/shared-mime-info/-/raw/master/data/freedesktop.org.xml.in';
 
 $root = \dirname(__DIR__);
-$mimeInfoSrc = $root . '/resources/shared-mime-info/data/freedesktop.org.xml.in';
-$mimeInfoDest = $root . '/src/Resources/mime-info/freedesktop.org.xml';
-$outputDir = $root . '/src/Resources/db';
+$destFile = $root . '/src/Resources/mime-info/freedesktop.org.xml';
 
-require $root . '/vendor/autoload.php';
+if (false === $fp = fopen(UPSTREAM_URL, 'r')) {
+    exit(1);
+}
+file_put_contents($destFile, $fp);
 
-$fs = new Filesystem();
-$fs->copy($mimeInfoSrc, $mimeInfoDest);
+require __DIR__ . '/compile-database.php';
 
-MimeDatabaseGenerator::new()
-    ->useXdgDirectories(false)
-    ->addCustomPaths($root . '/src/Resources/mime-info')
-    ->generate($outputDir)
-;
+exit(0);

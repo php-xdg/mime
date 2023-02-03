@@ -269,8 +269,6 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/pgp-encrypted">
     <comment>PGP/MIME-encrypted message header</comment>
-    <sub-class-of type="text/plain"/>
-    <generic-icon name="text-x-generic"/>
     <magic>
       <match type="string" value="-----BEGIN PGP MESSAGE-----" offset="0"/>
     </magic>
@@ -283,8 +281,6 @@ command to generate the output files.
     <comment>PGP keys</comment>
     <acronym>PGP</acronym>
     <expanded-acronym>Pretty Good Privacy</expanded-acronym>
-    <sub-class-of type="text/plain"/>
-    <generic-icon name="text-x-generic"/>
     <magic>
       <match type="string" value="-----BEGIN PGP PUBLIC KEY BLOCK-----" offset="0"/>
       <match type="string" value="-----BEGIN PGP PRIVATE KEY BLOCK-----" offset="0"/>
@@ -302,8 +298,6 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/pgp-signature">
     <comment>detached OpenPGP signature</comment>
-    <sub-class-of type="text/plain"/>
-    <generic-icon name="text-x-generic"/>
     <magic>
       <match type="string" value="-----BEGIN PGP SIGNATURE-----" offset="0"/>
     </magic>
@@ -3703,6 +3697,11 @@ command to generate the output files.
     <sub-class-of type="text/plain"/>
     <glob pattern="*.cr"/>
     <alias type="text/crystal"/>
+  </mime-type>
+  <mime-type type="text/julia">
+    <comment>Julia source code</comment>
+    <sub-class-of type="text/plain"/>
+    <glob pattern="*.jl"/>
   </mime-type>
   <mime-type type="text/rust">
     <comment>Rust source code</comment>

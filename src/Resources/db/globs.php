@@ -474,6 +474,7 @@ return new GlobsDatabase(
         'rb' => [new GlobLiteral('application/x-ruby', 50, 4)],
         'mab' => [new GlobLiteral('application/x-markaby', 50, 5)],
         'cr' => [new GlobLiteral('text/x-crystal', 50, 4)],
+        'jl' => [new GlobLiteral('text/julia', 50, 4)],
         'rs' => [new GlobLiteral('text/rust', 50, 4)],
         'shar' => [new GlobLiteral('application/x-shar', 50, 6)],
         'la' => [new GlobLiteral('application/x-shared-library-la', 50, 4)],
