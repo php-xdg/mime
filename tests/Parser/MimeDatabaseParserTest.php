@@ -2,6 +2,7 @@
 
 namespace Xdg\Mime\Tests\Parser;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Parser\Exception\ParseError;
 use Xdg\Mime\Parser\MimeDatabaseParser;
@@ -30,9 +31,7 @@ final class MimeDatabaseParserTest extends TestCase
         XML);
     }
 
-    /**
-     * @dataProvider invalidStringMaskProvider
-     */
+    #[DataProvider('invalidStringMaskProvider')]
     public function testInvalidStringMask(string $input): void
     {
         $this->expectException(ParseError::class);
@@ -50,7 +49,7 @@ final class MimeDatabaseParserTest extends TestCase
         $parser->parseXml($xml);
     }
 
-    public function invalidStringMaskProvider(): iterable
+    public static function invalidStringMaskProvider(): iterable
     {
         yield 'mask shorter than value' => [
             '<match type="string" offset="0" value="foo" mask="0x00"/>',

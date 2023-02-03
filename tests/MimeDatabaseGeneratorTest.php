@@ -3,6 +3,8 @@
 namespace Xdg\Mime\Tests;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\BackupGlobals;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Xdg\Mime\MimeDatabaseGenerator;
@@ -38,10 +40,8 @@ final class MimeDatabaseGeneratorTest extends TestCase
         XmlNamespacesDatabase::class => 'namespaces',
     ];
 
-    /**
-     * @backupGlobals enabled
-     * @dataProvider generateProvider
-     */
+    #[BackupGlobals(true)]
+    #[DataProvider('generateProvider')]
     public function testGenerate(MimeDatabaseGenerator $generator, array $env = []): void
     {
         // populates ENV
@@ -63,7 +63,7 @@ final class MimeDatabaseGeneratorTest extends TestCase
         }
     }
 
-    public function generateProvider(): \Traversable
+    public static function generateProvider(): \Traversable
     {
         yield 'custom paths' => [
             MimeDatabaseGenerator::new()

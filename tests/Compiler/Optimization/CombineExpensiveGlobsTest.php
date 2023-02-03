@@ -3,6 +3,7 @@
 namespace Xdg\Mime\Tests\Compiler\Optimization;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Compiler\Optimization\Glob\CombineExpensiveGlobs;
 use Xdg\Mime\Compiler\Optimization\RecursivePass;
@@ -12,9 +13,7 @@ use Xdg\Mime\Parser\AST\MimeInfoNode;
 
 final class CombineExpensiveGlobsTest extends TestCase
 {
-    /**
-     * @dataProvider processProvider
-     */
+    #[DataProvider('processProvider')]
     public function testProcess(array $globs, array $expected): void
     {
         $info = new MimeInfoNode();
@@ -23,7 +22,7 @@ final class CombineExpensiveGlobsTest extends TestCase
         Assert::assertEquals($expected, $result->globs);
     }
 
-    public function processProvider(): iterable
+    public static function processProvider(): iterable
     {
         yield 'single glob is not optimized' => [
             [new GlobNode('foo/bar', 50, '*.txt')],

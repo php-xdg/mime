@@ -3,6 +3,7 @@
 namespace Xdg\Mime\Tests\Runtime;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Runtime\XmlNamespacesDatabase;
 
@@ -23,30 +24,26 @@ final class XmlNamespacesDatabaseTest extends TestCase
         ]);
     }
 
-    /**
-     * @dataProvider getProvider
-     */
+    #[DataProvider('getProvider')]
     public function testGet(string $namespace, string $localName, ?string $expected): void
     {
         Assert::assertSame($expected, self::getDatabase()->get($namespace, $localName));
     }
 
-    public function getProvider(): iterable
+    public static function getProvider(): iterable
     {
         yield ['urn:nope', 'nope', null];
         yield ['urn:foo', 'foo', 'application/x-foo+xml'];
         yield ['urn:qux', '666', 'application/x-qux'];
     }
 
-    /**
-     * @dataProvider matchDataProvider
-     */
+    #[DataProvider('matchDataProvider')]
     public function testMatchData(string $input, ?string $expected): void
     {
         Assert::assertSame($expected, self::getDatabase()->matchData($input));
     }
 
-    public function matchDataProvider(): iterable
+    public static function matchDataProvider(): iterable
     {
         yield 'start tag without namespace' => [
             '<foo>',
@@ -78,9 +75,7 @@ final class XmlNamespacesDatabaseTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider matchDomDocumentProvider
-     */
+    #[DataProvider('matchDomDocumentProvider')]
     public function testMatchDomDocument(string $input, ?string $expected): void
     {
         $doc = new \DOMDocument();
@@ -88,7 +83,7 @@ final class XmlNamespacesDatabaseTest extends TestCase
         Assert::assertSame($expected, self::getDatabase()->matchDomDocument($doc));
     }
 
-    public function matchDomDocumentProvider(): iterable
+    public static function matchDomDocumentProvider(): iterable
     {
         yield 'no namespace' => [
             '<foo />',

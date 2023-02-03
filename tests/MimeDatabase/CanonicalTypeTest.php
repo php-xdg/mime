@@ -3,6 +3,7 @@
 namespace Xdg\Mime\Tests\MimeDatabase;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\MimeDatabaseInterface;
 use Xdg\Mime\MimeType;
@@ -28,16 +29,14 @@ final class CanonicalTypeTest extends TestCase
         Assert::assertSame($appFoo, $db->getCanonicalType($textFoo));
     }
 
-    /**
-     * @dataProvider defaultAliasProvider
-     */
+    #[DataProvider('defaultAliasProvider')]
     public function testWithDefaultDatabase(string $alias, string $expected): void
     {
         $type = self::getDatabase()->getCanonicalType(MimeType::of($alias));
         MimeTypeAssert::equals($expected, $type);
     }
 
-    public function defaultAliasProvider(): \Traversable
+    public static function defaultAliasProvider(): \Traversable
     {
         yield ['application/javascript', 'text/javascript'];
         yield ['application/x-javascript', 'text/javascript'];

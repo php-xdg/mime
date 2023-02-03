@@ -3,21 +3,20 @@
 namespace Xdg\Mime\Tests\Utils;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Tests\ResourceHelper;
 use Xdg\Mime\Utils\Bytes;
 
 final class BytesTest extends TestCase
 {
-    /**
-     * @dataProvider swapProvider
-     */
+    #[DataProvider('swapProvider')]
     public function testSwap(string $bytes, int $wordSize, string $expected): void
     {
         Assert::assertSame($expected, Bytes::be2le($bytes, $wordSize));
     }
 
-    public function swapProvider(): \Traversable
+    public static function swapProvider(): \Traversable
     {
         yield ["\xFF\x00", 2, "\x00\xFF"];
         yield ["\xFF\x00\xFF\x00", 2, "\x00\xFF\x00\xFF"];
@@ -25,15 +24,13 @@ final class BytesTest extends TestCase
         yield ["\xFF\x00\x00\x00\xFF\xFF\x00\x00", 4, "\x00\x00\x00\xFF\x00\x00\xFF\xFF"];
     }
 
-    /**
-     * @dataProvider plainTextSniffingProvider
-     */
+    #[DataProvider('plainTextSniffingProvider')]
     public function testPlainTextSniffing(string $input, bool $expected): void
     {
         Assert::assertSame($expected, Bytes::looksLikePlainText($input));
     }
 
-    public function plainTextSniffingProvider(): iterable
+    public static function plainTextSniffingProvider(): iterable
     {
         yield 'ASCII only' => [
             'This is some plain text.',

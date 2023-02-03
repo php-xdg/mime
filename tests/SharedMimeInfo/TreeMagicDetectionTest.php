@@ -3,6 +3,7 @@
 namespace Xdg\Mime\Tests\SharedMimeInfo;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\MimeDatabaseInterface;
 use Xdg\Mime\MimeType;
@@ -13,9 +14,8 @@ final class TreeMagicDetectionTest extends TestCase
 {
     /**
      * @fixme The tests seem to imply that the algorithm should return several MIME types.
-     *
-     * @dataProvider detectionProvider
      */
+    #[DataProvider('detectionProvider')]
     public function testDetection(TreeMagicTestDTO $dto): void
     {
         $type = self::getDatabase()->guessTypeForTree($dto->path);
@@ -27,7 +27,7 @@ final class TreeMagicDetectionTest extends TestCase
         }
     }
 
-    public function detectionProvider(): \Traversable
+    public static function detectionProvider(): \Traversable
     {
         $parser = new TreeMagicListParser();
         foreach ($parser->parse(self::getTestList()) as $dto) {

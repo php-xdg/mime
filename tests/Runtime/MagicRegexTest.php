@@ -3,20 +3,19 @@
 namespace Xdg\Mime\Tests\Runtime;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Runtime\MagicRegex;
 
 final class MagicRegexTest extends TestCase
 {
-    /**
-     * @dataProvider matchesProvider
-     */
+    #[DataProvider('matchesProvider')]
     public function testMatches(MagicRegex $rule, string $input, bool $expected): void
     {
         Assert::assertSame($expected, $rule->matches($input, 0));
     }
 
-    public function matchesProvider(): iterable
+    public static function matchesProvider(): iterable
     {
         yield 'simple match at offset' => [
             new MagicRegex('/(?n)\A.{3}foo/'),

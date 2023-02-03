@@ -2,6 +2,8 @@
 
 namespace Xdg\Mime\Tests\MimeDatabase;
 
+use PHPUnit\Framework\Attributes\BeforeClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Xdg\Mime\MimeDatabaseInterface;
@@ -17,9 +19,7 @@ final class TreeMagicTest extends TestCase
         'x-content-failure/nope/empty',
     ];
 
-    /**
-     * @beforeClass
-     */
+    #[BeforeClass]
     public static function createRequiredDirectories(): void
     {
         $fs = new Filesystem();
@@ -28,16 +28,14 @@ final class TreeMagicTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider guessTypeProvider
-     */
+    #[DataProvider('guessTypeProvider')]
     public function testGuessType(string $rootPath, string $expected): void
     {
         $type = self::getDatabase()->guessTypeForTree(ResourceHelper::getTreePath($rootPath));
         MimeTypeAssert::equals($expected, $type);
     }
 
-    public function guessTypeProvider(): \Traversable
+    public static function guessTypeProvider(): \Traversable
     {
         yield ['matches-nothing', 'inode/directory'];
         yield ['x-content-foo', 'x-content/foo'];

@@ -3,20 +3,19 @@
 namespace Xdg\Mime\Tests\Runtime;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Runtime\MagicMatch;
 
 final class MagicMatchTest extends TestCase
 {
-    /**
-     * @dataProvider matchChildrenProvider
-     */
+    #[DataProvider('matchChildrenProvider')]
     public function testMatchChildren(MagicMatch $match, string $subject, bool $expected): void
     {
         Assert::assertSame($expected, $match->matches($subject, \strlen($subject)));
     }
 
-    public function matchChildrenProvider(): iterable
+    public static function matchChildrenProvider(): iterable
     {
         yield 'single child' => [
             new MagicMatch(0, 1, 'foo', '', 0, [
@@ -51,15 +50,13 @@ final class MagicMatchTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider matchWithMaskProvider
-     */
+    #[DataProvider('matchWithMaskProvider')]
     public function testMatchWithMask(MagicMatch $match, string $subject, bool $expected): void
     {
         Assert::assertSame($expected, $match->matches($subject, \strlen($subject)));
     }
 
-    public function matchWithMaskProvider(): iterable
+    public static function matchWithMaskProvider(): iterable
     {
         yield '0xFF mask is the same as no mask' => [
             new MagicMatch(0, 1, 'foo', "\xFF\xFF\xFF"),
@@ -93,9 +90,7 @@ final class MagicMatchTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider itSwapsBytesProvider
-     */
+    #[DataProvider('itSwapsBytesProvider')]
     public function testItSwapsBytes(string $value, int $wordSize, string $expected): void
     {
         $match = new MagicMatch(0, 1, $value, $value, 1|$wordSize);
@@ -103,7 +98,7 @@ final class MagicMatchTest extends TestCase
         Assert::assertSame($expected, $match->mask);
     }
 
-    public function itSwapsBytesProvider(): iterable
+    public static function itSwapsBytesProvider(): iterable
     {
         yield 'wordSize = 2 (16-bits)' => [
             "\x01\x00\xFF\x00",

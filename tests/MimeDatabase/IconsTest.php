@@ -3,6 +3,7 @@
 namespace Xdg\Mime\Tests\MimeDatabase;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\MimeDatabaseInterface;
 use Xdg\Mime\MimeType;
@@ -29,29 +30,25 @@ final class IconsTest extends TestCase
         Assert::assertSame('text-x-generic', self::getDatabase()->getGenericIconName(MimeType::of('foo/bar')));
     }
 
-    /**
-     * @dataProvider notFoundIconsProvider
-     */
+    #[DataProvider('notFoundIconsProvider')]
     public function testNotFoundIcons(string $type, string $expected): void
     {
         Assert::assertSame($expected, self::getDatabase()->getIconName(MimeType::of($type)));
     }
 
-    public function notFoundIconsProvider(): iterable
+    public static function notFoundIconsProvider(): iterable
     {
         yield ['unknown/foo', 'unknown-foo'];
         yield ['application/vnd.unknown+foo', 'application-vnd.unknown+foo'];
     }
 
-    /**
-     * @dataProvider notFoundGenericIconsProvider
-     */
+    #[DataProvider('notFoundGenericIconsProvider')]
     public function testNotFoundGenericIcons(string $type, string $expected): void
     {
         Assert::assertSame($expected, self::getDatabase()->getGenericIconName(MimeType::of($type)));
     }
 
-    public function notFoundGenericIconsProvider(): iterable
+    public static function notFoundGenericIconsProvider(): iterable
     {
         yield ['unknown/foo', 'unknown-x-generic'];
         yield ['application/vnd.foo+bar', 'application-x-generic'];

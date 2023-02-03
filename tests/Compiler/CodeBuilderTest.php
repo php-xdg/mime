@@ -3,20 +3,19 @@
 namespace Xdg\Mime\Tests\Compiler;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Compiler\CodeBuilder;
 
 final class CodeBuilderTest extends TestCase
 {
-    /**
-     * @dataProvider indentationProvider
-     */
+    #[DataProvider('indentationProvider')]
     public function testIndentation(CodeBuilder $code, string $expected): void
     {
         Assert::assertSame($expected, (string)$code);
     }
 
-    public function indentationProvider(): \Traversable
+    public static function indentationProvider(): \Traversable
     {
         yield 'raw() does not use indentation' => [
             CodeBuilder::create()->indent()->raw('foo'),
@@ -49,16 +48,14 @@ final class CodeBuilderTest extends TestCase
         Assert::assertSame('0:a, 1:b, 2:c', $code);
     }
 
-    /**
-     * @dataProvider stringRepresentationProvider
-     */
+    #[DataProvider('stringRepresentationProvider')]
     public function testStringRepresentation(string $input, string $expected): void
     {
         $code = CodeBuilder::create()->string($input)->getSource();
         Assert::assertSame($expected, $code);
     }
 
-    public function stringRepresentationProvider(): \Traversable
+    public static function stringRepresentationProvider(): \Traversable
     {
         yield 'empty string' => ['', "''"];
         yield 'printable ASCII' => ['foo bar', "'foo bar'"];
@@ -69,16 +66,14 @@ final class CodeBuilderTest extends TestCase
         yield 'escapes bytes' => ["\x00\xFF", '"\x00\xFF"'];
     }
 
-    /**
-     * @dataProvider integerRepresentationProvider
-     */
+    #[DataProvider('integerRepresentationProvider')]
     public function testIntegerRepresentation(int $input, int $base, string $expected): void
     {
         $code = CodeBuilder::create()->int($input, $base)->getSource();
         Assert::assertSame($expected, $code);
     }
 
-    public function integerRepresentationProvider(): \Traversable
+    public static function integerRepresentationProvider(): \Traversable
     {
         yield '0 in binary' => [0, 2, '0'];
         yield '0 in octal' => [0, 8, '0'];
@@ -89,16 +84,14 @@ final class CodeBuilderTest extends TestCase
         yield '42 in hexadecimal' => [42, 16, '0x2A'];
     }
 
-    /**
-     * @dataProvider genericRepresentationProvider
-     */
+    #[DataProvider('genericRepresentationProvider')]
     public function testGenericRepresentation(mixed $input, string $expected): void
     {
         $code = CodeBuilder::create()->repr($input)->getSource();
         Assert::assertSame($expected, $code);
     }
 
-    public function genericRepresentationProvider(): \Traversable
+    public static function genericRepresentationProvider(): \Traversable
     {
         yield 'null' => [null, 'null'];
         yield 'int' => [42, '42'];

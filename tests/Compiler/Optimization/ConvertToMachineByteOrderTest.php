@@ -3,21 +3,20 @@
 namespace Xdg\Mime\Tests\Compiler\Optimization;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Compiler\Optimization\Magic\ConvertToMachineByteOrder;
 use Xdg\Mime\Parser\AST\MagicMatchNode;
 
 final class ConvertToMachineByteOrderTest extends TestCase
 {
-    /**
-     * @dataProvider itConvertsToLittleEndianProvider
-     */
+    #[DataProvider('itConvertsToLittleEndianProvider')]
     public function testItConvertsToLittleEndian(MagicMatchNode $input, bool $swap, MagicMatchNode $expected): void
     {
         Assert::assertEquals($expected, self::apply($input, $swap));
     }
 
-    public function itConvertsToLittleEndianProvider(): iterable
+    public static function itConvertsToLittleEndianProvider(): iterable
     {
         yield '8-bit values' => [
             new MagicMatchNode('string', 0, 1, "\xFF\x00", "\xFF\x00", 1),

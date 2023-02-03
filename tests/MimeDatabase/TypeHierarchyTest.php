@@ -3,6 +3,7 @@
 namespace Xdg\Mime\Tests\MimeDatabase;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\MimeDatabaseInterface;
 use Xdg\Mime\MimeType;
@@ -10,16 +11,14 @@ use Xdg\Mime\Tests\TestDatabaseFactory;
 
 final class TypeHierarchyTest extends TestCase
 {
-    /**
-     * @dataProvider getAncestorsProvider
-     */
+    #[DataProvider('getAncestorsProvider')]
     public function testGetAncestors(MimeDatabaseInterface $db, string $input, array $expected): void
     {
         $ancestors = $db->getAncestors(MimeType::of($input));
         Assert::assertSame(self::toMimeTypes($expected), $ancestors);
     }
 
-    public function getAncestorsProvider(): \Traversable
+    public static function getAncestorsProvider(): \Traversable
     {
         $db = TestDatabaseFactory::createFromString(<<<'XML'
         <mime-info xmlns="http://www.freedesktop.org/standards/shared-mime-info">
@@ -54,16 +53,14 @@ final class TypeHierarchyTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider defaultAncestorsProvider
-     */
+    #[DataProvider('defaultAncestorsProvider')]
     public function testWithDefaultDatabase(string $input, array $expected): void
     {
         $ancestors = self::getDatabase()->getAncestors(MimeType::of($input));
         Assert::assertSame(self::toMimeTypes($expected), $ancestors);
     }
 
-    public function defaultAncestorsProvider(): \Traversable
+    public static function defaultAncestorsProvider(): \Traversable
     {
         yield 'application/json' => [
             'application/json',

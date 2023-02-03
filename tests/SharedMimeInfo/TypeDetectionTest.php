@@ -2,6 +2,7 @@
 
 namespace Xdg\Mime\Tests\SharedMimeInfo;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\MimeDatabaseInterface;
 use Xdg\Mime\Tests\MimeTypeAssert;
@@ -16,25 +17,21 @@ final class TypeDetectionTest extends TestCase
      */
     private const LOOKUP_BUFFER_LENGTH = 18729;
 
-    /**
-     * @dataProvider guessTypeByFilenameProvider
-     */
+    #[DataProvider('guessTypeByFilenameProvider')]
     public function testGuessTypeByFilename(TypeDetectionTestDTO $dto): void
     {
         $type = self::getDatabase()->guessTypeByFileName($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
     }
 
-    /**
-     * @dataProvider guessTypeByFilenameProvider
-     */
+    #[DataProvider('guessTypeByFilenameProvider')]
     public function testGuessTypeByFilenameUnoptimized(TypeDetectionTestDTO $dto): void
     {
         $type = self::getDatabase(false)->guessTypeByFileName($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
     }
 
-    public function guessTypeByFilenameProvider(): iterable
+    public static function guessTypeByFilenameProvider(): iterable
     {
         $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
         foreach ($parser->parse(self::getTestList()) as $dto) {
@@ -45,9 +42,7 @@ final class TypeDetectionTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider guessTypeByContentsProvider
-     */
+    #[DataProvider('guessTypeByContentsProvider')]
     public function testGuessTypeByContents(TypeDetectionTestDTO $dto): void
     {
         $db = self::getDatabase();
@@ -56,9 +51,7 @@ final class TypeDetectionTest extends TestCase
         MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByData($buffer));
     }
 
-    /**
-     * @dataProvider guessTypeByContentsProvider
-     */
+    #[DataProvider('guessTypeByContentsProvider')]
     public function testGuessTypeByContentsUnoptimized(TypeDetectionTestDTO $dto): void
     {
         $db = self::getDatabase(false);
@@ -67,7 +60,7 @@ final class TypeDetectionTest extends TestCase
         MimeTypeAssert::equals($dto->expectedType, $db->guessTypeByData($buffer));
     }
 
-    public function guessTypeByContentsProvider(): iterable
+    public static function guessTypeByContentsProvider(): iterable
     {
         $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
         foreach ($parser->parse(self::getTestList()) as $dto) {
@@ -78,25 +71,21 @@ final class TypeDetectionTest extends TestCase
         }
     }
 
-    /**
-     * @dataProvider guessTypeProvider
-     */
+    #[DataProvider('guessTypeProvider')]
     public function testGuessType(TypeDetectionTestDTO $dto): void
     {
         $type = self::getDatabase()->guessType($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
     }
 
-    /**
-     * @dataProvider guessTypeProvider
-     */
+    #[DataProvider('guessTypeProvider')]
     public function testGuessTypeUnoptimized(TypeDetectionTestDTO $dto): void
     {
         $type = self::getDatabase(false)->guessType($dto->filename);
         MimeTypeAssert::equals($dto->expectedType, $type);
     }
 
-    public function guessTypeProvider(): iterable
+    public static function guessTypeProvider(): iterable
     {
         $parser = new TypeDetectionTestListParser(ResourceHelper::getSharedMimeInfoPath('tests/mime-detection'));
         foreach ($parser->parse(self::getTestList()) as $dto) {

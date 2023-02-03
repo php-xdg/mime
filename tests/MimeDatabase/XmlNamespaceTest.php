@@ -2,24 +2,21 @@
 
 namespace Xdg\Mime\Tests\MimeDatabase;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Tests\MimeTypeAssert;
 use Xdg\Mime\Tests\TestDatabaseFactory;
 
 final class XmlNamespaceTest extends TestCase
 {
-    /**
-     * @dataProvider guessTypeProvider
-     */
+    #[DataProvider('guessTypeProvider')]
     public function testGuessTypeForXml(string $data, string $expected): void
     {
         $db = TestDatabaseFactory::default();
         MimeTypeAssert::equals($expected, $db->guessTypeForXml($data));
     }
 
-    /**
-     * @dataProvider guessTypeProvider
-     */
+    #[DataProvider('guessTypeProvider')]
     public function testGuessTypeForDomDocument(string $data, string $expected): void
     {
         $db = TestDatabaseFactory::default();
@@ -28,7 +25,7 @@ final class XmlNamespaceTest extends TestCase
         MimeTypeAssert::equals($expected, $db->guessTypeForDomDocument($doc));
     }
 
-    public function guessTypeProvider(): iterable
+    public static function guessTypeProvider(): iterable
     {
         yield 'failure' => [
             '<unknown />',

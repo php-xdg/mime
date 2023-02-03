@@ -11,7 +11,7 @@
   "keywords": ["mime", "mime-type", "xdg", "freedesktop", "guesser"],
   "scripts": {
     "test": "XDEBUG_MODE=off tools/phpunit.phar",
-    "coverage:html": "XDEBUG_MODE=coverage tools/phpunit.phar --coverage-html=tmp/coverage"
+    "coverage": "XDEBUG_MODE=coverage tools/phpunit.phar --coverage-html=tmp/coverage"
   },
   "autoload": {
     "psr-4": {

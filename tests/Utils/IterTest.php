@@ -3,21 +3,20 @@
 namespace Xdg\Mime\Tests\Utils;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Utils\Iter;
 
 final class IterTest extends TestCase
 {
-    /**
-     * @dataProvider chunkWhileProvider
-     */
+    #[DataProvider('chunkWhileProvider')]
     public function testChunkWhile(iterable $col, callable $predicate, array $expected): void
     {
         $result = iterator_to_array(Iter::chunkWhile($col, $predicate), false);
         Assert::assertSame($expected, $result);
     }
 
-    public function chunkWhileProvider(): iterable
+    public static function chunkWhileProvider(): iterable
     {
         yield 'empty collection' => [
             [], fn() => true, [],
@@ -38,16 +37,14 @@ final class IterTest extends TestCase
         ];
     }
 
-    /**
-     * @dataProvider consecutiveProvider
-     */
+    #[DataProvider('consecutiveProvider')]
     public function testConsecutive(iterable $col, int $size, array $expected): void
     {
         $it = Iter::consecutive($col, $size);
         Assert::assertEquals($expected, iterator_to_array($it));
     }
 
-    public function consecutiveProvider(): iterable
+    public static function consecutiveProvider(): iterable
     {
         yield 'collection size is a multiple of size' => [
             [1, 2, 3, 4, 5, 6, 7, 8, 9],

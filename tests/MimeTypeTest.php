@@ -3,6 +3,7 @@
 namespace Xdg\Mime\Tests;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Exception\InvalidMimeType;
 use Xdg\Mime\MimeType;
@@ -27,16 +28,14 @@ class MimeTypeTest extends TestCase
         $other = clone $type;
     }
 
-    /**
-     * @dataProvider invalidMimeTypeProvider
-     */
+    #[DataProvider('invalidMimeTypeProvider')]
     public function testThatItRaisesInvalidMimeType($mime): void
     {
         $this->expectException(InvalidMimeType::class);
         MimeType::of($mime);
     }
 
-    public function invalidMimeTypeProvider(): \Traversable
+    public static function invalidMimeTypeProvider(): \Traversable
     {
         yield ['application'];
         yield ['application/foo/bar/baz'];
@@ -49,15 +48,13 @@ class MimeTypeTest extends TestCase
         Assert::assertSame($type, MimeType::of($type));
     }
 
-    /**
-     * @dataProvider isProvider
-     */
+    #[DataProvider('isProvider')]
     public function testIs(MimeType $type, MimeType|string $other, bool $expected): void
     {
         Assert::assertSame($expected, $type->is($other));
     }
 
-    public function isProvider(): iterable
+    public static function isProvider(): iterable
     {
         yield  [MimeType::of('foo/bar'), MimeType::of('foo/bar'), true];
         yield  [MimeType::of('foo/bar'), MimeType::of('Foo/Bar'), true];
@@ -67,15 +64,13 @@ class MimeTypeTest extends TestCase
         yield  [MimeType::of('foo/bar'), 'foo/baz', false];
     }
 
-    /**
-     * @dataProvider toStringProvider
-     */
+    #[DataProvider('toStringProvider')]
     public function testThatItConvertsToString($mime): void
     {
         Assert::assertSame($mime, (string)MimeType::of($mime));
     }
 
-    public function toStringProvider(): \Traversable
+    public static function toStringProvider(): \Traversable
     {
         yield ['inode/door'];
         yield ['application/vdn.foo-bar.x-baz'];
@@ -95,15 +90,13 @@ class MimeTypeTest extends TestCase
         Assert::assertSame(MimeType::of('text/html'), $html);
     }
 
-    /**
-     * @dataProvider knownTypesConstructorsProvider
-     */
+    #[DataProvider('knownTypesConstructorsProvider')]
     public function testKnownTypesConstructors(callable $fn, string $expected): void
     {
         Assert::assertSame(MimeType::of($expected), $fn());
     }
 
-    public function knownTypesConstructorsProvider(): \Traversable
+    public static function knownTypesConstructorsProvider(): \Traversable
     {
         yield [MimeType::defaultText(...), 'text/plain'];
         yield [MimeType::defaultBinary(...), 'application/octet-stream'];

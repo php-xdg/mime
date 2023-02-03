@@ -3,22 +3,21 @@
 namespace Xdg\Mime\Tests\Compiler\Optimization;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Compiler\Optimization\Glob\GlobToRegExpTranslator;
 use Xdg\Mime\Compiler\Optimization\Glob\GlobTranslationError;
 
 final class GlobToRegExpTranslatorTest extends TestCase
 {
-    /**
-     * @dataProvider translateProvider
-     */
+    #[DataProvider('translateProvider')]
     public function testTranslate(string $glob, string $expected): void
     {
         $translator = new GlobToRegExpTranslator('~');
         Assert::assertSame($expected, $translator->translate($glob));
     }
 
-    public function translateProvider(): iterable
+    public static function translateProvider(): iterable
     {
         yield ['*.txt', '.*\.txt'];
         yield ['\*.txt', '\*\.txt'];
@@ -33,9 +32,7 @@ final class GlobToRegExpTranslatorTest extends TestCase
         yield ['a[b', 'a\[b'];
     }
 
-    /**
-     * @dataProvider translationErrorProvider
-     */
+    #[DataProvider('translationErrorProvider')]
     public function testTranslationError(string $glob, ?string $message = null): void
     {
         $this->expectException(GlobTranslationError::class);
@@ -46,7 +43,7 @@ final class GlobToRegExpTranslatorTest extends TestCase
         $translator->translate($glob);
     }
 
-    public function translationErrorProvider(): iterable
+    public static function translationErrorProvider(): iterable
     {
         yield ['[-0--]', 'Compilation failed: range out of order in character class'];
     }

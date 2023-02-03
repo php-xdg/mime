@@ -3,14 +3,13 @@
 namespace Xdg\Mime\Tests\Utils;
 
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Utils\RegExp;
 
 final class RegExpTest extends TestCase
 {
-    /**
-     * @dataProvider byteSetToCharacterClassProvider
-     */
+    #[DataProvider('byteSetToCharacterClassProvider')]
     public function testByteSetToCharacterClass(array $bytes, string $expected): void
     {
         Assert::assertSame($expected, RegExp::byteSetToCharacterClass(...$bytes));

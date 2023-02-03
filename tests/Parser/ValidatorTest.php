@@ -2,6 +2,7 @@
 
 namespace Xdg\Mime\Tests\Parser;
 
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 use Xdg\Mime\Parser\Exception\ParseError;
 use Xdg\Mime\Parser\Validator\MimeInfoRngValidator;
@@ -15,9 +16,7 @@ final class ValidatorTest extends TestCase
     </mime-info>
     XML;
 
-    /**
-     * @dataProvider parseErrorsProvider
-     */
+    #[DataProvider('parseErrorsProvider')]
     public function testXsdValidator(string $xml, bool $xFail = false): void
     {
         if ($xFail) {
@@ -28,9 +27,7 @@ final class ValidatorTest extends TestCase
         $validator->validate(self::createDocument($xml));
     }
 
-    /**
-     * @dataProvider parseErrorsProvider
-     */
+    #[DataProvider('parseErrorsProvider')]
     public function testRngValidator(string $xml): void
     {
         $this->expectException(ParseError::class);
@@ -38,7 +35,7 @@ final class ValidatorTest extends TestCase
         $validator->validate(self::createDocument($xml));
     }
 
-    public function parseErrorsProvider(): \Traversable
+    public static function parseErrorsProvider(): \Traversable
     {
         yield 'invalid <mime-type type/>' => [
             '<mime-type type="foo/bar/baz" />',
