@@ -1,9 +1,9 @@
-*~
-.idea/
+/.idea
+/.vscode
 
 /composer.lock
 /vendor/
-/debug/
 /tools/
+/debug/
 /tmp
 /tests/Resources/tmp/

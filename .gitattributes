@@ -5,15 +5,12 @@
 /.gitmodules        export-ignore
 /.github            export-ignore
 /.editorconfig      export-ignore
-/.idea              export-ignore
 
-/tools              export-ignore
 /.phive             export-ignore
 /.php-cs-fixer.php  export-ignore
 /phpunit.xml        export-ignore
 
 /tests              export-ignore
-/resources          export-ignore
 /scripts            export-ignore
 
 # Configure diff output for .php and .phar files.
