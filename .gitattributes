@@ -12,6 +12,7 @@
 
 /tests              export-ignore
 /scripts            export-ignore
+/shared-mime-info   export-ignore
 
 # Configure diff output for .php and .phar files.
 *.php diff=php
