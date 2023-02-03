@@ -7,6 +7,7 @@ on:
   pull_request:
     branches:
       - main
+      - mime-info-updates
   schedule:
     - cron: '0 0 * * MON'
 

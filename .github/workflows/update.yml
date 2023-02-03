@@ -1,0 +1,37 @@
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow.json
+
+name: Update Shared MIME-Info database
+permissions:
+  contents: write
+  pull-requests: write
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 0 * * MON'
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install PHP with extensions
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.1
+          tools: composer:v2
+      - name: Install Composer dependencies
+        uses: ramsey/composer-install@v2
+        with:
+          dependency-versions: lowest
+          composer-options: --prefer-dist --prefer-stable
+      - name: Update the database
+        run: composer run update-db
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          title: Automated updates from upstream Shared MIME-Info
+          commit-message: "[bot] updates mime-info database from upstream"
+          base: main
+          branch: mime-info-updates
+          delete-branch: true
