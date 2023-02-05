@@ -31,7 +31,8 @@
     "ext-libxml": "*",
     "ext-xml": "*",
     "symfony/filesystem": "^5.4||^6.1",
-    "xdg/base-directory": "^1.0"
+    "xdg/base-directory": "^1.0",
+    "ju1ius/luigi": "^1.0"
   },
   "require-dev": {
     "ext-fileinfo": "*",

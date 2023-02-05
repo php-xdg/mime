@@ -2,6 +2,7 @@
 
 namespace Xdg\Mime\Compiler;
 
+use ju1ius\Luigi\CodeBuilder;
 use Symfony\Component\Filesystem\Filesystem;
 use Xdg\Mime\Parser\AST\GlobNode;
 use Xdg\Mime\Parser\AST\GlobRegExpNode;
@@ -46,7 +47,7 @@ final class MimeDatabaseCompiler
     {
         $info = Optimizer::create($this->enableOptimizations, $this->platformDependent)->process($info);
 
-        $code = new CodeBuilder();
+        $code = CodeBuilder::create();
 
         if (!$this->platformDependent) {
             $this->compileEndiannessCheck($code);
@@ -253,7 +254,7 @@ final class MimeDatabaseCompiler
     private function compileGlobRegExp(GlobRegExpNode $glob, CodeBuilder $code): void
     {
         $code->new(GlobRegExp::class)->raw('(')
-            ->regex($glob->pattern)->raw(", [\n")
+            ->regexp($glob->pattern)->raw(", [\n")
             ->indent()
         ;
         foreach ($glob->children as $child) {
@@ -339,7 +340,7 @@ final class MimeDatabaseCompiler
     {
         $code
             ->new(MagicRegex::class)->raw('(')
-            ->regex($node->compiledPattern)
+            ->regexp($node->compiledPattern)
         ;
         if ($node->children) {
             $code
