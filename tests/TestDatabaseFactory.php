@@ -43,7 +43,7 @@ final class TestDatabaseFactory
         $gen = (new MimeDatabaseGenerator())
             ->disableOptimizations()
             ->useXdgDirectories(false)
-            ->addCustomPaths(ResourceHelper::getSharedMimeInfoPath('data/freedesktop.org.xml.in'))
+            ->addCustomPaths(__DIR__ . '/../src/Resources/mime-info/freedesktop.org.xml')
         ;
         $gen->generate($outputDir);
 
