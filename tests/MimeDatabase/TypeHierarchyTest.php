@@ -64,7 +64,13 @@ final class TypeHierarchyTest extends TestCase
     {
         yield 'application/json' => [
             'application/json',
-            ['text/javascript', 'application/ecmascript', 'application/x-executable', 'text/plain'],
+            [
+                'application/json5',
+                'application/ecmascript',
+                'text/javascript',
+                'application/x-executable',
+                'text/plain',
+            ],
         ];
     }
 

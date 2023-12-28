@@ -15,7 +15,7 @@ final class TypeDetectionTest extends TestCase
      * Magic number retrieved by just looking at the compiled database.
      * Remember to update this when the default database is recompiled.
      */
-    private const LOOKUP_BUFFER_LENGTH = 18729;
+    private const LOOKUP_BUFFER_LENGTH = 18730;
 
     #[DataProvider('guessTypeByFilenameProvider')]
     public function testGuessTypeByFilename(TypeDetectionTestDTO $dto): void

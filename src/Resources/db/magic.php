@@ -17,6 +17,9 @@ return new MagicDatabase(
         new MagicRule('application/x-docbook+xml', 90, 126, [
             new MagicRegex('~(?n)\A(?(?=\<\?xml)(.{0,100}\-//OASIS//DTD DocBook XML|.{0,100}\-//KDE//DTD DocBook XML)|(*FAIL))~Ss'),
         ]),
+        new MagicRule('application/x-eris-link+cbor', 90, 10, [
+            new MagicMatch(0, 1, "\xD9\xD9\xF7\x84\xD9\x01\x14XB", '', 0),
+        ]),
         new MagicRule('image/x-eps', 90, 20, [
             new MagicRegex('~(?n)\A((?(?=%\!).{15}EPS|(*FAIL))|(?(?=\x04%\!).{16}EPS|(*FAIL))|\xC5\xD0\xD3\xC6)~Ss'),
         ]),
@@ -29,6 +32,9 @@ return new MagicDatabase(
         new MagicRule('application/vnd.corel-draw', 80, 17, [
             new MagicRegex('~(?n)\A.{8}CDR.vrsn~Ss'),
         ]),
+        new MagicRule('application/vnd.microsoft.portable-executable', 80, 261, [
+            new MagicRegex('~(?n)\A(?(?=MZ).{64}.{0,192}PE\x00\x00|(*FAIL))~Ss'),
+        ]),
         new MagicRule('application/x-fictionbook+xml', 80, 269, [
             new MagicRegex('~(?n)\A.{0,256}\<FictionBook~Ss'),
         ]),
@@ -40,9 +46,6 @@ return new MagicDatabase(
         ]),
         new MagicRule('application/x-nzb', 80, 261, [
             new MagicRegex('~(?n)\A.{0,256}\<nzb~Ss'),
-        ]),
-        new MagicRule('application/x-pak', 80, 5, [
-            new MagicMatch(0, 1, 'PACK', '', 0),
         ]),
         new MagicRule('application/x-php', 80, 70, [
             new MagicRegex('~(?n)\A.{0,64}\<\?php~Ss'),
@@ -191,6 +194,9 @@ return new MagicDatabase(
         new MagicRule('application/vnd.sun.xml.writer.template', 70, 69, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.sun\.xml\.writer|(*FAIL))|(*FAIL))~Ss'),
         ]),
+        new MagicRule('application/x-ms-ne-executable', 70, 259, [
+            new MagicRegex('~(?n)\A(?(?=MZ).{64}.{0,192}NE|(*FAIL))~Ss'),
+        ]),
         new MagicRule('application/x-zip-compressed-fb2', 70, 261, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04).{30}.{0,226}\.fb2|(*FAIL))~Ss'),
         ]),
@@ -206,11 +212,14 @@ return new MagicDatabase(
         new MagicRule('application/vnd.apple.pkpass', 65, 40, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04).{30}pass\.json|(*FAIL))~Ss'),
         ]),
+        new MagicRule('application/ovf', 62, 266, [
+            new MagicRegex('~(?n)\A(?(?=.{1}.{0,255}\.ovf)(.{257}ustar\x00|.{257}ustar  \x00)|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/hta', 60, 273, [
+            new MagicRegex('~(?n)\A(.{0,256}\<hta\:application|.{0,256}\<HTA\:APPLICATION)~Ss'),
+        ]),
         new MagicRule('application/msword', 60, 2141, [
             new MagicRegex('~(?n)\A(1\xBE\x00\x00|PO\^Q`|\xFE7\x00\#|\xDB\xA5\-\x00\x00\x00|.{2112}MSWordDoc|.{2108}MSWordDoc|.{2112}Microsoft Word document data|.{546}bjbj|.{546}jbjb)~Ss'),
-        ]),
-        new MagicRule('application/ovf', 60, 266, [
-            new MagicRegex('~(?n)\A(?(?=.{1}.{0,255}\.ovf)(.{257}ustar\x00|.{257}ustar  \x00)|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.ms-cab-compressed', 60, 9, [
             new MagicMatch(0, 1, "MSCF\x00\x00\x00\x00", '', 0),
@@ -234,6 +243,9 @@ return new MagicDatabase(
             new MagicMatch(0, 1, "q\xC7", '', $swap|2),
             new MagicRegex('~(?n)\A(070701|070702)~Ss'),
             new MagicMatch(0, 1, "\xC7q", '', $swap|2),
+        ]),
+        new MagicRule('application/x-dosexec', 60, 27, [
+            new MagicRegex('~(?n)\A(?(?=MZ).{24}[\x00-\x3F]\x00|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/x-font-type1', 60, 70, [
             new MagicRegex('~(?n)\A(LWFN|.{65}LWFN|%\!PS\-AdobeFont\-1\.|.{6}%\!PS\-AdobeFont\-1\.|%\!FontType1\-1\.|.{6}%\!FontType1\-1\.)~Ss'),
@@ -301,6 +313,9 @@ return new MagicDatabase(
         new MagicRule('application/x-stuffit', 60, 9, [
             new MagicRegex('~(?n)\A(StuffIt |SIT\!)~Ss'),
         ]),
+        new MagicRule('application/x-stuffitx', 60, 9, [
+            new MagicMatch(0, 1, 'StuffIt!', '', 0),
+        ]),
         new MagicRule('application/x-tar', 60, 266, [
             new MagicRegex('~(?n)\A(.{257}ustar\x00|.{257}ustar  \x00)~Ss'),
         ]),
@@ -325,6 +340,9 @@ return new MagicDatabase(
         new MagicRule('audio/vnd.dts.hd', 60, 18730, [
             new MagicRegex('~(?n)\A(?(?=\x7F\xFE\x80\x01).{4}.{0,18721}dX %|(*FAIL))~Ss'),
         ]),
+        new MagicRule('image/apng', 60, 42, [
+            new MagicRegex('~(?n)\A(?(?=\x89PNG\r\n\x1A\n).{37}acTL|(*FAIL))~Ss'),
+        ]),
         new MagicRule('text/x-python3', 60, 34, [
             new MagicRegex('~(?n)\A(\#\!/bin/python3|\#\! /bin/python3|eval "exec /bin/python3|\#\!/usr/bin/python3|\#\! /usr/bin/python3|eval "exec /usr/bin/python3|\#\!/usr/local/bin/python3|\#\! /usr/local/bin/python3|eval "exec /usr/local/bin/python3|.{2}.{0,14}/bin/env python3)~Ss'),
         ]),
@@ -340,11 +358,17 @@ return new MagicDatabase(
         new MagicRule('application/annodex', 50, 521, [
             new MagicRegex('~(?n)\A(?(?=OggS)(?(?=.{28}fishead\x00).{56}.{0,456}CMML\x00\x00\x00\x00|(*FAIL))|(*FAIL))~Ss'),
         ]),
+        new MagicRule('application/appinstaller', 50, 270, [
+            new MagicRegex('~(?n)\A.{0,256}\<AppInstaller~Ss'),
+        ]),
         new MagicRule('application/dicom', 50, 133, [
             new MagicMatch(128, 1, 'DICM', '', 0),
         ]),
         new MagicRule('application/fits', 50, 10, [
             new MagicMatch(0, 1, 'SIMPLE  =', '', 0),
+        ]),
+        new MagicRule('application/font-tdpfr', 50, 5, [
+            new MagicRegex('~(?n)\A(PFR0|PFR1)~Ss'),
         ]),
         new MagicRule('application/gnunet-directory', 50, 9, [
             new MagicMatch(0, 1, "\x89GND\r\n\x1A\n", '', 0),
@@ -352,8 +376,11 @@ return new MagicDatabase(
         new MagicRule('application/gzip', 50, 3, [
             new MagicMatch(0, 1, "\x1F\x8B", '', 0),
         ]),
-        new MagicRule('application/mac-binhex40', 50, 41, [
-            new MagicMatch(11, 1, 'must be converted with BinHex', '', 0),
+        new MagicRule('application/its+xml', 50, 261, [
+            new MagicRegex('~(?n)\A.{0,256}\<its~Ss'),
+        ]),
+        new MagicRule('application/mac-binhex40', 50, 54, [
+            new MagicRegex('~(?n)\A(\(This file must be converted with BinHex 4\.0\)|\(This file must be converted; you knew that already\.\))~Ss'),
         ]),
         new MagicRule('application/mathematica', 50, 322, [
             new MagicRegex('~(?n)\A(\(\*\*\*\*\*\*\*\*\*\*\*\*\*\* Content\-type\: application/mathematica|.{100}.{0,156}This notebook can be used on any computer system with Mathematica|.{10}.{0,246}This is a Mathematica Notebook file\.  It contains ASCII text)~Ss'),
@@ -412,8 +439,14 @@ return new MagicDatabase(
         new MagicRule('application/vnd.chess-pgn', 50, 8, [
             new MagicMatch(0, 1, '[Event ', '', 0),
         ]),
+        new MagicRule('application/vnd.cups-ppd', 50, 12, [
+            new MagicMatch(0, 1, '*PPD-Adobe:', '', 0),
+        ]),
         new MagicRule('application/vnd.debian.binary-package', 50, 15, [
             new MagicRegex('~(?n)\A(?(?=\!\<arch\>).{8}debian|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/vnd.efi.img', 50, 4105, [
+            new MagicRegex('~(?n)\A(.{512}EFI PART|.{1024}EFI PART|.{2048}EFI PART|.{4096}EFI PART)~Ss'),
         ]),
         new MagicRule('application/vnd.emusic-emusic_package', 50, 8, [
             new MagicMatch(0, 1, 'nF7YLao', '', 0),
@@ -429,6 +462,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('application/vnd.framemaker', 50, 17, [
             new MagicRegex('~(?n)\A(\<MakerFile|\<MIFFile|\<MakerDictionary|\<MakerScreenFon|\<MML|\<Book|\<Maker)~Ss'),
+        ]),
+        new MagicRule('application/vnd.gerber', 50, 6, [
+            new MagicRegex('~(?n)\A(G04 |%FSLA|%MO|%TF\.|G75\*)~Ss'),
         ]),
         new MagicRule('application/vnd.iccprofile', 50, 41, [
             new MagicMatch(36, 1, 'acsp', '', 0),
@@ -472,6 +508,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('application/vnd.wordperfect', 50, 5, [
             new MagicMatch(1, 1, 'WPC', '', 0),
+        ]),
+        new MagicRule('application/wasm', 50, 5, [
+            new MagicMatch(0, 1, "\x00asm", '', 0),
         ]),
         new MagicRule('application/winhlp', 50, 5, [
             new MagicMatch(0, 1, "?_\x03\x00", '', 0),
@@ -524,8 +563,14 @@ return new MagicDatabase(
         new MagicRule('application/x-bsdiff', 50, 9, [
             new MagicRegex('~(?n)\A(BSDIFF40|BSDIFN40)~Ss'),
         ]),
-        new MagicRule('application/x-bzip', 50, 4, [
+        new MagicRule('application/x-bzip1', 50, 4, [
+            new MagicMatch(0, 1, 'BZ0', '', 0),
+        ]),
+        new MagicRule('application/x-bzip2', 50, 4, [
             new MagicMatch(0, 1, 'BZh', '', 0),
+        ]),
+        new MagicRule('application/x-bzip3', 50, 6, [
+            new MagicMatch(0, 1, 'BZ3v1', '', 0),
         ]),
         new MagicRule('application/x-ccmx', 50, 5, [
             new MagicMatch(0, 1, 'CCMX', '', 0),
@@ -572,8 +617,14 @@ return new MagicDatabase(
         new MagicRule('application/x-dvi', 50, 3, [
             new MagicMatch(0, 1, "\xF7\x02", '', 0),
         ]),
+        new MagicRule('application/x-excellon', 50, 5, [
+            new MagicMatch(0, 1, "M48\n", '', 0),
+        ]),
         new MagicRule('application/x-fds-disk', 50, 16, [
             new MagicMatch(1, 1, '*NINTENDO-HVC*', '', 0),
+        ]),
+        new MagicRule('application/x-fishscript', 50, 30, [
+            new MagicRegex('~(?n)\A.{2}.{0,14}/bin/env fish~Ss'),
         ]),
         new MagicRule('application/x-fluid', 50, 25, [
             new MagicMatch(0, 1, '# data file for the Fltk', '', 0),
@@ -625,9 +676,6 @@ return new MagicDatabase(
         ]),
         new MagicRule('application/x-gdbm', 50, 5, [
             new MagicRegex('~(?n)\A(\x13W\x9A\xCE|\xCE\x9AW\x13|GDBM)~Ss'),
-        ]),
-        new MagicRule('application/x-gedcom', 50, 7, [
-            new MagicMatch(0, 1, '0 HEAD', '', 0),
         ]),
         new MagicRule('application/x-genesis-32x-rom', 50, 265, [
             new MagicMatch(256, 1, 'SEGA 32X', '', 0),
@@ -704,6 +752,9 @@ return new MagicDatabase(
         new MagicRule('application/x-kword-crypt', 50, 5, [
             new MagicMatch(0, 1, "\r\x1A'\x01", '', 0),
         ]),
+        new MagicRule('application/x-lmdb', 50, 21, [
+            new MagicMatch(16, 1, "\xDE\xC0\xEF\xBE", '', 0),
+        ]),
         new MagicRule('application/x-lyx', 50, 5, [
             new MagicMatch(0, 1, '#LyX', '', 0),
         ]),
@@ -716,11 +767,17 @@ return new MagicDatabase(
         new MagicRule('application/x-matroska', 50, 84, [
             new MagicRegex('~(?n)\A(?(?=\x1AE\xDF\xA3)(?(?=.{5}.{0,60}B\x82).{8}.{0,67}matroska|(*FAIL))|(*FAIL))~Ss'),
         ]),
-        new MagicRule('application/x-ms-dos-executable', 50, 3, [
-            new MagicMatch(0, 1, 'MZ', '', 0),
+        new MagicRule('application/x-ms-pdb', 50, 43, [
+            new MagicRegex('~(?n)\A(Microsoft C/C\+\+ MSF 7\.00\r\n\x1ADS|Microsoft C/C\+\+ program database 2\.00\r\n\x1AJG)~Ss'),
+        ]),
+        new MagicRule('application/x-ms-shortcut', 50, 21, [
+            new MagicMatch(0, 1, "L\x00\x00\x00\x01\x14\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00F", '', 0),
         ]),
         new MagicRule('application/x-ms-wim', 50, 9, [
             new MagicMatch(0, 1, "MSWIM\x00\x00\x00", '', 0),
+        ]),
+        new MagicRule('application/x-msdownload', 50, 3, [
+            new MagicMatch(0, 1, 'MZ', '', 0),
         ]),
         new MagicRule('application/x-mswinurl', 50, 20, [
             new MagicRegex('~(?n)\A(.{1}InternetShortcut|(?(?=.{1}DEFAULT).{11}BASEURL\=|(*FAIL)))~Ss'),
@@ -746,6 +803,9 @@ return new MagicDatabase(
         new MagicRule('application/x-nintendo-3ds-rom', 50, 261, [
             new MagicMatch(256, 1, 'NCSD', '', 0),
         ]),
+        new MagicRule('application/x-nuscript', 50, 28, [
+            new MagicRegex('~(?n)\A.{2}.{0,14}/bin/env nu~Ss'),
+        ]),
         new MagicRule('application/x-object', 50, 19, [
             new MagicRegex('~(?n)\A((?(?=\x7FELF)(?(?=.{5}\x01).{16}\x01\x00|(*FAIL))|(*FAIL))|(?(?=\x7FELF)(?(?=.{5}\x02).{16}\x00\x01|(*FAIL))|(*FAIL)))~Ss'),
         ]),
@@ -761,11 +821,17 @@ return new MagicDatabase(
         new MagicRule('application/x-pef-executable', 50, 5, [
             new MagicMatch(0, 1, 'Joy!', '', 0),
         ]),
+        new MagicRule('application/x-perf-data', 50, 9, [
+            new MagicMatch(0, 1, 'PERFILE2', '', 0),
+        ]),
         new MagicRule('application/x-perl', 50, 267, [
             new MagicRegex('~(?n)\A(eval "exec /usr/local/bin/perl|.{2}.{0,14}/bin/perl|.{2}.{0,14}/bin/env perl|.{0,256}use Test\:\:)~Ss'),
         ]),
         new MagicRule('application/x-pocket-word', 50, 6, [
             new MagicMatch(0, 1, '{\\pwi', '', 0),
+        ]),
+        new MagicRule('application/x-powershell', 50, 29, [
+            new MagicRegex('~(?n)\A(\#Requires \-PSEdition Core|\#Requires \-PSEdition Desktop)~Ss'),
         ]),
         new MagicRule('application/x-pyspread-spreadsheet', 50, 29, [
             new MagicMatch(0, 1, '[Pyspread save file version]', '', 0),
@@ -854,14 +920,17 @@ return new MagicDatabase(
         new MagicRule('application/x-xbel', 50, 271, [
             new MagicRegex('~(?n)\A.{0,256}\<\!DOCTYPE xbel~Ss'),
         ]),
-        new MagicRule('application/x-yaml', 50, 6, [
-            new MagicMatch(0, 1, '%YAML', '', 0),
+        new MagicRule('application/x-zpaq', 50, 5, [
+            new MagicMatch(0, 1, '7kSt', '', 0),
         ]),
         new MagicRule('application/xslt+xml', 50, 272, [
             new MagicRegex('~(?n)\A.{0,256}\<xsl\:stylesheet~Ss'),
         ]),
         new MagicRule('application/xspf+xml', 50, 85, [
             new MagicRegex('~(?n)\A(.{0,64}\<playlist version\="1|.{0,64}\<playlist version\=\'1)~Ss'),
+        ]),
+        new MagicRule('application/yaml', 50, 6, [
+            new MagicMatch(0, 1, '%YAML', '', 0),
         ]),
         new MagicRule('audio/AMR', 50, 13, [
             new MagicRegex('~(?n)\A(\#\!AMR\n|\#\!AMR_MC1\.0\n)~Ss'),
@@ -902,8 +971,14 @@ return new MagicDatabase(
         new MagicRule('audio/vnd.audible.aax', 50, 13, [
             new MagicMatch(4, 1, 'ftypaax ', '', 0),
         ]),
+        new MagicRule('audio/vnd.audible.aaxc', 50, 13, [
+            new MagicMatch(4, 1, 'ftypaaxc', '', 0),
+        ]),
         new MagicRule('audio/vnd.dts', 50, 5, [
             new MagicRegex('~(?n)\A(\x7F\xFE\x80\x01|\x80\x01\x7F\xFE|\x1F\xFF\xE8\x00|\xE8\x00\x1F\xFF)~Ss'),
+        ]),
+        new MagicRule('audio/vnd.wave', 50, 13, [
+            new MagicRegex('~(?n)\A(.{8}WAVE|.{8}WAV )~Ss'),
         ]),
         new MagicRule('audio/x-adpcm', 50, 17, [
             new MagicRegex('~(?n)\A((?(?=\.snd).{12}\x00\x00\x00\x17|(*FAIL))|(?(?=\.sd\x00)(.{12}\x01\x00\x00\x00|.{12}\x02\x00\x00\x00|.{12}\x03\x00\x00\x00|.{12}\x04\x00\x00\x00|.{12}\x05\x00\x00\x00|.{12}\x06\x00\x00\x00|.{12}\x07\x00\x00\x00|.{12}\x17\x00\x00\x00)|(*FAIL)))~Ss'),
@@ -965,9 +1040,6 @@ return new MagicDatabase(
         new MagicRule('audio/x-tta', 50, 5, [
             new MagicMatch(0, 1, 'TTA1', '', 0),
         ]),
-        new MagicRule('audio/x-wav', 50, 13, [
-            new MagicRegex('~(?n)\A(.{8}WAVE|.{8}WAV )~Ss'),
-        ]),
         new MagicRule('audio/x-wavpack', 50, 5, [
             new MagicMatch(0, 1, 'wvpk', '', 0),
         ]),
@@ -1010,6 +1082,9 @@ return new MagicDatabase(
         new MagicRule('image/gif', 50, 5, [
             new MagicMatch(0, 1, 'GIF8', '', 0),
         ]),
+        new MagicRule('image/hej2k', 50, 13, [
+            new MagicMatch(4, 1, 'ftypj2ki', '', 0),
+        ]),
         new MagicRule('image/jp2', 50, 25, [
             new MagicRegex('~(?n)\A\x00\x00\x00\fjP  \r\n\x87\n........jp2 ~Ss'),
         ]),
@@ -1025,8 +1100,14 @@ return new MagicDatabase(
         new MagicRule('image/jxl', 50, 13, [
             new MagicRegex('~(?n)\A(\xFF\n|\x00\x00\x00\fJXL \r\n\x87\n)~Ss'),
         ]),
-        new MagicRule('image/png', 50, 5, [
-            new MagicMatch(0, 1, "\x89PNG", '', 0),
+        new MagicRule('image/jxr', 50, 5, [
+            new MagicMatch(0, 1, "II\xBC\x01", '', 0),
+        ]),
+        new MagicRule('image/png', 50, 9, [
+            new MagicMatch(0, 1, "\x89PNG\r\n\x1A\n", '', 0),
+        ]),
+        new MagicRule('image/qoi', 50, 5, [
+            new MagicMatch(0, 1, 'qoif', '', 0),
         ]),
         new MagicRule('image/tiff', 50, 5, [
             new MagicRegex('~(?n)\A(MM\x00\*|II\*\x00)~Ss'),
@@ -1149,7 +1230,7 @@ return new MagicDatabase(
             new MagicRegex('~(?n)\A(Article|Path\:|Xref\:)~Ss'),
         ]),
         new MagicRule('message/rfc822', 50, 15, [
-            new MagicRegex('~(?n)\A(\#\! rnews|Forward to|From\:|N\#\! rnews|Pipe to|Received\:|Relay\-Version\:|Return\-Path\:|Return\-path\:|Subject\: )~Ss'),
+            new MagicRegex('~(?n)\A(\#\! rnews|Content\-Type\:|Forward to|From\:|N\#\! rnews|Pipe to|Received\:|Relay\-Version\:|Return\-Path\:|Return\-path\:|Subject\: |To\:)~Ss'),
         ]),
         new MagicRule('model/gltf-binary', 50, 5, [
             new MagicMatch(0, 1, 'glTF', '', 0),
@@ -1181,6 +1262,9 @@ return new MagicDatabase(
         new MagicRule('text/javascript', 50, 30, [
             new MagicRegex('~(?n)\A(\#\!/bin/gjs|\#\! /bin/gjs|eval "exec /bin/gjs|\#\!/usr/bin/gjs|\#\! /usr/bin/gjs|eval "exec /usr/bin/gjs|\#\!/usr/local/bin/gjs|\#\! /usr/local/bin/gjs|eval "exec /usr/local/bin/gjs|.{2}.{0,14}/bin/env gjs)~Ss'),
         ]),
+        new MagicRule('text/jscript.encode', 50, 5, [
+            new MagicMatch(0, 1, '#@~^', '', 0),
+        ]),
         new MagicRule('text/plain', 50, 18, [
             new MagicRegex('~(?n)\A(This is TeX,|This is METAFONT,)~Ss'),
         ]),
@@ -1190,8 +1274,14 @@ return new MagicDatabase(
         new MagicRule('text/troff', 50, 5, [
             new MagicRegex('~(?n)\A(\.\\\\"|\'\\\\"|\'\.\\\\"|\\\\")~Ss'),
         ]),
+        new MagicRule('text/vbscript.encode', 50, 5, [
+            new MagicMatch(0, 1, '#@~^', '', 0),
+        ]),
         new MagicRule('text/vcard', 50, 12, [
             new MagicRegex('~(?n)\A(BEGIN\:VCARD|begin\:vcard)~Ss'),
+        ]),
+        new MagicRule('text/vnd.familysearch.gedcom', 50, 7, [
+            new MagicMatch(0, 1, '0 HEAD', '', 0),
         ]),
         new MagicRule('text/vnd.graphviz', 50, 16, [
             new MagicRegex('~(?n)\A(digraph |strict digraph |graph |strict graph )~Ss'),
@@ -1265,9 +1355,6 @@ return new MagicDatabase(
         new MagicRule('text/x-mpl2', 50, 9, [
             new MagicRegex('~(?n)\A(\[1\]|\[0\]|.{0,6}\]\[)~Ss'),
         ]),
-        new MagicRule('text/x-mpsub', 50, 264, [
-            new MagicRegex('~(?n)\A.{0,256}FORMAT\=~Ss'),
-        ]),
         new MagicRule('text/x-mrml', 50, 7, [
             new MagicMatch(0, 1, '<mrml ', '', 0),
         ]),
@@ -1304,6 +1391,9 @@ return new MagicDatabase(
         new MagicRule('text/x-uuencode', 50, 7, [
             new MagicMatch(0, 1, 'begin ', '', 0),
         ]),
+        new MagicRule('text/x-vb', 50, 8, [
+            new MagicRegex('~(?n)\A(Imports|Module|REM)~Ss'),
+        ]),
         new MagicRule('text/xmcd', 50, 7, [
             new MagicMatch(0, 1, '# xmcd', '', 0),
         ]),
@@ -1337,6 +1427,9 @@ return new MagicDatabase(
         new MagicRule('video/quicktime', 50, 17, [
             new MagicRegex('~(?n)\A(.{12}mdat|.{4}mdat|.{4}moov|.{4}ftypqt)~Ss'),
         ]),
+        new MagicRule('video/vnd.avi', 50, 13, [
+            new MagicRegex('~(?n)\A((?(?=RIFF).{8}AVI |(*FAIL))|(?(?=AVF0).{8}AVI |(*FAIL)))~Ss'),
+        ]),
         new MagicRule('video/vnd.mpegurl', 50, 8, [
             new MagicMatch(0, 1, '#EXTM4U', '', 0),
         ]),
@@ -1360,9 +1453,6 @@ return new MagicDatabase(
         ]),
         new MagicRule('video/x-mng', 50, 9, [
             new MagicMatch(0, 1, "\x8AMNG\r\n\x1A\n", '', 0),
-        ]),
-        new MagicRule('video/x-msvideo', 50, 13, [
-            new MagicRegex('~(?n)\A((?(?=RIFF).{8}AVI |(*FAIL))|(?(?=AVF0).{8}AVI |(*FAIL)))~Ss'),
         ]),
         new MagicRule('video/x-nsv', 50, 5, [
             new MagicMatch(0, 1, 'NSVf', '', 0),
@@ -1409,6 +1499,9 @@ return new MagicDatabase(
         new MagicRule('audio/x-mod', 40, 1085, [
             new MagicRegex('~(?n)\A(MTM|MMD0|MMD1|(?(?=.{112}[\x00-\x7F])((?(?=if)((?(?=.{368}[\x00-\x1F])((?(?=.{110}[\x00-\x3F])(.{111}[\x00-\x7F]|.{111}\x80)|(*FAIL))|(?(?=.{110}@)(.{111}[\x00-\x7F]|.{111}\x80)|(*FAIL)))|(*FAIL))|(?(?=.{368} )((?(?=.{110}[\x00-\x3F])(.{111}[\x00-\x7F]|.{111}\x80)|(*FAIL))|(?(?=.{110}@)(.{111}[\x00-\x7F]|.{111}\x80)|(*FAIL)))|(*FAIL)))|(*FAIL))|(?(?=JN)((?(?=.{368}[\x00-\x1F])(?(?=.{110}[\x00-\x3F])(.{111}[\x00-\x7F]|.{111}\x80)|(*FAIL))|(*FAIL))|(?(?=.{368} )(?(?=.{110}@)(.{111}[\x00-\x7F]|.{111}\x80)|(*FAIL))|(*FAIL)))|(*FAIL)))|(*FAIL))|MAS_UTrack_V00|.{1080}M\.K\.|.{1080}M\!K\!)~Ss'),
         ]),
+        new MagicRule('chemical/x-pdb', 40, 8, [
+            new MagicMatch(0, 1, 'HEADER ', '', 0),
+        ]),
         new MagicRule('image/heif', 40, 13, [
             new MagicRegex('~(?n)\A(.{4}ftypmif1|.{4}ftypmsf1|.{4}ftypheic|.{4}ftypheix|.{4}ftyphevc|.{4}ftyphevx)~Ss'),
         ]),
@@ -1417,6 +1510,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('text/x-devicetree-source', 40, 4095, [
             new MagicRegex('~(?n)\A(?(?=[\x00-\x7F][\x00-\x7F])(.{0,4090}/ \{|(?(?=.{0,4080}include ).{10}.{0,4080}\.dts|(*FAIL)))|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('text/x-mpsub', 40, 264, [
+            new MagicRegex('~(?n)\A.{0,256}FORMAT\=~Ss'),
         ]),
         new MagicRule('video/x-javafx', 40, 4, [
             new MagicMatch(0, 1, 'FLV', '', 0),
@@ -1442,14 +1538,14 @@ return new MagicDatabase(
         new MagicRule('text/x-matlab', 10, 2, [
             new MagicMatch(0, 1, '%', '', 0),
         ]),
-        new MagicRule('text/x-matlab', 10, 3, [
-            new MagicMatch(0, 1, '##', '', 0),
-        ]),
         new MagicRule('text/x-modelica', 10, 3, [
             new MagicMatch(0, 1, '//', '', 0),
         ]),
         new MagicRule('text/x-tex', 10, 2, [
             new MagicMatch(0, 1, '%', '', 0),
+        ]),
+        new MagicRule('text/x-todo-txt', 10, 5, [
+            new MagicRegex('~(?n)\A(\(A\) |x )~Ss'),
         ]),
     ],
 );
