@@ -44,12 +44,12 @@ final class MimeInfoNode extends CompositeNode
     public array $globs = [];
 
     /**
-     * @var array<string, GlobNode>
+     * @var array<string, GlobNode[]>
      */
     public array $extensionGlobs = [];
 
     /**
-     * @var array<string, GlobNode>
+     * @var array<string, GlobNode[]>
      */
     public array $caseSensitiveExtensionGlobs = [];
 
