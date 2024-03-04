@@ -28,7 +28,7 @@ jobs:
       - name: Update the database
         run: composer run update-db
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@v4
+        uses: peter-evans/create-pull-request@v6
         with:
           title: Automated updates from upstream Shared MIME-Info
           commit-message: "[bot] updates mime-info database from upstream"
