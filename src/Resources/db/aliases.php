@@ -259,6 +259,7 @@ return new AliasesDatabase([
     'application/x-msmetafile' => 'image/wmf',
     'image/x-xpm' => 'image/x-xpixmap',
     'x-directory/normal' => 'inode/directory',
+    'application/prs.wavefront-obj' => 'model/obj',
     'text/x-vcalendar' => 'text/calendar',
     'application/ics' => 'text/calendar',
     'text/directory' => 'text/vcard',
