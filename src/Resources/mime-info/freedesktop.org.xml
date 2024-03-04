@@ -704,7 +704,11 @@ command to generate the output files.
     <comment>Excel spreadsheet</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-spreadsheet"/>
-    <magic>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x10\x08\x02\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+        <match type="string" value="\x20\x08\x02\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+      </match>
       <match type="string" value="Microsoft Excel 5.0 Worksheet" offset="2080"/>
     </magic>
     <glob pattern="*.xls"/>
@@ -747,6 +751,12 @@ command to generate the output files.
     <comment>PowerPoint presentation</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-presentation"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x10\x8d\x81\x64\x9b\x4f\xcf\x11\x86\xea\x00\xaa\x00\xb9\x29\xe8" offset="592:8192"/>
+        <match type="string" value="\x70\xae\x7b\xea\x3b\xfb\xcd\x11\xa9\x03\x00\xaa\x00\x51\x0e\xa3" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.ppz"/>
     <glob pattern="*.ppt"/>
     <glob pattern="*.pps"/>
@@ -853,6 +863,16 @@ command to generate the output files.
     <comment>Microsoft Works document</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-document"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x02\x13\x02\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+        <match type="string" value="\x03\x13\x02\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+        <match type="string" value="\xb2\x5a\xa4\x0e\x0a\x9e\xd1\x11\xa4\x07\x00\xc0\x4f\xb9\x32\xba" offset="592:8192"/>
+        <match type="string" value="\xc0\xc7\x26\x6e\xb9\x8c\xd3\x11\xa1\xc8\x00\xc0\x4f\x61\x24\x52" offset="592:8192"/>
+        <match type="string" value="\xc2\xdb\xcd\x28\xe2\x0a\xce\x11\xa2\x9a\x00\xaa\x00\x4a\x1a\x72" offset="592:8192"/>
+        <match type="string" value="\xc3\xdb\xcd\x28\xe2\x0a\xce\x11\xa2\x9a\x00\xaa\x00\x4a\x1a\x72" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.wcm"/>
     <glob pattern="*.wdb"/>
     <glob pattern="*.wks"/>
@@ -863,6 +883,12 @@ command to generate the output files.
     <comment>Microsoft Visio document</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-document"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x13\x1a\x02\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+        <match type="string" value="\x14\x1a\x02\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.vsd"/>
     <glob pattern="*.vst"/>
     <glob pattern="*.vsw"/>
@@ -873,6 +899,10 @@ command to generate the output files.
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-document"/>
     <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x00\x09\x02\x00\x00\x00\x00\x00\x00\xc0\x46\x00\x00\x00\x00\x00" offset="592:8192"/>
+        <match type="string" value="\x06\x09\x02\x00\x00\x00\x00\x00\x00\xc0\x46\x00\x00\x00\x00\x00" offset="592:8192"/>
+      </match>
       <match type="string" value="\x31\xbe\x00\x00" offset="0"/>
       <match type="string" value="PO^Q`" offset="0"/>
       <match type="string" value="\376\067\0\043" offset="0"/>
@@ -923,22 +953,53 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/vnd.stardivision.calc">
     <comment>StarCalc spreadsheet</comment>
+    <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-spreadsheet"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x41\xd4\x61\x63\x35\x42\xd0\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\x61\xb8\xa5\xc6\xd6\x85\xd1\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\xa0\x3f\x54\x3f\xa6\xb6\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.sdc"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.chart">
     <comment>StarChart chart</comment>
+    <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-spreadsheet"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x21\x43\x88\xbf\xdd\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\xe0\x99\x9c\xfb\x6d\x2c\x1c\x10\x8e\x2c\x00\x00\x1b\x4c\xc7\x11" offset="592:8192"/>
+        <match type="string" value="\xe0\xb7\xb3\x02\x25\x42\xd0\x11\x89\xca\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.sds"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.draw">
     <comment>StarDraw drawing</comment>
+    <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="image-x-generic"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\xa0\x05\x89\x2e\xbd\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\xe0\xaa\x10\xaf\x6d\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.sda"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.impress">
     <comment>StarImpress presentation</comment>
+    <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-presentation"/>
+    <magic priority="70">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x21\x72\x5c\x56\xbc\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\xc0\x3c\x2d\x01\x16\x42\xd0\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\xe0\xaa\x10\xaf\x6d\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.sdd"/>
     <glob pattern="*.sdp"/>
   </mime-type>
@@ -948,16 +1009,30 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/vnd.stardivision.math">
     <comment>StarMath formula</comment>
+    <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-document"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x40\xe6\xb5\xff\xde\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\x60\x04\x59\xd4\xfd\x35\x1c\x10\xb1\x2a\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+        <match type="string" value="\xe1\xb7\xb3\x02\x25\x42\xd0\x11\x89\xca\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.smf"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.writer">
     <comment>StarWriter document</comment>
+    <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-document"/>
     <glob pattern="*.sdw"/>
     <glob pattern="*.vor"/>
     <glob pattern="*.sgl"/>
     <magic priority="90">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x40\x7e\x5c\xdc\x5c\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+        <match type="string" value="\xb0\xe9\x04\x8b\x0e\x42\xd0\x11\xa4\x5e\x00\xa0\x24\x9d\x57\xb1" offset="592:8192"/>
+        <match type="string" value="\xd1\xf9\x0c\xc2\xae\x85\xd1\x11\xaa\xb4\x00\x06\x09\x7d\x56\x1a" offset="592:8192"/>
+      </match>
       <match type="string" value="StarWriter" offset="2089" />
     </magic>
     <alias type="application/vnd.stardivision.writer-global"/>
@@ -1413,9 +1488,12 @@ command to generate the output files.
     <alias type="application/x-wordperfect"/>
     <alias type="application/wordperfect"/>
     <generic-icon name="x-office-document"/>
-    <magic>
+    <magic priority="60">
       <match type="string" value="WPC" offset="1"/>
       <!-- <match type="big32" value="0xff575053c405" offset="0"/> -->
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\xff\x73\x98\x51\xad\x2d\x20\x02\x19\x37\x00\x00\x92\x96\x79\xcd" offset="592:8192"/>
+      </match>
     </magic>
     <glob pattern="*.wp"/>
     <glob pattern="*.wp4"/>
@@ -1728,6 +1806,21 @@ command to generate the output files.
     <generic-icon name="x-office-document"/>
     <glob pattern="*.cbz"/>
     <alias type="application/x-cbz"/>
+  </mime-type>
+  <mime-type type="application/x-rzip">
+    <comment>Rzip archive</comment>
+    <generic-icon name="package-x-generic"/>
+    <magic>
+      <match type="string" value="RZIP" offset="0"/>
+    </magic>
+    <glob pattern="*.rz"/>
+  </mime-type>
+  <mime-type type="application/x-rzip-compressed-tar">
+    <comment>Tar archive (rzip-compressed)</comment>
+    <generic-icon name="package-x-generic"/>
+    <sub-class-of type="application/x-rzip"/>
+    <glob pattern="*.tar.rz"/>
+    <glob pattern="*.trz"/>
   </mime-type>
   <mime-type type="application/x-lrzip">
     <comment>Lrzip archive</comment>
@@ -3657,8 +3750,7 @@ command to generate the output files.
     <comment>OLE2 compound document storage</comment>
     <generic-icon name="x-office-document"/>
     <magic>
-      <match type="string" value="\320\317\021\340\241\261\032\341" offset="0"/>
-      <match type="little32" value="0xe011cfd0" offset="0"/>
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0"/>
     </magic>
   </mime-type>
   <mime-type type="application/vnd.microsoft.windows.thumbnail-cache">
@@ -3676,13 +3768,41 @@ command to generate the output files.
   <mime-type type="application/vnd.ms-publisher">
     <comment>Microsoft Publisher document</comment>
     <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-document"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x01\x12\x02\x00\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.pub"/>
   </mime-type>
   <mime-type type="application/x-msi">
     <comment>Windows Installer package</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="package-x-generic"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x84\x10\x0c\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.msi"/>
+  </mime-type>
+  <mime-type type="application/microsoftpatch">
+    <comment>Windows Installer patch</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="package-x-generic"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x86\x10\x0c\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+      </match>
+    </magic>
+    <glob pattern="*.msp"/>
+  </mime-type>
+  <mime-type type="application/microsoftupdate">
+    <comment>Windows Update package</comment>
+    <sub-class-of type="application/vnd.ms-cab-compressed"/>
+    <generic-icon name="package-x-generic"/>
+    <glob pattern="*.msu"/>
   </mime-type>
   <mime-type type="application/appx">
     <comment>Windows app store package</comment>
@@ -3860,9 +3980,15 @@ command to generate the output files.
   <mime-type type="application/x-quattropro">
     <comment>Quattro Pro spreadsheet</comment>
     <generic-icon name="x-office-spreadsheet"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x00\xb4\x02\x00\x00\x00\x00\x00\xc0\x00\x00\x00\x00\x00\x00\x46" offset="592:8192"/>
+      </match>
+    </magic>
     <glob pattern="*.wb1"/>
     <glob pattern="*.wb2"/>
     <glob pattern="*.wb3"/>
+    <glob pattern="*.qpw"/>
   </mime-type>
   <mime-type type="application/x-quicktime-media-link">
     <comment>QuickTime playlist</comment>
@@ -6251,6 +6377,7 @@ command to generate the output files.
       <match type="string" value="mtllib " offset="0:256"/>
     </magic>
     <glob pattern="*.obj"/>
+    <alias type="application/prs.wavefront-obj"/>
   </mime-type>
   <mime-type type="model/mtl">
     <comment>OBJ 3D model material library</comment>
