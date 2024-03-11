@@ -1140,7 +1140,7 @@ return new GlobsDatabase(
         'meson_options.txt' => new GlobLiteral('text/x-meson', 50, 17),
         'sconstruct' => new GlobLiteral('text/x-scons', 50, 10),
         'sconscript' => new GlobLiteral('text/x-scons', 50, 10),
-        'todo.txt' => new GlobLiteral('text/x-todo-txt', 50, 8),
+        'todo.txt' => new GlobLiteral('text/x-todo-txt', 10, 8),
         'pom.xml' => new GlobLiteral('text/x-maven+xml', 50, 7),
         'settings.xml' => new GlobLiteral('text/x-maven+xml', 50, 12),
     ],
