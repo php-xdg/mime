@@ -448,6 +448,7 @@ return new IconsDatabase(
         'application/vnd.appimage' => 'application-x-executable',
         'model/3mf' => 'image-x-generic',
         'model/stl' => 'image-x-generic',
+        'model/step' => 'image-x-generic',
         'text/x.gcode' => 'text-x-generic',
         'application/x-appleworks-document' => 'x-office-document',
         'application/x-pyspread-spreadsheet' => 'x-office-spreadsheet',

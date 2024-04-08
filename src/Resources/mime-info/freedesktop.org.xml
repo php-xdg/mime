@@ -1005,7 +1005,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/vnd.stardivision.mail">
     <comment>StarMail email</comment>
-    <glob pattern="*.smd"/>
+    <glob pattern="*.smd" weight="10"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.math">
     <comment>StarMath formula</comment>
@@ -2591,11 +2591,13 @@ command to generate the output files.
       <match type="string" value="SEGA GENESIS" offset="256"/>
       <match type="string" value="SEGA MEGA DRIVE" offset="256"/>
       <match type="string" value="SEGA_MEGA_DRIVE" offset="256"/>
+      <match type="string" value="SEGA SSF" offset="256"/>
       <match type="string" value="EAGN" offset="640"/>
       <match type="string" value="EAMG" offset="640"/>
     </magic>
     <glob pattern="*.gen"/>
     <glob pattern="*.smd"/>
+    <glob pattern="*.md" weight="10"/>
     <glob pattern="*.sgd"/>
   </mime-type>
   <mime-type type="application/x-genesis-32x-rom">
@@ -8314,6 +8316,16 @@ command to generate the output files.
     <glob pattern="*.stl"/>
     <alias type="model/x.stl-ascii"/>
     <alias type="model/x.stl-binary"/>
+  </mime-type>
+
+  <mime-type type="model/step">
+    <comment>STEP 3D model</comment>
+    <generic-icon name="image-x-generic"/>
+    <glob pattern="*.step"/>
+    <glob pattern="*.stp"/>
+    <magic>
+      <match type="string" value="ISO-10303-21;" offset="0"/>
+    </magic>
   </mime-type>
 
   <mime-type type="text/x.gcode">
