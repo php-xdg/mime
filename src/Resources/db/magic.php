@@ -717,7 +717,7 @@ return new MagicDatabase(
             new MagicMatch(256, 1, 'SEGA 32X', '', 0),
         ]),
         new MagicRule('application/x-genesis-rom', 50, 645, [
-            new MagicRegex('~(?n)\A(.{256}SEGA GENESIS|.{256}SEGA MEGA DRIVE|.{256}SEGA_MEGA_DRIVE|.{640}EAGN|.{640}EAMG)~Ss'),
+            new MagicRegex('~(?n)\A(.{256}SEGA GENESIS|.{256}SEGA MEGA DRIVE|.{256}SEGA_MEGA_DRIVE|.{256}SEGA SSF|.{640}EAGN|.{640}EAMG)~Ss'),
         ]),
         new MagicRule('application/x-gettext-translation', 50, 5, [
             new MagicRegex('~(?n)\A(\xDE\x12\x04\x95|\x95\x04\x12\xDE)~Ss'),
@@ -1282,6 +1282,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('model/obj', 50, 264, [
             new MagicRegex('~(?n)\A(.{0,64} OBJ File\: \'|.{0,256}mtllib )~Ss'),
+        ]),
+        new MagicRule('model/step', 50, 14, [
+            new MagicMatch(0, 1, 'ISO-10303-21;', '', 0),
         ]),
         new MagicRule('model/stl', 50, 6, [
             new MagicRegex('~(?n)\A(solid|SOLID)~Ss'),
