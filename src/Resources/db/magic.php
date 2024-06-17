@@ -11,14 +11,23 @@ $swap = Bytes::isLittleEndianPlatform() ? 1 : 0;
 return new MagicDatabase(
     lookupBufferSize: 18730,
     rules: [
-        new MagicRule('application/vnd.stardivision.writer', 90, 8209, [
-            new MagicRegex('~(?n)\A((?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}@\~\\\\\xDC\\\\\xB3\x1B\x10\x99a\x04\x02\x1C\x00p\x02|.{592}.{0,7600}\xB0\xE9\x04\x8B\x0EB\xD0\x11\xA4\^\x00\xA0\$\x9DW\xB1|.{592}.{0,7600}\xD1\xF9\f\xC2\xAE\x85\xD1\x11\xAA\xB4\x00\x06\t\}V\x1A)|(*FAIL))|.{2089}StarWriter)~Ss'),
-        ]),
-        new MagicRule('application/x-docbook+xml', 90, 126, [
+        new MagicRule('application/docbook+xml', 90, 126, [
             new MagicRegex('~(?n)\A(?(?=\<\?xml)(.{0,100}\-//OASIS//DTD DocBook XML|.{0,100}\-//KDE//DTD DocBook XML)|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/vnd.stardivision.writer', 90, 8209, [
+            new MagicRegex('~(?n)\A((?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\xD1\xF9\f\xC2\xAE\x85\xD1\x11\xAA\xB4\x00\x06\t\}V\x1A|(*FAIL))|.{2089}StarWriter)~Ss'),
+        ]),
+        new MagicRule('application/vnd.stardivision.writer-global', 90, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\xD3\xF9\f\xC2\xAE\x85\xD1\x11\xAA\xB4\x00`\x97\xDAV\x1A|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/x-eris-link+cbor', 90, 10, [
             new MagicMatch(0, 1, "\xD9\xD9\xF7\x84\xD9\x01\x14XB", '', 0),
+        ]),
+        new MagicRule('application/x-starwriter', 90, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}@\~\\\\\xDC\\\\\xB3\x1B\x10\x99a\x04\x02\x1C\x00p\x02|.{592}.{0,7600}\xB0\xE9\x04\x8B\x0EB\xD0\x11\xA4\^\x00\xA0\$\x9DW\xB1)|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/x-starwriter-global', 90, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}p\xC9\n4\r\xE3\xD0\x11\xA5\?\x00\xA0\$\x9DW\xB1|(*FAIL))~Ss'),
         ]),
         new MagicRule('image/x-eps', 90, 20, [
             new MagicRegex('~(?n)\A((?(?=%\!).{15}EPS|(*FAIL))|(?(?=\x04%\!).{16}EPS|(*FAIL))|\xC5\xD0\xD3\xC6)~Ss'),
@@ -34,6 +43,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('application/vnd.microsoft.portable-executable', 80, 261, [
             new MagicRegex('~(?n)\A(?(?=MZ).{64}.{0,192}PE\x00\x00|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/vnd.oasis.opendocument.text-master-template', 80, 94, [
+            new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.text\-master\-template|(*FAIL))|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/x-fictionbook+xml', 80, 269, [
             new MagicRegex('~(?n)\A.{0,256}\<FictionBook~Ss'),
@@ -75,10 +87,7 @@ return new MagicDatabase(
             new MagicRegex('~(?n)\A(?(?=\xABKTX)(?(?=.{4} 20\xBB).{8}\r\n\x1A\n|(*FAIL))|(*FAIL))~Ss'),
         ]),
         new MagicRule('image/svg+xml', 80, 270, [
-            new MagicRegex('~(?n)\A.{0,256}\<\!DOCTYPE svg~Ss'),
-        ]),
-        new MagicRule('image/svg+xml', 80, 27, [
-            new MagicRegex('~(?n)\A(\<\!\-\- Created with Inkscape|\<svg)~Ss'),
+            new MagicRegex('~(?n)\A(.{0,256}\<\!DOCTYPE svg|\<\!\-\- Created with Inkscape|\<svg)~Ss'),
         ]),
         new MagicRule('image/vnd.djvu', 80, 17, [
             new MagicRegex('~(?n)\A((?(?=AT&TFORM).{12}DJVU|(*FAIL))|(?(?=FORM).{8}DJVU|(*FAIL)))~Ss'),
@@ -98,6 +107,9 @@ return new MagicDatabase(
         new MagicRule('video/x-theora+ogg', 80, 36, [
             new MagicRegex('~(?n)\A(?(?=OggS).{28}\x80theora|(*FAIL))~Ss'),
         ]),
+        new MagicRule('application/vnd.oasis.opendocument.text-master', 75, 85, [
+            new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.text\-master|(*FAIL))|(*FAIL))~Ss'),
+        ]),
         new MagicRule('application/atom+xml', 70, 263, [
             new MagicRegex('~(?n)\A.{0,256}\<feed ~Ss'),
         ]),
@@ -116,14 +128,14 @@ return new MagicDatabase(
         new MagicRule('application/vnd.apple.pages', 70, 49, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(.{30}index\.xml|.{30}Index/Document\.iwa)|(*FAIL))~Ss'),
         ]),
+        new MagicRule('application/vnd.oasis.opendocument.base', 70, 78, [
+            new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.base|(*FAIL))|(*FAIL))~Ss'),
+        ]),
         new MagicRule('application/vnd.oasis.opendocument.chart', 70, 79, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.chart|(*FAIL))|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.oasis.opendocument.chart-template', 70, 88, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.chart\-template|(*FAIL))|(*FAIL))~Ss'),
-        ]),
-        new MagicRule('application/vnd.oasis.opendocument.database', 70, 78, [
-            new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.base|(*FAIL))|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.oasis.opendocument.formula', 70, 81, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.formula|(*FAIL))|(*FAIL))~Ss'),
@@ -155,9 +167,6 @@ return new MagicDatabase(
         new MagicRule('application/vnd.oasis.opendocument.text', 70, 78, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.text|(*FAIL))|(*FAIL))~Ss'),
         ]),
-        new MagicRule('application/vnd.oasis.opendocument.text-master', 70, 85, [
-            new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.text\-master|(*FAIL))|(*FAIL))~Ss'),
-        ]),
         new MagicRule('application/vnd.oasis.opendocument.text-template', 70, 87, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.text\-template|(*FAIL))|(*FAIL))~Ss'),
         ]),
@@ -165,7 +174,7 @@ return new MagicDatabase(
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.oasis\.opendocument\.text\-web|(*FAIL))|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.stardivision.impress', 70, 8209, [
-            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}\!r\\\\V\xBC\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}\xC0\<\-\x01\x16B\xD0\x11\x89\xCB\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}\xE0\xAA\x10\xAFm\xB3\x1B\x10\x99a\x04\x02\x1C\x00p\x02)|(*FAIL))~Ss'),
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\!r\\\\V\xBC\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.sun.xml.calc', 70, 67, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04)(?(?=.{30}mimetype).{38}application/vnd\.sun\.xml\.calc|(*FAIL))|(*FAIL))~Ss'),
@@ -199,6 +208,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('application/x-ms-ne-executable', 70, 259, [
             new MagicRegex('~(?n)\A(?(?=MZ).{64}.{0,192}NE|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/x-starimpress', 70, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}\xC0\<\-\x01\x16B\xD0\x11\x89\xCB\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}\xE0\xAA\x10\xAFm\xB3\x1B\x10\x99a\x04\x02\x1C\x00p\x02)|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/x-zip-compressed-fb2', 70, 261, [
             new MagicRegex('~(?n)\A(?(?=PK\x03\x04).{30}.{0,226}\.fb2|(*FAIL))~Ss'),
@@ -249,16 +261,19 @@ return new MagicDatabase(
             new MagicMatch(0, 1, 'Rar!', '', 0),
         ]),
         new MagicRule('application/vnd.stardivision.calc', 60, 8209, [
-            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}A\xD4ac5B\xD0\x11\x89\xCB\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}a\xB8\xA5\xC6\xD6\x85\xD1\x11\x89\xCB\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}\xA0\?T\?\xA6\xB6\x1B\x10\x99a\x04\x02\x1C\x00p\x02)|(*FAIL))~Ss'),
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}a\xB8\xA5\xC6\xD6\x85\xD1\x11\x89\xCB\x00\x80\)\xE4\xB0\xB1|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.stardivision.chart', 60, 8209, [
-            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}\!C\x88\xBF\xDD\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}\xE0\x99\x9C\xFBm,\x1C\x10\x8E,\x00\x00\x1BL\xC7\x11|.{592}.{0,7600}\xE0\xB7\xB3\x02%B\xD0\x11\x89\xCA\x00\x80\)\xE4\xB0\xB1)|(*FAIL))~Ss'),
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\!C\x88\xBF\xDD\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.stardivision.draw', 60, 8209, [
-            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}\xA0\x05\x89\.\xBD\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}\xE0\xAA\x10\xAFm\xB3\x1B\x10\x99a\x04\x02\x1C\x00p\x02)|(*FAIL))~Ss'),
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\xA0\x05\x89\.\xBD\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/vnd.stardivision.mail', 60, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\xE0\xC4L\xC2\xDFs\x1B\x10\x80L\xFD\xFD\xFD\xFD\xFD\xFD|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.stardivision.math', 60, 8209, [
-            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}@\xE6\xB5\xFF\xDE\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}`\x04Y\xD4\xFD5\x1C\x10\xB1\*\x04\x02\x1C\x00p\x02|.{592}.{0,7600}\xE1\xB7\xB3\x02%B\xD0\x11\x89\xCA\x00\x80\)\xE4\xB0\xB1)|(*FAIL))~Ss'),
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}@\xE6\xB5\xFF\xDE\x85\xD1\x11\x89\xD0\x00\x80\)\xE4\xB0\xB1|(*FAIL))~Ss'),
         ]),
         new MagicRule('application/vnd.visio', 60, 8209, [
             new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}\x13\x1A\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00F|.{592}.{0,7600}\x14\x1A\x02\x00\x00\x00\x00\x00\xC0\x00\x00\x00\x00\x00\x00F)|(*FAIL))~Ss'),
@@ -352,6 +367,18 @@ return new MagicDatabase(
         new MagicRule('application/x-sega-cd-rom', 60, 277, [
             new MagicRegex('~(?n)\A((?(?=SEGADISCSYSTEM).{256}SEGA|(*FAIL))|(?(?=.{16}SEGADISCSYSTEM).{272}SEGA|(*FAIL)))~Ss'),
         ]),
+        new MagicRule('application/x-starcalc', 60, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}A\xD4ac5B\xD0\x11\x89\xCB\x00\x80\)\xE4\xB0\xB1|.{592}.{0,7600}\xA0\?T\?\xA6\xB6\x1B\x10\x99a\x04\x02\x1C\x00p\x02)|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/x-starchart', 60, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}\xE0\x99\x9C\xFBm,\x1C\x10\x8E,\x00\x00\x1BL\xC7\x11|.{592}.{0,7600}\xE0\xB7\xB3\x02%B\xD0\x11\x89\xCA\x00\x80\)\xE4\xB0\xB1)|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/x-stardraw', 60, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\xE0\xAA\x10\xAFm\xB3\x1B\x10\x99a\x04\x02\x1C\x00p\x02|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/x-starmath', 60, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1)(.{592}.{0,7600}`\x04Y\xD4\xFD5\x1C\x10\xB1\*\x04\x02\x1C\x00p\x02|.{592}.{0,7600}\xE1\xB7\xB3\x02%B\xD0\x11\x89\xCA\x00\x80\)\xE4\xB0\xB1)|(*FAIL))~Ss'),
+        ]),
         new MagicRule('application/x-stuffit', 60, 9, [
             new MagicRegex('~(?n)\A(StuffIt |SIT\!)~Ss'),
         ]),
@@ -384,6 +411,12 @@ return new MagicDatabase(
         ]),
         new MagicRule('image/apng', 60, 42, [
             new MagicRegex('~(?n)\A(?(?=\x89PNG\r\n\x1A\n).{37}acTL|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('image/vnd.fpx', 60, 8209, [
+            new MagicRegex('~(?n)\A(?(?=\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1).{592}.{0,7600}\x00gaVT\xC1\xCE\x11\x85S\x00\xAA\x00\xA1\xF9\[|(*FAIL))~Ss'),
+        ]),
+        new MagicRule('text/x-python2', 60, 34, [
+            new MagicRegex('~(?n)\A(\#\!/bin/python2|\#\! /bin/python2|eval "exec /bin/python2|\#\!/usr/bin/python2|\#\! /usr/bin/python2|eval "exec /usr/bin/python2|\#\!/usr/local/bin/python2|\#\! /usr/local/bin/python2|eval "exec /usr/local/bin/python2|.{2}.{0,14}/bin/env python2)~Ss'),
         ]),
         new MagicRule('text/x-python3', 60, 34, [
             new MagicRegex('~(?n)\A(\#\!/bin/python3|\#\! /bin/python3|eval "exec /bin/python3|\#\!/usr/bin/python3|\#\! /usr/bin/python3|eval "exec /usr/bin/python3|\#\!/usr/local/bin/python3|\#\! /usr/local/bin/python3|eval "exec /usr/local/bin/python3|.{2}.{0,14}/bin/env python3)~Ss'),
@@ -475,6 +508,9 @@ return new MagicDatabase(
         new MagicRule('application/vnd.adobe.flash.movie', 50, 4, [
             new MagicRegex('~(?n)\A(FWS|CWS)~Ss'),
         ]),
+        new MagicRule('application/vnd.apache.parquet', 50, 5, [
+            new MagicRegex('~(?n)\A(PAR1|PARE)~Ss'),
+        ]),
         new MagicRule('application/vnd.appimage', 50, 12, [
             new MagicRegex('~(?n)\A(?(?=.{1}ELF)(?(?=.{8}A)(?(?=.{9}I).{10}\x02|(*FAIL))|(*FAIL))|(*FAIL))~Ss'),
         ]),
@@ -526,6 +562,9 @@ return new MagicDatabase(
         new MagicRule('application/vnd.ms-tnef', 50, 5, [
             new MagicMatch(0, 1, "x\x9F>\"", '', 0),
         ]),
+        new MagicRule('application/vnd.quark.quarkxpress', 50, 9, [
+            new MagicMatch(4, 1, 'XPR3', '', 0),
+        ]),
         new MagicRule('application/vnd.rn-realmedia', 50, 5, [
             new MagicMatch(0, 1, '.RMF', '', 0),
         ]),
@@ -536,7 +575,10 @@ return new MagicDatabase(
             new MagicMatch(0, 1, 'SQLite format 3', '', 0),
         ]),
         new MagicRule('application/vnd.squashfs', 50, 5, [
-            new MagicRegex('~(?n)\A(sqsh|hsqs)~Ss'),
+            new MagicMatch(0, 1, 'hsqs', '', 0),
+        ]),
+        new MagicRule('application/vnd.stardivision.impress-packed', 50, 5, [
+            new MagicMatch(0, 1, 'PIZS', '', 0),
         ]),
         new MagicRule('application/vnd.symbian.install', 50, 13, [
             new MagicMatch(8, 1, "\x19\x04\x00\x10", '', 0),
@@ -839,6 +881,9 @@ return new MagicDatabase(
         new MagicRule('application/x-nintendo-3ds-rom', 50, 261, [
             new MagicMatch(256, 1, 'NCSD', '', 0),
         ]),
+        new MagicRule('application/x-nintendo-switch-xci', 50, 271, [
+            new MagicRegex('~(?n)\A(?(?=.{256}HEAD)(.{269}\xFA|.{269}\xF8|.{269}\xF0|.{269}\xE0|.{269}\xE1|.{269}\xE2)|(*FAIL))~Ss'),
+        ]),
         new MagicRule('application/x-nuscript', 50, 28, [
             new MagicRegex('~(?n)\A.{2}.{0,14}/bin/env nu~Ss'),
         ]),
@@ -853,6 +898,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('application/x-openzim', 50, 5, [
             new MagicMatch(0, 1, "ZIM\x04", '', 0),
+        ]),
+        new MagicRule('application/x-pcapng', 50, 13, [
+            new MagicMatch(0, 1, "\n\r\r\n", '', $swap|4, [new MagicMatch(8, 1, "\x1A+<M", '', $swap|4), new MagicMatch(8, 1, "M<+\x1A", '', $swap|4)]),
         ]),
         new MagicRule('application/x-pef-executable', 50, 5, [
             new MagicMatch(0, 1, 'Joy!', '', 0),
@@ -914,6 +962,9 @@ return new MagicDatabase(
         new MagicRule('application/x-shorten', 50, 5, [
             new MagicMatch(0, 1, 'ajkg', '', 0),
         ]),
+        new MagicRule('application/x-sony-bbeb', 50, 9, [
+            new MagicMatch(0, 1, "L\x00R\x00F\x00\x00\x00", '', 0),
+        ]),
         new MagicRule('application/x-spss-por', 50, 61, [
             new MagicMatch(40, 1, 'ASCII SPSS PORT FILE', '', 0),
         ]),
@@ -923,8 +974,14 @@ return new MagicDatabase(
         new MagicRule('application/x-sqlite2', 50, 32, [
             new MagicMatch(0, 1, '** This file contains an SQLite', '', 0),
         ]),
+        new MagicRule('application/x-starmail', 50, 5, [
+            new MagicMatch(0, 1, 'ANCH', '', 0),
+        ]),
         new MagicRule('application/x-subrip', 50, 262, [
             new MagicRegex('~(?n)\A(?(?=1).{0,256} \-\-\> |(*FAIL))~Ss'),
+        ]),
+        new MagicRule('application/x-sylk', 50, 4, [
+            new MagicMatch(0, 1, 'ID;', '', 0),
         ]),
         new MagicRule('application/x-t602', 50, 6, [
             new MagicRegex('~(?n)\A(@CT 0|@CT 1|@CT 2)~Ss'),
@@ -1187,9 +1244,6 @@ return new MagicDatabase(
         new MagicRule('image/x-exr', 50, 5, [
             new MagicMatch(0, 1, "v/1\x01", '', 0),
         ]),
-        new MagicRule('image/x-fpx', 50, 5, [
-            new MagicMatch(0, 1, 'FPix', '', 0),
-        ]),
         new MagicRule('image/x-fuji-raf', 50, 17, [
             new MagicMatch(0, 1, 'FUJIFILMCCD-RAW ', '', 0),
         ]),
@@ -1207,6 +1261,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('image/x-jp2-codestream', 50, 5, [
             new MagicMatch(0, 1, "\xFFO\xFFQ", '', 0),
+        ]),
+        new MagicRule('image/x-kiss-cel', 50, 5, [
+            new MagicMatch(0, 1, 'KiSS', '', 0),
         ]),
         new MagicRule('image/x-minolta-mrw', 50, 5, [
             new MagicMatch(0, 1, "\x00MRM", '', 0),
@@ -1310,9 +1367,6 @@ return new MagicDatabase(
         new MagicRule('text/plain', 50, 18, [
             new MagicRegex('~(?n)\A(This is TeX,|This is METAFONT,)~Ss'),
         ]),
-        new MagicRule('text/spreadsheet', 50, 4, [
-            new MagicMatch(0, 1, 'ID;', '', 0),
-        ]),
         new MagicRule('text/troff', 50, 5, [
             new MagicRegex('~(?n)\A(\.\\\\"|\'\\\\"|\'\.\\\\"|\\\\")~Ss'),
         ]),
@@ -1336,6 +1390,9 @@ return new MagicDatabase(
         ]),
         new MagicRule('text/vtt', 50, 7, [
             new MagicMatch(0, 1, 'WEBVTT', '', 0),
+        ]),
+        new MagicRule('text/x-asm', 50, 9, [
+            new MagicRegex('~(?n)\A(\t\.asciiz|\t\.byte|\t\.even|\t\.file|\t\.globl|\t\.text|\t\.type)~Ss'),
         ]),
         new MagicRule('text/x-bibtex', 50, 36, [
             new MagicMatch(0, 1, '% This file was created with JabRef', '', 0),
@@ -1383,16 +1440,7 @@ return new MagicDatabase(
             new MagicRegex('~(?n)\A(\{1\}|\{0\}|.{0,6}\}\{)~Ss'),
         ]),
         new MagicRule('text/x-modelica', 50, 9, [
-            new MagicMatch(0, 1, 'function', '', 0),
-        ]),
-        new MagicRule('text/x-modelica', 50, 6, [
-            new MagicMatch(0, 1, 'class', '', 0),
-        ]),
-        new MagicRule('text/x-modelica', 50, 6, [
-            new MagicMatch(0, 1, 'model', '', 0),
-        ]),
-        new MagicRule('text/x-modelica', 50, 7, [
-            new MagicMatch(0, 1, 'record', '', 0),
+            new MagicRegex('~(?n)\A(function|class|model|record)~Ss'),
         ]),
         new MagicRule('text/x-mpl2', 50, 9, [
             new MagicRegex('~(?n)\A(\[1\]|\[0\]|.{0,6}\]\[)~Ss'),
@@ -1518,7 +1566,7 @@ return new MagicDatabase(
             new MagicMatch(0, 1, 'PREFIX', '', 0),
         ]),
         new MagicRule('application/x-executable', 40, 7, [
-            new MagicRegex('~(?n)\A((?(?=\x7FELF).{5}\x01|(*FAIL))|(?(?=\x7FELF).{5}\x02|(*FAIL))|MZ|\x1CR)~Ss'),
+            new MagicRegex('~(?n)\A((?(?=\x7FELF).{5}\x01|(*FAIL))|(?(?=\x7FELF).{5}\x02|(*FAIL))|\x1CR)~Ss'),
             new MagicMatch(0, 1, "\x01\x10", '', $swap|2),
             new MagicMatch(0, 1, "\x01\x11", '', $swap|2),
             new MagicRegex('~(?n)\A\x83\x01~Ss'),

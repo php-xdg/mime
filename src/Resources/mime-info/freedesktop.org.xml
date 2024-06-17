@@ -22,7 +22,7 @@
   <!-- a generic icon name as per the Icon Naming Specification, only required if computing
   it from the mime-type would not work, See "generic-icon" in the Shared Mime Specification -->
   <!ELEMENT generic-icon EMPTY>
-  <!ATTLIST generic-icon name (application-x-executable|audio-x-generic|emblem-symbolic-link|folder|font-x-generic|image-x-generic|media-floppy|media-optical|package-x-generic|text-html|text-x-generic|text-x-generic-template|text-x-script|video-x-generic|x-office-address-book|x-office-calendar|x-office-document|x-office-presentation|x-office-spreadsheet) #REQUIRED>
+  <!ATTLIST generic-icon name (application-x-executable|audio-x-generic|emblem-mail|emblem-symbolic-link|folder|font-x-generic|image-x-generic|media-floppy|media-optical|package-x-generic|text-html|text-x-generic|text-x-generic-template|text-x-script|video-x-generic|x-office-address-book|x-office-calendar|x-office-document|x-office-presentation|x-office-spreadsheet) #REQUIRED>
 
   <!ELEMENT glob EMPTY>
   <!ATTLIST glob pattern CDATA #REQUIRED>
@@ -170,7 +170,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/mbox">
     <comment>Mailbox file</comment>
-    <generic-icon name="text-x-generic"/>
+    <generic-icon name="emblem-mail"/>
     <sub-class-of type="text/plain"/>
     <magic priority="20">
       <match type="string" value="From " offset="0"/>
@@ -951,94 +951,197 @@ command to generate the output files.
     <glob pattern="winmail.dat"/>
     <alias type="application/ms-tnef"/>
   </mime-type>
-  <mime-type type="application/vnd.stardivision.calc">
-    <comment>StarCalc spreadsheet</comment>
+  <mime-type type="application/x-starcalc">
+    <comment>StarCalc 3-4 spreadsheet</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-spreadsheet"/>
     <magic priority="60">
       <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
         <match type="string" value="\x41\xd4\x61\x63\x35\x42\xd0\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
-        <match type="string" value="\x61\xb8\xa5\xc6\xd6\x85\xd1\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
         <match type="string" value="\xa0\x3f\x54\x3f\xa6\xb6\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+      </match>
+    </magic>
+    <glob pattern="*.sdc" weight="40"/>
+  </mime-type>
+  <mime-type type="application/x-starchart">
+    <comment>StarChart 3-4 chart</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-spreadsheet"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\xe0\x99\x9c\xfb\x6d\x2c\x1c\x10\x8e\x2c\x00\x00\x1b\x4c\xc7\x11" offset="592:8192"/>
+        <match type="string" value="\xe0\xb7\xb3\x02\x25\x42\xd0\x11\x89\xca\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+      </match>
+    </magic>
+    <glob pattern="*.sds" weight="40"/>
+  </mime-type>
+  <mime-type type="application/x-stardraw">
+    <comment>StarDraw 4 drawing</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="image-x-generic"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\xe0\xaa\x10\xaf\x6d\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+      </match>
+    </magic>
+    <glob pattern="*.sda" weight="40"/>
+  </mime-type>
+  <mime-type type="application/x-starimpress">
+    <comment>StarImpress 3-4 presentation</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-presentation"/>
+    <magic priority="70">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\xc0\x3c\x2d\x01\x16\x42\xd0\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+        <match type="string" value="\xe0\xaa\x10\xaf\x6d\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+      </match>
+    </magic>
+    <glob pattern="*.sdd" weight="40"/>
+  </mime-type>
+  <mime-type type="application/x-starmail">
+    <comment>StarMail 4 email</comment>
+    <generic-icon name="emblem-mail"/>
+    <magic>
+      <match type="string" value="ANCH" offset="0"/>
+    </magic>
+    <glob pattern="*.smd" weight="10"/>
+  </mime-type>
+  <mime-type type="application/x-starmath">
+    <comment>StarMath 3-4 formula</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-document"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x60\x04\x59\xd4\xfd\x35\x1c\x10\xb1\x2a\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+        <match type="string" value="\xe1\xb7\xb3\x02\x25\x42\xd0\x11\x89\xca\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
+      </match>
+    </magic>
+    <glob pattern="*.smf" weight="40"/>
+  </mime-type>
+  <mime-type type="application/x-starwriter">
+    <comment>StarWriter 3-4 document</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-document"/>
+    <glob pattern="*.sdw" weight="40"/>
+    <glob pattern="*.vor" weight="40"/>
+    <magic priority="90">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x40\x7e\x5c\xdc\x5c\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
+        <match type="string" value="\xb0\xe9\x04\x8b\x0e\x42\xd0\x11\xa4\x5e\x00\xa0\x24\x9d\x57\xb1" offset="592:8192"/>
+      </match>
+    </magic>
+  </mime-type>
+  <mime-type type="application/x-starwriter-global">
+    <comment>StarWriter 4 master document</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-document"/>
+    <glob pattern="*.sgl" weight="40"/>
+    <magic priority="90">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x70\xc9\x0a\x34\x0d\xe3\xd0\x11\xa5\x3f\x00\xa0\x24\x9d\x57\xb1" offset="592:8192"/>
+      </match>
+    </magic>
+  </mime-type>
+  <mime-type type="application/vnd.stardivision.calc">
+    <comment>StarCalc 5 spreadsheet</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-spreadsheet"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x61\xb8\xa5\xc6\xd6\x85\xd1\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
       </match>
     </magic>
     <glob pattern="*.sdc"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.chart">
-    <comment>StarChart chart</comment>
+    <comment>StarChart 5 chart</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-spreadsheet"/>
     <magic priority="60">
       <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
         <match type="string" value="\x21\x43\x88\xbf\xdd\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
-        <match type="string" value="\xe0\x99\x9c\xfb\x6d\x2c\x1c\x10\x8e\x2c\x00\x00\x1b\x4c\xc7\x11" offset="592:8192"/>
-        <match type="string" value="\xe0\xb7\xb3\x02\x25\x42\xd0\x11\x89\xca\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
       </match>
     </magic>
     <glob pattern="*.sds"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.draw">
-    <comment>StarDraw drawing</comment>
+    <comment>StarDraw 5 drawing</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="image-x-generic"/>
     <magic priority="60">
       <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
         <match type="string" value="\xa0\x05\x89\x2e\xbd\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
-        <match type="string" value="\xe0\xaa\x10\xaf\x6d\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
       </match>
     </magic>
     <glob pattern="*.sda"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.impress">
-    <comment>StarImpress presentation</comment>
+    <comment>StarImpress 5 presentation</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-presentation"/>
     <magic priority="70">
       <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
         <match type="string" value="\x21\x72\x5c\x56\xbc\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
-        <match type="string" value="\xc0\x3c\x2d\x01\x16\x42\xd0\x11\x89\xcb\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
-        <match type="string" value="\xe0\xaa\x10\xaf\x6d\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
       </match>
     </magic>
     <glob pattern="*.sdd"/>
-    <glob pattern="*.sdp"/>
+  </mime-type>
+  <mime-type type="application/vnd.stardivision.impress-packed">
+    <comment>StarImpress packed presentation</comment>
+    <generic-icon name="x-office-presentation"/>
+    <magic>
+      <match type="string" value="PIZS" offset="0"/>
+    </magic>
+    <glob pattern="*.sdp" weight="10"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.mail">
-    <comment>StarMail email</comment>
-    <glob pattern="*.smd" weight="10"/>
+    <comment>StarMail 5 email</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="emblem-mail"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\xe0\xc4\x4c\xc2\xdf\x73\x1b\x10\x80\x4c\xfd\xfd\xfd\xfd\xfd\xfd" offset="592:8192"/>
+      </match>
+    </magic>
+    <glob pattern="*.sdm"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.math">
-    <comment>StarMath formula</comment>
+    <comment>StarMath 5 formula</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-document"/>
     <magic priority="60">
       <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
         <match type="string" value="\x40\xe6\xb5\xff\xde\x85\xd1\x11\x89\xd0\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
-        <match type="string" value="\x60\x04\x59\xd4\xfd\x35\x1c\x10\xb1\x2a\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
-        <match type="string" value="\xe1\xb7\xb3\x02\x25\x42\xd0\x11\x89\xca\x00\x80\x29\xe4\xb0\xb1" offset="592:8192"/>
       </match>
     </magic>
     <glob pattern="*.smf"/>
   </mime-type>
   <mime-type type="application/vnd.stardivision.writer">
-    <comment>StarWriter document</comment>
+    <comment>StarWriter 5 document</comment>
     <sub-class-of type="application/x-ole-storage"/>
     <generic-icon name="x-office-document"/>
     <glob pattern="*.sdw"/>
     <glob pattern="*.vor"/>
-    <glob pattern="*.sgl"/>
     <magic priority="90">
       <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
-        <match type="string" value="\x40\x7e\x5c\xdc\x5c\xb3\x1b\x10\x99\x61\x04\x02\x1c\x00\x70\x02" offset="592:8192"/>
-        <match type="string" value="\xb0\xe9\x04\x8b\x0e\x42\xd0\x11\xa4\x5e\x00\xa0\x24\x9d\x57\xb1" offset="592:8192"/>
         <match type="string" value="\xd1\xf9\x0c\xc2\xae\x85\xd1\x11\xaa\xb4\x00\x06\x09\x7d\x56\x1a" offset="592:8192"/>
       </match>
       <match type="string" value="StarWriter" offset="2089" />
     </magic>
-    <alias type="application/vnd.stardivision.writer-global"/>
+  </mime-type>
+  <mime-type type="application/vnd.stardivision.writer-global">
+    <comment>StarWriter 5 master document</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <generic-icon name="x-office-document"/>
+    <glob pattern="*.sgl"/>
+    <magic priority="90">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\xd3\xf9\x0c\xc2\xae\x85\xd1\x11\xaa\xb4\x00\x60\x97\xda\x56\x1a" offset="592:8192"/>
+      </match>
+    </magic>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.calc">
-    <comment>LibreOffice Calc spreadsheet</comment>
+    <comment>OpenOffice.org 1.0 Calc spreadsheet</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-spreadsheet"/>
     <magic priority="70">
@@ -1051,7 +1154,7 @@ command to generate the output files.
     <glob pattern="*.sxc"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.calc.template">
-    <comment>LibreOffice Calc template</comment>
+    <comment>OpenOffice.org 1.0 Calc template</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-spreadsheet"/>
     <magic priority="70">
@@ -1064,7 +1167,7 @@ command to generate the output files.
     <glob pattern="*.stc"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.draw">
-    <comment>LibreOffice Draw drawing</comment>
+    <comment>OpenOffice.org 1.0 Draw drawing</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="image-x-generic"/>
     <magic priority="70">
@@ -1077,7 +1180,7 @@ command to generate the output files.
     <glob pattern="*.sxd"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.draw.template">
-    <comment>LibreOffice Draw template</comment>
+    <comment>OpenOffice.org 1.0 Draw template</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="image-x-generic"/>
     <magic priority="70">
@@ -1090,7 +1193,7 @@ command to generate the output files.
     <glob pattern="*.std"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.impress">
-    <comment>LibreOffice Impress presentation</comment>
+    <comment>OpenOffice.org 1.0 Impress presentation</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-presentation"/>
     <magic priority="70">
@@ -1103,7 +1206,7 @@ command to generate the output files.
     <glob pattern="*.sxi"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.impress.template">
-    <comment>LibreOffice Impress template</comment>
+    <comment>OpenOffice.org 1.0 Impress template</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-presentation"/>
     <magic priority="70">
@@ -1116,7 +1219,7 @@ command to generate the output files.
     <glob pattern="*.sti"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.math">
-    <comment>LibreOffice Math formula</comment>
+    <comment>OpenOffice.org 1.0 Math formula</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-document"/>
     <magic priority="70">
@@ -1129,7 +1232,7 @@ command to generate the output files.
     <glob pattern="*.sxm"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.writer">
-    <comment>LibreOffice Writer document</comment>
+    <comment>OpenOffice.org 1.0 Writer document</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-document"/>
     <magic priority="70">
@@ -1142,7 +1245,7 @@ command to generate the output files.
     <glob pattern="*.sxw"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.writer.global">
-    <comment>LibreOffice Writer global document</comment>
+    <comment>OpenOffice.org 1.0 Writer global document</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-document"/>
     <magic priority="70">
@@ -1155,7 +1258,7 @@ command to generate the output files.
     <glob pattern="*.sxg"/>
   </mime-type>
   <mime-type type="application/vnd.sun.xml.writer.template">
-    <comment>LibreOffice Writer template</comment>
+    <comment>OpenOffice.org 1.0 Writer template</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-document"/>
     <magic priority="70">
@@ -1226,7 +1329,7 @@ command to generate the output files.
     <expanded-acronym>OpenDocument Master</expanded-acronym>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-document"/>
-    <magic priority="70">
+    <magic priority="75">
       <match type="string" value="PK\003\004" offset="0">
         <match type="string" value="mimetype" offset="30">
           <match type="string" value="application/vnd.oasis.opendocument.text-master" offset="38"/>
@@ -1234,6 +1337,21 @@ command to generate the output files.
       </match>
     </magic>
     <glob pattern="*.odm"/>
+  </mime-type>
+  <mime-type type="application/vnd.oasis.opendocument.text-master-template">
+    <comment>ODM template</comment>
+    <acronym>ODM</acronym>
+    <expanded-acronym>OpenDocument Master</expanded-acronym>
+    <sub-class-of type="application/zip"/>
+    <generic-icon name="x-office-document"/>
+    <magic priority="80">
+      <match type="string" value="PK\003\004" offset="0">
+        <match type="string" value="mimetype" offset="30">
+          <match type="string" value="application/vnd.oasis.opendocument.text-master-template" offset="38"/>
+        </match>
+      </match>
+    </magic>
+    <glob pattern="*.otm"/>
   </mime-type>
   <mime-type type="application/vnd.oasis.opendocument.graphics">
     <comment>ODG drawing</comment>
@@ -1409,7 +1527,7 @@ command to generate the output files.
     </magic>
     <glob pattern="*.otf"/>
   </mime-type>
-  <mime-type type="application/vnd.oasis.opendocument.database">
+  <mime-type type="application/vnd.oasis.opendocument.base">
     <comment>ODB database</comment>
     <acronym>ODB</acronym>
     <expanded-acronym>OpenDocument Database</expanded-acronym>
@@ -1423,6 +1541,7 @@ command to generate the output files.
       </match>
     </magic>
     <glob pattern="*.odb"/>
+    <alias type="application/vnd.oasis.opendocument.database"/>
     <alias type="application/vnd.sun.xml.base"/>
   </mime-type>
   <mime-type type="application/vnd.oasis.opendocument.image">
@@ -1441,10 +1560,20 @@ command to generate the output files.
     <glob pattern="*.odi"/>
   </mime-type>
   <mime-type type="application/vnd.openofficeorg.extension">
-    <comment>OpenOffice.org extension</comment>
+    <comment>LibreOffice extension</comment>
     <sub-class-of type="application/zip"/>
     <generic-icon name="x-office-document"/>
     <glob pattern="*.oxt" />
+  </mime-type>
+  <mime-type type="application/vnd.apache.parquet">
+    <comment>Apache Parquet file</comment>
+    <alias type="application/x-parquet"/>
+    <generic-icon name="x-office-spreadsheet"/>
+    <magic>
+      <match type="string" value="PAR1" offset="0"/>
+      <match type="string" value="PARE" offset="0"/>
+    </magic>
+    <glob pattern="*.parquet"/>
   </mime-type>
   <mime-type type="application/vnd.android.package-archive">
     <comment>Android package</comment>
@@ -1482,6 +1611,19 @@ command to generate the output files.
     <glob pattern="*.dmp"/>
     <alias type="application/x-pcap"/>
     <alias type="application/pcap"/>
+  </mime-type>
+  <mime-type type="application/x-pcapng">
+    <comment>PCAPNG packet capture</comment>
+    <acronym>PCAPNG</acronym>
+    <expanded-acronym>PCAP Next Generation</expanded-acronym>
+    <magic>
+      <match type="host32" value="0x0a0d0d0a" offset="0">
+	<match type="host32" value="0x1a2b3c4d" offset="8"/>
+	<match type="host32" value="0x4d3c2b1a" offset="8"/>
+      </match>
+    </magic>
+    <glob pattern="*.pcapng"/>
+    <glob pattern="*.ntar"/>
   </mime-type>
   <mime-type type="application/vnd.wordperfect">
     <comment>WordPerfect document</comment>
@@ -1641,6 +1783,7 @@ command to generate the output files.
     </magic>
     <glob pattern="*.a"/>
     <glob pattern="*.ar"/>
+    <glob pattern="*.lib"/>
   </mime-type>
   <mime-type type="application/x-arj">
     <comment>ARJ archive</comment>
@@ -1708,7 +1851,6 @@ command to generate the output files.
     <comment>Blender scene</comment>
     <generic-icon name="image-x-generic"/>
     <glob pattern="*.blend"/>
-    <glob pattern="*.BLEND"/>
     <glob pattern="*.blender"/>
     <magic>
       <match type="string" value="BLENDER" offset="0"/>
@@ -2117,6 +2259,21 @@ command to generate the output files.
       <match offset="0" type="string" value="3DSX"/>
     </magic>
   </mime-type>
+  <mime-type type="application/x-nintendo-switch-xci">
+    <comment>Nintendo Switch encrypted ROM</comment>
+    <alias type="application/x-nx-xci"/>
+    <magic>
+      <match offset="256" type="string" value="HEAD">
+        <match offset="269" type="byte" value="0xFA"/>
+        <match offset="269" type="byte" value="0xF8"/>
+        <match offset="269" type="byte" value="0xF0"/>
+        <match offset="269" type="byte" value="0xE0"/>
+        <match offset="269" type="byte" value="0xE1"/>
+        <match offset="269" type="byte" value="0xE2"/>
+      </match>
+    </magic>
+    <glob pattern="*.xci"/>
+  </mime-type>
   <mime-type type="application/x-pc-engine-rom">
     <comment>PC Engine ROM</comment>
     <generic-icon name="application-x-executable"/>
@@ -2315,7 +2472,6 @@ command to generate the output files.
       <match type="string" value="\177ELF" offset="0">
         <match type="byte" value="2" offset="5"/>
       </match>
-      <match type="string" value="MZ" offset="0"/>
       <match type="little16" value="0x521c" offset="0"/>
       <match type="host16" value="0420" offset="0"/>
       <match type="host16" value="0421" offset="0"/>
@@ -2752,7 +2908,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="text/x-groovy">
     <comment>Groovy source code</comment>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/plain"/>
     <generic-icon name="text-x-script"/>
     <glob pattern="*.groovy"/>
     <glob pattern="*.gvy"/>
@@ -3446,7 +3602,6 @@ command to generate the output files.
     <glob pattern="*.efi"/>
     <glob pattern="*.ocx"/>
     <glob pattern="*.sys"/>
-    <glob pattern="*.lib"/>
   </mime-type>
   <mime-type type="application/x-ms-pdb">
     <comment>Windows program database</comment>
@@ -3582,7 +3737,6 @@ command to generate the output files.
   </mime-type>
   <mime-type type="application/x-object">
     <comment>Object code</comment>
-    <generic-icon name="x-office-document"/>
     <magic>
       <match type="string" value="\177ELF" offset="0">
         <match type="byte" value="1" offset="5">
@@ -3777,6 +3931,20 @@ command to generate the output files.
       </match>
     </magic>
     <glob pattern="*.pub"/>
+  </mime-type>
+  <mime-type type="application/vnd.quark.quarkxpress">
+    <comment>QuarkXPress document</comment>
+    <generic-icon name="x-office-document"/>
+    <magic>
+      <match type="string" value="XPR3" offset="4"/>
+    </magic>
+    <glob pattern="*.qwd"/>
+    <glob pattern="*.qwt"/>
+    <glob pattern="*.qxb"/>
+    <glob pattern="*.qxd"/>
+    <glob pattern="*.qxl"/>
+    <glob pattern="*.qxp"/>
+    <glob pattern="*.qxt"/>
   </mime-type>
   <mime-type type="application/x-msi">
     <comment>Windows Installer package</comment>
@@ -5652,6 +5820,14 @@ command to generate the output files.
     <sub-class-of type="image/tiff"/>
     <glob pattern="*.arw"/>
   </mime-type>
+  <mime-type type="application/x-sony-bbeb">
+    <comment>BroadBand eBook</comment>
+    <generic-icon name="x-office-document"/>
+    <magic>
+      <match type="string" value="L\0R\0F\0\0\0" offset="0"/>
+    </magic>
+    <glob pattern="*.lrf"/>
+  </mime-type>
   <mime-type type="image/png">
     <comment>PNG image</comment>
     <acronym>PNG</acronym>
@@ -5688,8 +5864,6 @@ command to generate the output files.
     <sub-class-of type="application/xml"/>
     <magic priority="80">
       <match type="string" value="&lt;!DOCTYPE svg" offset="0:256"/>
-    </magic>
-    <magic priority="80">
       <match type="string" value="&lt;!-- Created with Inkscape" offset="0"/>
       <match type="string" value="&lt;svg" offset="0"/>
     </magic>
@@ -5809,7 +5983,7 @@ command to generate the output files.
       <match type="string" value="DICM" offset="128"/>
     </magic>
   </mime-type>
-  <mime-type type="application/x-docbook+xml">
+  <mime-type type="application/docbook+xml">
     <comment>DocBook document</comment>
     <sub-class-of type="application/xml"/>
     <generic-icon name="x-office-document"/>
@@ -5821,7 +5995,7 @@ command to generate the output files.
     </magic>
     <glob pattern="*.dbk"/>
     <glob pattern="*.docbook"/>
-    <alias type="application/docbook+xml"/>
+    <alias type="application/x-docbook+xml"/>
     <alias type="application/vnd.oasis.docbook+xml"/>
   </mime-type>
   <mime-type type="image/x-dib">
@@ -5901,13 +6075,16 @@ command to generate the output files.
     <alias type="image/x-fits"/>
     <alias type="image/fits"/>
   </mime-type>
-  <mime-type type="image/x-fpx">
-    <comment>FPX image</comment>
-    <acronym>FPX</acronym>
-    <expanded-acronym>FlashPiX</expanded-acronym>
-    <magic>
-      <match type="big32" value="0x46506978" offset="0"/>
+  <mime-type type="image/vnd.fpx">
+    <comment>FlashPix image</comment>
+    <sub-class-of type="application/x-ole-storage"/>
+    <magic priority="60">
+      <match type="string" value="\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1" offset="0">
+        <match type="string" value="\x00\x67\x61\x56\x54\xc1\xce\x11\x85\x53\x00\xaa\x00\xa1\xf9\x5b" offset="592:8192"/>
+      </match>
     </magic>
+    <glob pattern="*.fpx"/>
+    <alias type="image/x-fpx"/>
   </mime-type>
   <mime-type type="image/x-gzeps">
     <comment>EPS image (gzip-compressed)</comment>
@@ -6248,6 +6425,16 @@ command to generate the output files.
     <comment>X window image</comment>
     <glob pattern="*.xwd"/>
   </mime-type>
+  <mime-type type="image/x-kiss-cel">
+    <comment>KiSS cel</comment>
+    <acronym>KiSS</acronym>
+    <expanded-acronym>Kisekae Set System</expanded-acronym>
+    <magic>
+      <match type="string" value="KiSS" offset="0"/>
+    </magic>
+    <glob pattern="*.cel"/>
+    <glob pattern="*.kcf"/>
+  </mime-type>
   <mime-type type="inode/blockdevice">
     <comment>Block device</comment>
   </mime-type>
@@ -6303,7 +6490,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="message/rfc822">
     <comment>Email message</comment>
-    <generic-icon name="text-x-generic"/>
+    <generic-icon name="emblem-mail"/>
     <sub-class-of type="text/plain"/>
     <magic>
       <match type="string" value="#! rnews" offset="0"/>
@@ -6323,7 +6510,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="message/x-gnu-rmail">
     <comment>GNU mail message</comment>
-    <generic-icon name="text-x-generic"/>
+    <generic-icon name="emblem-mail"/>
     <glob pattern="RMAIL"/>
   </mime-type>
   <mime-type type="model/iges">
@@ -6425,12 +6612,15 @@ command to generate the output files.
     <sub-class-of type="text/plain"/>
     <alias type="text/x-vcalendar"/>
     <alias type="application/ics"/>
+    <generic-icon name="x-office-calendar"/>
     <magic>
       <match type="string" value="BEGIN:VCALENDAR" offset="0"/>
       <match type="string" value="begin:vcalendar" offset="0"/>
     </magic>
     <glob pattern="*.vcs"/>
     <glob pattern="*.ics"/>
+    <glob pattern="*.ifb"/>
+    <glob pattern="*.icalendar"/>
   </mime-type>
   <mime-type type="text/css">
     <comment>CSS stylesheet</comment>
@@ -6492,10 +6682,6 @@ command to generate the output files.
   </mime-type>
   <mime-type type="text/enriched">
     <comment>Enriched text document</comment>
-    <sub-class-of type="text/plain"/>
-  </mime-type>
-  <mime-type type="text/htmlh">
-    <comment>Help page</comment>
     <sub-class-of type="text/plain"/>
   </mime-type>
   <mime-type type="text/plain">
@@ -6587,9 +6773,11 @@ command to generate the output files.
     <glob pattern="*.sgml"/>
     <glob pattern="*.sgm"/>
   </mime-type>
-  <mime-type type="text/spreadsheet">
+  <mime-type type="application/x-sylk">
     <comment>Spreadsheet interchange document</comment>
     <sub-class-of type="text/plain"/>
+    <alias type="text/spreadsheet"/>
+    <generic-icon name="x-office-spreadsheet"/>
     <magic>
       <match type="string" value="ID;" offset="0"/>
     </magic>
@@ -6686,7 +6874,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="text/x-c++src">
     <comment>C++ source code</comment>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/x-objc++src"/>
     <glob pattern="*.cpp"/>
     <glob pattern="*.cxx"/>
     <glob pattern="*.cc"/>
@@ -6745,7 +6933,8 @@ command to generate the output files.
   </mime-type>
   <mime-type type="text/x-csrc">
     <comment>C source code</comment>
-    <sub-class-of type="text/plain"/>
+    <sub-class-of type="text/x-c++src"/>
+    <sub-class-of type="text/x-objcsrc"/>
     <alias type="text/x-c"/>
     <glob pattern="*.c" case-sensitive="true"/>
     <magic priority="30">
@@ -6754,14 +6943,29 @@ command to generate the output files.
       <match type="string" value="#include" offset="0"/>
     </magic>
   </mime-type>
+  <mime-type type="text/x-asm">
+    <comment>Assembly code</comment>
+    <sub-class-of type="text/plain"/>
+    <magic>
+      <match type="string" value="\t.asciiz" offset="0"/>
+      <match type="string" value="\t.byte" offset="0"/>
+      <match type="string" value="\t.even" offset="0"/>
+      <match type="string" value="\t.file" offset="0"/>
+      <match type="string" value="\t.globl" offset="0"/>
+      <match type="string" value="\t.text" offset="0"/>
+      <match type="string" value="\t.type" offset="0"/>
+    </magic>
+    <glob pattern="*.asm"/>
+    <glob pattern="*.s"/>
+  </mime-type>
   <mime-type type="text/x-csharp">
     <comment>C# source code</comment>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/plain"/>
     <glob pattern="*.cs"/>
   </mime-type>
   <mime-type type="text/x-vala">
     <comment>Vala source code</comment>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/plain"/>
     <glob pattern="*.vala"/>
     <glob pattern="*.vapi"/>
   </mime-type>
@@ -6769,7 +6973,7 @@ command to generate the output files.
     <comment>OOC source code</comment>
     <acronym>OOC</acronym>
     <expanded-acronym>Out Of Class</expanded-acronym>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/plain"/>
     <glob pattern="*.ooc"/>
   </mime-type>
   <mime-type type="text/x-dcl">
@@ -6788,7 +6992,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="text/x-dsrc">
     <comment>D source code</comment>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/plain"/>
     <glob pattern="*.d"/>
     <glob pattern="*.di"/>
   </mime-type>
@@ -6954,7 +7158,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="text/x-java">
     <comment>Java source code</comment>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/plain"/>
     <glob pattern="*.java"/>
   </mime-type>
   <mime-type type="text/x-ldif">
@@ -6962,6 +7166,7 @@ command to generate the output files.
     <acronym>LDIF</acronym>
     <expanded-acronym>LDAP Data Interchange Format</expanded-acronym>
     <sub-class-of type="text/plain"/>
+    <generic-icon name="x-office-address-book"/>
     <magic>
       <match type="string" value="dn: cn=" offset="0"/>
       <match type="string" value="dn: mail=" offset="0"/>
@@ -7040,9 +7245,14 @@ command to generate the output files.
     <glob pattern="*.mup"/>
     <glob pattern="*.not"/>
   </mime-type>
+  <mime-type type="text/x-nix">
+    <comment>Nix source code</comment>
+    <sub-class-of type="text/plain"/>
+    <glob pattern="*.nix"/>
+  </mime-type>
   <mime-type type="text/x-objcsrc">
     <comment>Objective-C source code</comment>
-    <sub-class-of type="text/x-csrc"/>
+    <sub-class-of type="text/x-objc++src"/>
     <magic priority="30">
       <match type="string" value="#import" offset="0"/>
     </magic>
@@ -7050,8 +7260,7 @@ command to generate the output files.
   </mime-type>
   <mime-type type="text/x-objc++src">
     <comment>Objective-C++ source code</comment>
-    <sub-class-of type="text/x-c++src"/>
-    <sub-class-of type="text/x-objcsrc"/>
+    <sub-class-of type="text/plain"/>
     <glob pattern="*.mm"/>
   </mime-type>
   <mime-type type="text/x-ocaml">
@@ -7093,14 +7302,8 @@ command to generate the output files.
     </magic>
     <magic>
       <match type="string" value="function" offset="0"/>
-    </magic>
-    <magic>
       <match type="string" value="class" offset="0"/>
-    </magic>
-    <magic>
       <match type="string" value="model" offset="0"/>
-    </magic>
-    <magic>
       <match type="string" value="record" offset="0"/>
     </magic>
     <glob pattern="*.mo"/>
@@ -7176,13 +7379,30 @@ command to generate the output files.
     </magic>
     <glob pattern="*.py"/><!-- lower priority than in text/x-python -->
     <glob pattern="*.py3" weight="60"/>
-    <glob pattern="*.py3x" weight="60"/>
     <glob pattern="*.pyi" weight="60"/>
+  </mime-type>
+  <mime-type type="text/x-python2">
+    <comment>Python 2 script</comment>
+    <sub-class-of type='text/x-python'/>
+    <magic priority="60"><!-- higher priority than text/x-python -->
+      <match type="string" value="#!/bin/python2" offset="0"/>
+      <match type="string" value="#! /bin/python2" offset="0"/>
+      <match type="string" value='eval \"exec /bin/python2' offset="0"/>
+      <match type="string" value="#!/usr/bin/python2" offset="0"/>
+      <match type="string" value="#! /usr/bin/python2" offset="0"/>
+      <match type="string" value='eval \"exec /usr/bin/python2' offset="0"/>
+      <match type="string" value="#!/usr/local/bin/python2" offset="0"/>
+      <match type="string" value="#! /usr/local/bin/python2" offset="0"/>
+      <match type="string" value='eval \"exec /usr/local/bin/python2' offset="0"/>
+      <match type="string" value='/bin/env python2' offset="2:16"/>
+    </magic>
+    <glob pattern="*.py"/><!-- lower priority than in text/x-python -->
+    <glob pattern="*.py2" weight="60"/>
   </mime-type>
   <mime-type type="text/x-python">
     <comment>Python script</comment>
     <sub-class-of type='application/x-executable'/>
-    <sub-class-of type="text/plain"/>
+    <sub-class-of type="text/x-cython"/>
     <magic>
       <match type="string" value="#!/bin/python" offset="0"/>
       <match type="string" value="#! /bin/python" offset="0"/>
@@ -7196,8 +7416,14 @@ command to generate the output files.
       <match type="string" value='/bin/env python' offset="2:16"/>
     </magic>
     <glob pattern="*.py" weight="60"/>
-    <glob pattern="*.pyx" weight="60"/>
     <glob pattern="*.wsgi" weight="60"/>
+  </mime-type>
+  <mime-type type="text/x-cython">
+    <comment>Cython source code</comment>
+    <sub-class-of type="text/plain"/>
+    <glob pattern="*.pxd"/>
+    <glob pattern="*.pxi"/>
+    <glob pattern="*.pyx"/>
   </mime-type>
   <mime-type type="text/x-sagemath">
     <comment>SageMath script</comment>
@@ -8263,17 +8489,18 @@ command to generate the output files.
     <comment>Squashfs filesystem image</comment>
     <sub-class-of type="application/vnd.efi.img"/>
     <magic>
-      <match type="string" value="sqsh" offset="0"/>
       <match type="string" value="hsqs" offset="0"/>
     </magic>
+    <glob pattern="*.sfs"/>
+    <glob pattern="*.sqfs"/>
     <glob pattern="*.sqsh"/>
+    <glob pattern="*.squashfs"/>
   </mime-type>
 
   <!-- AppImage application bundle (Type 2) -->
   <mime-type type="application/vnd.appimage">
     <comment>AppImage application bundle</comment>
     <sub-class-of type="application/x-executable"/>
-    <sub-class-of type="application/vnd.squashfs"/>
     <generic-icon name="application-x-executable"/>
     <magic>
       <match value="ELF" type="string" offset="1" >
@@ -8627,6 +8854,11 @@ command to generate the output files.
     <sub-class-of type="application/zip"/>
     <generic-icon name="package-x-generic"/>
     <glob pattern="*.mrpack"/>
+  </mime-type>
+  <mime-type type="application/x-qbrew">
+    <comment>QBrew beer recipes</comment>
+    <sub-class-of type="application/xml"/>
+    <glob pattern="*.qbrew"/>
   </mime-type>
   <mime-type type="application/cbor">
     <comment>CBOR Data</comment>
